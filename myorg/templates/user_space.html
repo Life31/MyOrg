@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+{% load cache %}
+{% load static %}
+{% block title %}Личный кабинт{% endblock %}
+{% block header %}
+	<style>
+		.text_b {
+			height: 97%; font-size: 12px; font-weight: bold; line-height: 10px; background: white; color: gray; margin: 0px; border: 1px groove gray;
+		}
+
+		.widg_f_btn {
+			height: 31px; border: 1px solid gray; font-size: 12px; font-weight: bold; line-height: 10px; background: white; color: gray;
+			display: flex; flex-direction: row; align-items: center; justify-content: center;
+		}
+
+		.text_a { font-family: Calibri; font-size: 18px; font-weight: 400; line-height: 20px; letter-spacing: 0em; }
+
+		.widget_data {
+			display: flex; flex-direction: column; justify-content: top; align-items: center; 
+			width: 100%; height: 310px; 
+			margin-top: 1px; padding: 2px;
+			background: rgb(235, 236, 240);
+			border-radius: 8px;
+		}
+		.widget_footer {
+			position: absolute; top: 360px;
+			display: flex; flex-direction: row; justify-content: center; align-items: center;
+			width: 100%;
+			padding: 0px;
+			height: 31px;
+			margin-top: 2px;
+		}
+		.widget_place_for_image {
+			display: flex; flex-direction: row; justify-content: center; align-items: center;
+			width: 49px; height: 44px; 
+			border-radius: 21px;
+			border: 0px;
+			background: rgb(235, 236, 240);
+
+			margin-top: 1px;
+		}
+		.all_flex {
+			display: flex; flex-direction: row;
+		}
+		.main_text {
+			margin-left: 10px; padding-left: 10px; color: gray; margin-right: 20px; width: 350px; line-height: 40px;
+		}
+		.main_btn {
+			margin: 3px; cursor: pointer;
+			border: 4px solid gray; width: 40px; height: 40px; border-radius: 12px 0px 12px 0px; background: white; justify-content: center; align-items: center;
+		}
+		.btn_off {
+			border-radius: 0px 12px 0px 12px;
+		}
+		.bord {
+			flex-wrap: wrap;  gap: 2px; margin-top: 28px; margin-left: -24px;
+			display: flex; flex-direction: row; padding: 0px; width: 1500px; height: 420px; 
+			background: transparent; overflow-y: auto; overflow-x: hidden; overflow: visible;
+		}
+		.card {
+			display: flex; flex-direction: column; justify-content: top; align-items: center; margin: 8px;
+			width: 350px; height: 400px; background: gray; border-radius: 21px;
+			overflow: visible; border: 4px solid gray;
+		}
+		.title {
+			display: flex; flex-direction: row; justify-content: left; align-items: center; cursor: pointer;
+			width: 100%; height: 45px; border-radius: 19px 19px 8px 8px; background: rgb(235, 236, 240); margin-bottom: 3px;
+			font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; font-size: 28px; padding: 5px auto;
+		}
+		.task, .part {
+			margin: 2px; padding: 4px; font-weight: bold; text-align: left; width: 85%; background: white; border-radius: 10px; cursor: pointer;
+			display: flex; flex-direction: row; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		}
+		.circle {background: #01A86B; width: 15px; height: 15px; border-radius: 50%; margin-right: 15px; margin-top: 4px; margin-left: 5px;
+		}
+		.plus {width: 30px; height: 30px; cursor: pointer;  margin: 2px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);}
+		.part {
+			margin: 0px; background: transparent; height: 30px; color: #808080; font-family: 'Calibri';
+			font-style: normal; font-weight: 700; font-size: 18px; line-height: 22px; text-align: left;
+			box-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
+		}
+		.calc_btn{
+			justify-content: center; align-items: center; width: 45px; height: 45px; border-radius: 50%; margin: 5px; background: rgb(90, 90, 89); font-size: 25px;
+			box-shadow: 0px 0px 7px rgba(255, 255, 255, 0.5);
+		}
+	</style>
+		
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_user_space.html' %}
+{% endblock %}
+{% load thumbnail %}
+
+{% load user_filters %}
+{% block content %}
+	<div class="bord" id="{{widgets_order}}">
+		{% include 'user_space/tasks.html' %}
+		{% include 'user_space/news.html' %}
+		{% include 'user_space/corresp.html' %}
+		{% include 'user_space/reqs.html' %}
+		{% include 'user_space/messenger.html' %}
+		{% include 'user_space/storage.html' %}
+		{% include 'user_space/vacation.html' %}
+		{% include 'user_space/tests.html' %}
+		{% include 'user_space/bibl.html' %}
+		{% include 'user_space/users.html' %}
+		{% include 'user_space/notes.html' %}
+		{% include 'user_space/calculator.html' %}
+	</div>	
+	<script>
+		
+
+		let bord_S = document.getElementsByClassName("bord")[0];
+		let cards = document.getElementsByClassName('card');
+		let widgets_order = bord_S.id.split('_').reverse();
+
+		for (let i = 0; i < widgets_order.length; i++) {
+			//alert(widgets_order[i])
+			for (let j = 0; j < cards.length; j++) {
+				//alert(cards[j].id)
+				if (cards[j].id == widgets_order[i]) {
+					bord_S.insertBefore(cards[j], bord_S.firstElementChild);
+					break;
+				}
+			}
+		}
+		
+		function titleonmouseover(obj) {
+			obj.childNodes[5].childNodes[1].style.display="flex";
+		}
+		function titleonmouseout(obj) {
+			obj.childNodes[5].childNodes[1].style.display="none";
+		}
+
+		
+		
+		let dialogues = document.getElementsByClassName("dialogue");
+		let notes = document.getElementsByClassName("note");
+		for (let i = 0; i < dialogues.length; i++) {
+			dialogues[i].addEventListener(
+				"mouseover",
+				(event) => {                  
+					setTimeout(function() {
+						dialogues[i].style.background = 'whitesmoke';
+					}, "0"
+					);
+				},
+				false,
+			);
+		}
+		for (let i = 0; i < dialogues.length; i++) {
+			dialogues[i].addEventListener(
+				"mouseout",
+				(event) => {                  
+					setTimeout(function() {
+						dialogues[i].style.background = 'white';
+					}, "0"
+					);
+				},
+				false,
+			);
+		}
+		for (let i = 0; i < notes.length; i++) {
+			notes[i].addEventListener(
+				"mouseover",
+				(event) => {                  
+					setTimeout(function() {
+						notes[i].style.background = 'whitesmoke';
+					}, "0"
+					);
+				},
+				false,
+			);
+		}
+		for (let i = 0; i < notes.length; i++) {
+			notes[i].addEventListener(
+				"mouseout",
+				(event) => {                  
+					setTimeout(function() {
+						notes[i].style.background = 'white';
+					}, "0"
+					);
+				},
+				false,
+			);
+		}
+		
+		let screens = document.getElementsByClassName("top_left_screen");
+		
+		/*
+		for (let i = 0; i < screens.length; i++) {
+
+			if (screens[i].parentElement.getAttribute('name') != 'open') {
+				var cList = screens[i].parentElement.classList;
+				var title = screens[i].parentElement.parentElement;
+				var card = screens[i].parentElement.parentElement.parentElement;
+				screens[i].parentElement.style.border = '4px solid rgb(235, 236, 240)';
+				title.childNodes[3].style.display = 'none';
+				title.childNodes[5].style.display = 'none';
+				card.style.width = '45px';
+				card.style.height = '45px';
+				card.style.overflow = 'hidden';
+				cList.replace('on', 'off');
+			}
+
+			
+		}*/
+		for (let i = 0; i < screens.length; i++) {
+
+			if (screens[i].parentElement.getAttribute('name') == 'open') {
+				var cList = screens[i].parentElement.classList;
+				var title = screens[i].parentElement.parentElement;
+				var card = screens[i].parentElement.parentElement.parentElement;			
+				//screens[i].parentElement.style.border = '4px solid gray';
+				title.childNodes[3].style.display = 'block';
+				title.childNodes[5].style.display = 'block';					
+				card.style.width = '350px';
+				card.style.height = '400px';
+				card.style.overflow = 'visible';
+				cList.replace('off', 'on')
+			}
+
+		}
+		let openAllCard = 2;
+		function OpenAllCard(body) {
+			if (openAllCard == 1) {
+				return;
+			}/*
+			for (let i = 0; i < screens.length; i++) {
+				let obj = screens[i]
+				var cList = obj.parentElement.classList;
+				var title = obj.parentElement.parentElement;
+				let card = obj.parentElement.parentElement.parentElement;
+
+				obj.parentElement.style.border = '4px solid gray';
+				title.childNodes[3].style.display = 'block';
+				title.childNodes[5].style.display = 'block';
+				card.style.width = '300px';
+				card.style.height = '380px';
+				card.style.overflow = 'visible';
+				cList.replace('off', 'on')
+			}*/
+			openAllCard = 1;
+			let url = "{% url 'user_widget_close_all' user.id 'open' %}";
+			location.href=url;
+
+		}
+		function CloseAllCard(body) {
+			if (openAllCard == 0) {
+				return;
+			}/*
+			for (let i = 0; i < screens.length; i++) {
+				let obj = screens[i]
+				var cList = obj.parentElement.classList
+				var title = obj.parentElement.parentElement;
+				var card = obj.parentElement.parentElement.parentElement;
+				obj.parentElement.style.border = '4px solid rgb(235, 236, 240)';
+				title.childNodes[3].style.display = 'none';
+				title.childNodes[5].style.display = 'none';
+				card.style.width = '45px';
+				card.style.height = '45px';
+				card.style.overflow = 'hidden';
+				cList.replace('on', 'off')
+			}*/
+			openAllCard = 0;
+			let url = "{% url 'user_widget_close_all' user.id 'close' %}";
+			location.href=url;
+		}
+
+
+		function closeOpenCard(obj) {
+			
+			var cList = obj.parentElement.classList
+			var title = obj.parentElement.parentElement;
+			var card = obj.parentElement.parentElement.parentElement;
+			if (cList.contains('on')) {		
+				cList.replace('on', 'off');
+				/*obj.parentElement.style.border = '4px solid rgb(235, 236, 240)';
+				title.childNodes[3].style.display = 'none';
+				title.childNodes[5].style.display = 'none';
+				card.style.width = '45px';
+				card.style.height = '45px';
+				card.style.overflow = 'hidden';*/
+				
+				//bord_S.insertBefore(card, bord_S.lastElementChild)
+			} else {
+				cList.replace('off', 'on');
+				/*obj.parentElement.style.border = '4px solid gray';
+				title.childNodes[3].style.display = 'block';
+				title.childNodes[5].style.display = 'block';
+				card.style.width = '300px';
+				//card.style.height = '380px';
+				card.style.overflow = 'visible';
+				
+				//bord_S.insertBefore(card, bord_S.firstElementChild)
+				let start = Date.now();
+				
+				let timer = setInterval(function(){
+					let timePassed = Date.now() - start + 100;
+					card.style.height = timePassed + 'px';
+					if (parseInt(card.style.height) > 380) {
+						clearInterval(timer);
+						card.style.height = '380px';
+					}
+				}, 10);*/
+			}
+			openAllCard = 2;
+
+			let widget = (cList[1]);
+			let url = "{% url 'user_widget_close' user.id 'widget' 999 %}";
+			let arrayFromUrl = url.split('/');
+			arrayFromUrl[5] = widget;
+			arrayFromUrl[6] = card.id;
+			let new_url = arrayFromUrl.join("/");
+			location.href=new_url;
+		}
+
+		function showInfoOtd(obj) {
+			let otd_btns = document.getElementsByClassName('otd_btn')
+			for (let i = 0; i < otd_btns.length; i++) {
+				if (otd_btns[i] != obj) {
+					otd_btns[i].style.display = 'none';
+				}
+			}
+			let back = document.getElementById('back_0');
+			back.style.display = 'flex';
+			let otd = obj.id
+			let emplo = document.getElementsByClassName(otd);
+			for (let i = 0; i < emplo.length; i++) {
+				emplo[i].style.display = 'flex';
+			}
+		}
+		
+		function showAllOtd() {
+			let otd_btns = document.getElementsByClassName('otd_btn')
+			let otd_emplos = document.getElementsByClassName('otd_emplos')
+			let user_info = document.getElementsByClassName('user_info')
+			
+			for (let i = 0; i < otd_btns.length; i++) {
+				otd_btns[i].style.display = 'flex';
+			}
+			for (let i = 0; i < otd_emplos.length; i++) {
+				otd_emplos[i].style.display = 'none';
+			}
+			for (let i = 0; i < user_info.length; i++) {
+				user_info[i].style.display = 'none';
+			}
+		}
+	</script>
+{% endblock %} 

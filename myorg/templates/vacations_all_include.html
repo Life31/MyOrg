@@ -1,0 +1,141 @@
+{% load user_filters %}
+<style>
+    .v_a_i_full {
+        display: flex; flex-direction: row; justify-content: left; align-items: left; width: 1150px; margin: 3px; 
+        padding:1px; background: white; border-radius: 10px; border: 1px solid white; cursor: pointer;
+    }
+    .v_a_i_body_for_key {
+        font-size: 20px; display: flex; flex-direction: row; justify-content: center; align-items: center; width: 100px;
+        background: #E6E6E6; margin-right: 10px; border-radius: 10px; cursor: pointer;
+    }
+    .v_a_i_string {
+        display: flex; flex-direction: row; justify-content: left; align-items: left;
+    }
+    .v_a_i_number {
+        font-size: 18px; background: transparent; width: 30px; height: 30px; border: 0px solid white; 
+    }
+
+</style>
+<div class="v_a_i_full">
+    <div class="v_a_i_body_for_key">{{key}}</div>
+    <div>
+        {% for kk, vv in full_year_by_month.items %}
+            {% if kk == key %}
+                <div class="v_a_i_string" style="width: 950px;  display: none;">
+                    {% for el in vv %}
+                        <div style="box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2); border-radius: 10px;">
+                            {% if el|color_for_date == 5 or el|color_for_date == 6 or el in holidays %}
+                                {% if el not in special_work_days %}
+                                    {% if el in holidays %}
+                                        <div class="v_a_i_number" style="color: rgb(133, 226, 133);">{{el|day_from_date}}</div>
+                                    {% else %}
+                                        <div class="v_a_i_number" style="color: rgb(233, 129, 129);">{{el|day_from_date}}</div>
+                                    {% endif %}
+                                {% else %}
+                                    
+                                    <div class="dropdown" style="display: block;">
+                                        <div class="v_a_i_number" onmouseover='posForDrop(this)'>{{el|day_from_date}}</div>
+                                        <div class="dropdown-content">
+                                            <a href="#" role="button" style="border-radius: 4px;">{{ el }}</a>
+                                            <a href="#" role="button" style="border-radius: 4px;">Рабочий день</a>
+                                            <a href="#" role="button" style="border-radius: 4px;" onclick="showInput(this)">Добавить отпуск</a>
+                                            <div style="display: none; flex-direction: row; justify-content: center; align-items: center;">
+                                                <input placeholder="Дни" style="border-radius: 4px; width: 50px;">
+                                                <a href="#" role="button" onclick="creatVac(this)" style="border-radius: 4px; width: 110px;">Подтвердить</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                
+                            {% else %}
+                                <div class="dropdown" style="display: block;">
+                                    <div class="v_a_i_number" onmouseover='posForDrop(this)'>{{el|day_from_date}}</div>
+                                    <div class="dropdown-content">
+                                        <a href="#" role="button" style="border-radius: 4px;">{{ el }}</a>
+                                        <a href="#" role="button" style="border-radius: 4px;">Рабочий день</a>
+                                        <a href="#" role="button" style="border-radius: 4px;" onclick="showInput(this)">Добавить отпуск</a>
+                                        <div style="display: none; flex-direction: row; justify-content: center; align-items: center;">
+                                            <input placeholder="Дни" style="border-radius: 4px; width: 50px;">
+                                            <a href="#" role="button" onclick="creatVac(this)" style="border-radius: 4px; width: 110px;">Подтвердить</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>    
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% for k, val in value.items %}
+            {% for kk, vv in full_year_by_month.items %}
+                {% if kk == key %}
+                    <div class="v_a_i_string" style="width: 920px; cursor: pointer;">
+                        <div class="v_a_i_string" style="width: 920px; cursor: pointer;">
+                            {% for el in vv %}
+                                {% if el in val %}
+                                    <div>
+                                        
+                                        <div class="dropdown" style="display: block;">
+                                            <div class="v_a_i_number number" id="{{el}},{{k}}" style="background:{{k|color_for_user:user_colors}}; border-radius: 5px; color: white; border: 1px solid black;"  onmouseover='posForDrop(this)'>{{el|day_from_date}}</div>
+                                            <div class="dropdown-content">
+                                                <a href="#" role="button" style="border-radius: 4px;">{{el}}</a>
+                                                <a href="#" role="button" style="border-radius: 4px;" onclick="showUserFromDrop(this)">{{k}}</a>
+                                                {% if user.get_full_name in bosses.keys  or user.get_full_name == k %}
+                                                    <a href="{% url 'del_vac_by_drop' otd k el %}" role="button" style="border-radius: 4px;">Удалить</a>
+                                                {% else %}
+                                                    <a href="#" role="button" style="border-radius: 4px; display: none;"></a>
+                                                {% endif %}
+                                                <a href="#" role="button" name="иначе скрипт не работает" style="border-radius: 4px; display: none;"></a>
+                                                {% if user.get_full_name in bosses.keys %}
+                                                <a href="{% url 'vacation_confirm_from_day' year otd k el %}" role="button" style="border-radius: 4px;">Подтвердить</a>
+                                                <a href="{% url 'vacation_confirm_from_day' year otd k el %}" role="button" style="border-radius: 4px;">Отклонить</a>
+                                                {% else %}
+                                                <a href="#" role="button" style="border-radius: 4px; display: none;"></a>
+                                                <a href="#" role="button" style="border-radius: 4px; display: none;"></a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                <div>
+                                    <div class="v_a_i_number">-</div>
+                                </div>    
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <!--div class="user_vac" style="width: 200px; cursor: pointer; color: {{k|color_for_user:user_colors}}" onclick="showUser(this)">{{k}}</div-->
+                        <div class="user_vac" style="width: 200px; cursor: pointer; color: black; display: none;" onclick="showUser(this)">{{k}}</div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>  
+</div>
+<script>
+    function creatVac(obj) {
+        let date = obj.parentNode.parentNode.childNodes[1].textContent;
+
+        let day = date.split(' ')[0];
+        let months = {'января': '01', 'февраля': '02', 'марта': '03', 'апреля': '04', 'мая': '05', 'июня': '06',
+        'июля': '07', 'августа': '08', 'сентября': '09', 'октября': '10', 'ноября': '11', 'декабря': '12',};
+        
+        let month = months[date.split(' ')[1]];
+
+        let year = date.split(' ')[2];
+
+        let howManyDays = obj.parentNode.childNodes[1].value;
+        if (!isNaN(howManyDays)) {
+            let url = "{% url 'add_new_vac_by_drop' otd 99 99 year 99 %}";
+            let arrayFromUrl = url.split('/');
+            arrayFromUrl[5] = day;
+            arrayFromUrl[6] = month;
+            arrayFromUrl[8] = howManyDays;
+            let new_url = arrayFromUrl.join("/");
+            location.href=new_url;
+           
+        }
+    }
+    function showInput(obj) {
+        obj.nextElementSibling.style.display = "flex";
+    }
+</script>

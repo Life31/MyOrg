@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Страница задачи{% endblock %}
+{% block header %}Страница задачи{% endblock %}
+{% block content %}
+<main role="main" class="container">
+    <div class="row">
+      <div class="col-md-3 mb-3 mt-1">
+        {% include 'includes/sadec_author_card.html' %}
+      </div>
+      <div class="col-md-9">
+        <div class="card mb-3 mt-1 shadow-sm">
+          {% load thumbnail %}
+          {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+            <img class="card-img" src="{{ im.url }}">
+          {% endthumbnail %}
+          <div class="card-body">
+            <p class="card-text">
+				{% if post.task_state_id == 3 %}
+					{% include "includes/sadec_post_item_for_profile.html" with post=post color="border-success" %}
+				{% elif post.task_state_id == 1 %}
+				  {% include "includes/sadec_post_item_for_profile.html" with post=post color="border-primary" %} 
+				{% else %}
+				  {% include "includes/sadec_post_item_for_profile.html" with post=post color="border-danger" %}
+				{% endif %}
+			</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                  {% if user == post.author %}
+                    <a class="btn btn-sm text-muted" href="{% url 'sadec_post_edit' user.username post.id %}" role="button">
+						Редактировать
+                    </a>
+                  {% endif %}
+              </div>
+              <small class="text-muted">Дата начала: {{ post.pub_date|date:"d M Y" }}</small>
+              <small class="text-muted">Дней в работе: {{ in_progres }}</small>
+              <small class="text-muted">Дата завершения: {{ post.end_date|date:"d M Y" }}</small>
+            </div>
+          </div>
+        </div>
+        {% include "includes/sadec_comments.html" with task=post %}
+      </div>
+    </div>
+</main>
+{% endblock %}

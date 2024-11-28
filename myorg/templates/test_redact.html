@@ -1,0 +1,114 @@
+<style>
+    
+    .box {
+        display: flex; flex-direction: row; justify-content: center; align-items: center; width: 40px; margin: 10px; 
+        padding:10px; background: white; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2); 
+        cursor: pointer;
+    }
+    .ques {
+        display: flex; flex-direction: row; justify-content: center; align-items: center; width: 1180px; margin: 5px;
+        background: white; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2); padding: 10px;
+        cursor: pointer; 
+    }
+    .ball {
+        background: rgb(165, 167, 166); border-radius: 50%; width: 20px; height: 20px;
+        display: flex; flex-direction: row; justify-content: center; align-items: center;
+    }
+    .ball_in {
+        background: rgb(165, 167, 166); border-radius: 50%; width: 10px; height: 10px;
+    }  
+</style>
+
+{% extends "base.html" %}
+{% load cache %}
+{% load user_filters %}
+{% block title %}Тест{% endblock %}
+{% block header %}
+<div style="display: flex; flex-direction: row; justify-content: left; align-items: center; width: 130%;">
+    <a style="color: black;">Тест "{{test_name}}"</a>
+</div>
+    
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_tests.html' %}
+{% endblock %}
+{% load static %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; justify-content: left; align-items: left; padding:10px; width: 130%;">
+    <div class="ques" style="display: flex; flex-direction: row; justify-content: left; align-items: center; background: transparent; width: 1180px;">
+        <div style="justify-content: left; background: transparent; width: 180px; margin-left: 5px;">Вопрос</div>
+        <div style="justify-content: left; background: transparent; width: 180px; margin-left: 21px;">Правильный ответ</div>
+        <div style="justify-content: left; background: transparent; width: 180px; margin-left: 21px;">Ответ 2</div>
+        <div style="justify-content: left; background: transparent; width: 180px; margin-left: 21px;">Ответ 3</div>
+        <div style="justify-content: left; background: transparent; width: 180px; margin-left: 21px;">Ответ 4</div>
+    </div>
+    <form method='post' enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="ques" style="display: flex; flex-direction: row; justify-content: left; align-items: center; display: none;">
+            {% for field in form %}
+                <div style="width: 300px;"> {{ field|addclass:"form-control" }}</div>
+            {% endfor %}
+            <button id="subm" type="submit" class="btn sib" style="width: 160px;">изменить</button>
+        </div> 
+    </form>
+
+    {% for q in questions %}
+    <div class="ques" style="display: flex; flex-direction: row; justify-content: left; align-items: center; padding: 5px;">
+        
+        <div style="justify-content: left; width: 300px;">
+            <textarea name="{{q.id}}" cols="20" rows="1">{{q.quest}}</textarea>
+        </div>
+        <div style="justify-content: left; width: 300px;">
+            <textarea name="{{q.id}}" cols="20" rows="1">{{q.right_unswer}}</textarea>
+        </div>
+        <div style="justify-content: left; width: 300px;">
+            <textarea name="{{q.id}}" cols="20" rows="1">{{q.unswer_2}}</textarea>
+        </div>
+        <div style="justify-content: left; width: 300px;">
+            <textarea name="{{q.id}}" cols="20" rows="1">{{q.unswer_3}}</textarea>
+        </div>
+        <div style="justify-content: left; width: 300px;">
+            <textarea name="{{q.id}}" cols="20" rows="1">{{q.unswer_4}}</textarea>
+        </div>
+        <div style="justify-content: left; width: 300px; display: none;">
+            <textarea name="{{q.id}}" cols="20" rows="1">{{q.test_id}}</textarea>
+        </div>
+        <div style="justify-content: left; width: 300px; display: none;">
+            <textarea name="{{q.id}}" cols="20" rows="1">{{q.same_id}}</textarea>
+        </div>
+        <a class="btn sib" name="{{q.id}}" onclick="btnClick(this)" style="width: 180px; background: rgb(160, 220, 236); margin-left: 10px; color: black;" href="#">Изменить</a>
+    </div>
+    {% endfor %}
+</div>
+<script>
+
+    function btnClick(obj) {
+
+        let data = document.getElementsByName(obj.name)
+
+        let quest = document.getElementById("id_quest");
+        quest.textContent = data[0].value;
+
+        let right_unswer = document.getElementById("id_right_unswer");
+        right_unswer.textContent = data[1].value;
+
+        let unswer_2 = document.getElementById("id_unswer_2");
+        unswer_2.textContent = data[2].value;
+
+        let unswer_3 = document.getElementById("id_unswer_3");
+        unswer_3.textContent = data[3].value;
+
+        let unswer_4 = document.getElementById("id_unswer_4");
+        unswer_4.textContent = data[4].value;
+
+        let test = document.getElementById("id_test");
+        test.textContent = data[5].value;
+
+        let same_id = document.getElementById("id_same_id");
+        same_id.textContent = obj.name;
+
+        document.getElementById("subm").click();
+    }
+</script>
+{% endblock %} 

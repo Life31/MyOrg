@@ -1,0 +1,74 @@
+{% load static %}
+{% load user_filters %}
+<style type="text/css"> 
+	h4 {
+		color:black;
+		margin-top: 8px;
+		color: #808080;
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 18px;
+		line-height: 22px;
+		text-align: left;
+	}
+	.sib {
+		width: 118px;
+		height: 37px auto;
+		display: flex; flex-direction: row; justify-content: center; align-items: center;
+		margin: 2px;
+		border: 3px solid white;
+		border-radius: 10px;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 22px;
+	}
+	.sib:hover {
+		transition: 0.4s;
+		background: #3b3b3a;
+		border: 3px solid white;
+		color: white;
+	}
+	.btn-group-vertical {
+	margin: 2px auto;
+	}
+</style>
+{% with request.resolver_match.view_name as view_name %}
+
+	<aside class="aside" style="margin: 4px; border-radius: 10px;">
+		<h4>Назначенные доски</h4>
+        {% if user.is_authenticated %}						
+			{% for bord in all_bords%}
+				{% if request.user.id in bord.guests|str_to_arr %}
+					<a class="btn sib" style="width: 240px;" href="{% url 'task_all' bord.id  %}">
+						{{bord.name}}
+						{% if bord.id in new_tasks_sorted_by_bords.keys %}
+						<span style="color: red;">(+{{new_tasks_sorted_by_bords|get_value_from_dict:bord.id}})</span>
+						{% endif %}
+					</a>
+					
+				{% endif %}
+				
+			{% endfor %}
+        {% endif %}
+		<h4>Мои доски</h4>	
+		{% for bord in user_bords%}
+			{% if bord.user_id == request.user.id %}
+			<a class="btn sib user_b" id="{{bord.id}}" style="width: 240px;" href="{% url 'task_all' bord.id %}">
+				{{bord.name}}
+				{% if bord.id in new_tasks_sorted_by_bords.keys %}
+				<span style="color: red;">(+{{new_tasks_sorted_by_bords|get_value_from_dict:bord.id}})</span>
+				{% endif %}
+			</a>
+			{% endif %}
+		{% endfor %}
+		<h4>Опции</h4>	
+		<a class="btn sib" style="width: 240px;" href="{% url 'bord_new' %}">Добавить доску</a>
+    </aside>
+{% endwith %}
+
+
+

@@ -1,0 +1,58 @@
+<style type="text/css"> 
+    .log {
+	border-collapse: separate;
+	border-spacing: 2px 1px;
+    }
+    .log th {
+	text-align: center;
+	background:rgb(164, 214, 243);
+    font-weight: bold;
+	padding: 0px 10px 0px 10px;
+	margin: auto;
+    }
+    .log td {
+	text-align: center;
+
+	padding: 0px 10px 0px 10px;
+	margin: auto;
+    }
+</style>
+
+{% extends "base.html" %}
+{% load cache %}
+{% block title %}Журнал пользователя{% endblock %}
+{% block header %}<a style="color: rgb(74, 177, 236); font-weight: bold; text-align: left;">Журнал пользователя</a>{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_users.html' %}
+{% endblock %}
+{% load thumbnail %}
+{% load static %}
+{% block content %}  
+    <table class="log" border="0" style="width:120%;">
+        <thead>
+            <tr>
+                <th>Номер</th>
+                <th>Пользователь</th>
+                <th>Ресурс</th>
+                <th>Дата</th>
+                <th>Событие</th>
+                <th>Дополнительная информация</th>
+                <th>Дополнительная информация</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in page %} 
+                <tr>
+                    <td>{{ log.id }}</td>
+                    <td >{{ log.user }}</td>
+                    <td>{{ log.res }}</td>
+                    <td>{{ log.day|date:"d M Y H:m:s" }}</td>
+                    <td>{{ log.event }}</td>
+                    <td>{{ log.before }}</td>
+                    <td>{{ log.after }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% include "includes/paginator.html" %}
+{% endblock %} 

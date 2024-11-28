@@ -1,0 +1,58 @@
+
+<style>
+	.all_flex {
+		display: flex; flex-direction: row;
+	}
+	.main_text {
+		margin-left: 10px; padding-left: 10px; color: gray; margin-right: 20px; width: 350px auto; line-height: 40px;
+	}
+</style>
+{% load static %}
+{% load user_filters %}
+{% with request.resolver_match.view_name as view_name %}
+<nav class="navbar navbar-expand-md" style="font-weight: bold; background: #E6E6E6;">
+	<div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+		<img style="height: 45px; margin-left: 30px; margin-right: 100px;" src={% static "logo_ya.png" %}>
+		<ul class="navbar-nav mr-auto">
+			{% if page_name %}
+				<div class="all_flex">
+					<div class="main_text all_flex" style="font-size: 40px;">
+						{{page_name}}
+					</div>
+				</div>
+
+			{% elif request.resolver_match.url_name == "user_space" %}
+			<div class="all_flex">
+				<div class="main_text all_flex" style="font-size: 40px;">Личный кабинет</div>
+				<div class="all_flex main_btn" onclick="OpenAllCard(this)">
+					<img class="img_for_btn" 
+					
+					style="margin: 0px;"
+					src={% static "size_up.png" %}>
+				</div>
+				<div class="all_flex main_btn btn_off" onclick="CloseAllCard(this)">
+					<img class="img_for_btn"
+					
+					style="margin: 0px;"
+					src={% static "size_down.png" %}>
+				</div>
+				{% include 'user_space/dropdown.html' %}
+			</div>
+			{% endif %}
+		</ul>
+	</div>
+
+	<div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+		<ul class="navbar-nav ml-auto">
+			{% if user.is_authenticated %}
+				<li><a  id="username" class="p-2" style="color:rgb(74, 177, 236);" href="{% url 'user_space' user.id %}">{{ user.username }}</a></li> | 
+				<li><a  class="p-2" style="color: black;" href="{% url 'password_change' %}">Изменить пароль</a></li> | 
+				<li><a  class="p-2" style="color: black;" href="{% url 'logout' %}">Выйти</a></li>	
+			{% else %}
+				<li><a class="p-2" style="color: black;" href="{% url 'login' %}">Войти</a></li> | 
+				<li><a class="p-2" style="color: black;" href="{% url 'signup' %}">Регистрация</a></li>
+			{% endif %}
+		</ul>
+	</div>
+</nav>
+{% endwith %}

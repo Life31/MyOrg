@@ -1,0 +1,438 @@
+<style type="text/css"> 
+    .param {
+		border-radius: 10px; background: rgb(241, 145, 145); margin: 1px; padding: 1px; width: 250px; border: 2px solid black;
+    }
+	.for_param {
+		display: flex; flex-direction: row; margin-bottom: 1px;
+	}
+	.column {
+		display: flex; flex-direction: column; margin-bottom: 5px;
+	}
+	.value {
+		border-radius: 10px; background: white; margin: 1px; padding: 1px; width: 100px; border: 2px solid black;
+    }
+	.match {
+		border-radius: 10px;
+		text-align: center;
+		background: rgb(117, 231, 136);
+		margin: 1px; padding: 1px;
+		width: 200px;
+    }
+	.full {
+		width: 1800px;
+		display: flex; flex-direction: row;
+		
+	}
+	.lol{
+		width: 400px; padding: 10px; display: flex; flex-direction: column;
+	}
+</style>
+{% extends "base.html" %}
+{% block title %}Все матчи{% endblock %}
+{% block header %}
+	<a style="font-weight: bold; text-align: left;">Все матчи</a>
+{% endblock %}
+{% load thumbnail %}
+{% load static %}
+{% load user_filters %}
+<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+{% block aside %}
+    
+{% endblock %}
+{% block content %}
+
+	<div class="panel_config" style="width:120%;">
+		<table class="config_units_includes" border="0">
+			
+		</table>
+	</div>
+	{% for match in today_matches %}
+		<button class="accordion" style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+			<div style="width: 1800px;" class="for_param">
+				<div style="width: 200px;" class="match">{{match.date}}</div>
+				<div style="width: 200px;" class="match">{{match.t1}}</div>
+				<div style="width: 200px;" class="match">{{match.t2}}</div>
+				<div style="width: 200px;" class="match">{{match.coef1}}</div>
+				<div style="width: 200px;" class="match">{{match.coef2}}</div>
+				<div style="width: 200px;" class="match">{{match.coef3}}</div>
+				<div style="width: 200px;" class="match">{{match.result}}</div>
+				<div style="width: 200px;" class="match">На Ливерпуль</div>
+				<div style="width: 200px;" class="match">человек - Лестер</div>
+			</div>
+		</button>
+		
+		<div class="panel_config" style="width: 1800px; border-radius: 10px; padding-bottom: 5px; padding-top: 5px; background: white;">
+			<div class="full">
+				<div class="lol">
+					<div class="for_param">
+						<div class="match">Англия Премьер-лига</div>
+					</div>
+					<div class="for_param">
+						<div class="column">
+							<div class="param">Всего матчей:</div>
+							<div class="param">Всего побед:</div>
+							<div class="param">Всего ничьих:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{len_matches}}</div>
+							<div class="value">{{wins_all}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{drows_all}}</div>
+						</div>
+					</div>
+					<div class="for_param">	
+						<div class="column">
+							<div class="param">Равных игр:</div>
+							<div class="param">Равных побед:</div>
+							<div class="param">Равных ничьих:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{same}}</div>
+							<div class="value">{{wins_same|bet:same}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{drows_same|bet:same}}</div>
+						</div>
+					</div>
+
+					<div class="for_param">
+						<div class="column">
+							<div class="param">Неравных игр:</div>
+							<div class="param">Неравных побед:</div>
+							<div class="param">Неравных ничьих:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{not_same}}</div>
+							<div class="value">{{wins_favor|bet:not_same}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{drows_favor|bet:not_same}}</div>
+						</div>
+					</div>
+
+					<div class="for_param">
+						<div class="column">
+							<div class="param">Побед:</div>
+							<div class="param">Побед фаворитов:</div>
+							<div class="param">Побед аутсайдеров:</div>
+							<div class="param">Побед равных:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{wins_all}}</div>
+							<div class="value">{{wins_f|bet:wins_all}}</div>
+							<div class="value">{{wins_l|bet:wins_all}}</div>
+							<div class="value">{{wins_same|bet:wins_all}}</div>
+						</div>				
+					</div>
+					<div class="for_param">
+						<div class="column">
+							<div class="param">0 голов:</div>
+							<div class="param">1 гол:</div>
+							<div class="param">2 гола:</div>
+							<div class="param">3 гола:</div>
+							<div class="param">4 гола:</div>
+							<div class="param">5+ голов:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{zero}}</div>
+							<div class="value">{{one}}</div>
+							<div class="value">{{two}}</div>
+							<div class="value">{{three}}</div>
+							<div class="value">{{four}}</div>
+							<div class="value">{{five_plus}}</div>
+						</div>				
+					</div>
+				</div>
+				<div class="lol">
+					<div class="for_param">
+						<div class="match">{{match.t1}}</div>
+					</div>
+					<div class="for_param">
+						<div class="column">
+							<div class="param">Всего игр:</div>
+							<div class="param">Всего побед:</div>
+							<div class="param">Всего поражений:</div>
+							<div class="param">Всего ничьих:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{match.t1_t_matches}}</div>
+							<div class="value">{{match.t1_t_wins}}</div>
+							<div class="value">{{match.t1_t_loses}}</div>
+							<div class="value">{{match.t1_t_drows}}</div>
+						</div>
+					</div>
+
+					<div class="for_param" {% if match.favorite != 0 %} style="display: none;"{% endif%}>
+						<div class="column">
+							<div class="param">Равных игр:</div>
+							<div class="param">Равных побед:</div>
+							<div class="param">Равных поражений:</div>
+							<div class="param">Равных ничьих:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{match.t1_t_same}}</div>
+							<div class="value">{{match.t1_t_same_vins}}</div>
+							<div class="value">{{match.t1_t_same_loses}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t1_t_same_drows}}</div>
+							
+						</div>
+					</div>
+
+					<div class="for_param" {% if match.favorite == 0 %} style="display: none;"{% endif%}>
+						<div class="column">
+							<div class="param">Неравных игр:</div>
+							<div class="param">Неравных побед:</div>
+							<div class="param">Неравных поражений:</div>
+							<div class="param">Неравных ничьих:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{match.t1_t_not_same}}</div>
+							<div class="value">{{match.t1_t_not_same_vins}}</div>
+							<div class="value">{{match.t1_t_not_same_loses}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t1_t_not_same_drows}}</div>
+						</div>
+						
+					</div>
+					<div class="for_param" {% if match.favorite != 1 %} style="display: none;"{% endif%}>
+						<div class="column">
+							<div class="param">Побед фаворитом:</div>
+							<div class="param">Ничьих фаворитом:</div>
+							<div class="param">Поражений фаворитом:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{match.t1_t_not_same_vins_f}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t1_t_not_same_drows_f}}</div>
+							<div class="value">{{match.t1_t_not_same_loses_f}}</div>
+						</div>
+					</div>
+					<div class="for_param" {% if match.favorite != 2 %} style="display: none;"{% endif%}>
+						<div class="column">
+							<div class="param">Побед аутсайдером:</div>
+							<div class="param">Ничьих аутсайдером:</div>
+							<div class="param">Поражений аутсайдером:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{match.t1_t_not_same_vins_l}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t1_t_not_same_drows_l}}</div>
+							<div class="value">{{match.t1_t_not_same_loses_l}}</div>
+						</div>
+					</div>
+					<div class="for_param">
+						<div class="column">
+							<div class="param">Всего голов (ср. за матч):</div>
+							<div class="param">0 голов:</div>
+							<div class="param">Больше 0 голов:</div>
+							<div class="param">Больше 1 голов:</div>
+							<div class="param">Больше 2 голов:</div>
+							<div class="param">Больше 3 голов:</div>
+						</div>
+						<div class="column">
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t1_t_gols}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t1_t_gols_0}}</div>
+							<div class="value">{{match.t1_t_gols_more_0}}</div>
+							<div class="value">{{match.t1_t_gols_more_1}}</div>
+							<div class="value">{{match.t1_t_gols_more_2}}</div>
+							<div class="value">{{match.t1_t_gols_more_3}}</div>
+							
+						</div>
+					</div>
+				</div>
+				<div class="lol">
+					<div class="for_param">
+						<div class="match">{{match.t2}}</div>
+					</div>
+					<div class="for_param">
+						<div class="column">
+							<div class="param">Всего игр:</div>
+							<div class="param">Всего побед:</div>
+							<div class="param">Всего поражений:</div>
+							<div class="param">Всего ничьих:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{match.t2_t_matches}}</div>
+							<div class="value">{{match.t2_t_wins}}</div>
+							<div class="value">{{match.t2_t_loses}}</div>
+							<div class="value">{{match.t2_t_drows}}</div>
+						</div>
+					</div>
+
+					<div class="for_param" {% if match.favorite != 0 %} style="display: none;"{% endif%}>
+						<div class="column">
+							<div class="param">Равных игр:</div>
+							<div class="param">Равных побед:</div>
+							<div class="param">Равных поражений:</div>
+							<div class="param">Равных ничьих:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{match.t2_t_same}}</div>
+							<div class="value">{{match.t2_t_same_vins}}</div>
+							<div class="value">{{match.t2_t_same_loses}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t2_t_same_drows}}</div>
+							
+						</div>
+					</div>
+					<div class="for_param" {% if match.favorite == 0 %} style="display: none;"{% endif%}>
+						<div class="column">
+							<div class="param">Неравных игр:</div>
+							<div class="param">Неравных побед:</div>
+							<div class="param">Неравных поражений:</div>
+							<div class="param">Неравных ничьих:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{match.t2_t_not_same}}</div>
+							<div class="value">{{match.t2_t_not_same_vins}}</div>
+							<div class="value">{{match.t2_t_not_same_loses}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t2_t_not_same_drows}}</div>
+						</div>	
+					</div>
+					<div class="for_param" {% if match.favorite != 2 %} style="display: none;"{% endif%}>
+						<div class="column">
+							<div class="param">Побед фаворитом:</div>
+							<div class="param">Ничьих фаворитом:</div>
+							<div class="param">Поражений фаворитом:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{match.t2_t_not_same_vins_f}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t2_t_not_same_drows_f}}</div>
+							<div class="value">{{match.t2_t_not_same_loses_f}}</div>
+						</div>
+					</div>
+					<div class="for_param" {% if match.favorite != 1 %} style="display: none;"{% endif%}>
+						<div class="column">
+							<div class="param">Побед аутсайдером:</div>
+							<div class="param">Ничьих аутсайдером:</div>
+							<div class="param">Поражений аутсайдером:</div>
+						</div>
+						<div class="column">
+							<div class="value">{{match.t2_t_not_same_vins_l}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t2_t_not_same_drows_l}}</div>
+							<div class="value">{{match.t2_t_not_same_loses_l}}</div>
+						</div>
+					</div>
+					<div class="for_param">
+						<div class="column">
+							<div class="param">Всего голов (ср. за матч):</div>
+							<div class="param">0 голов:</div>
+							<div class="param">Больше 0 голов:</div>
+							<div class="param">Больше 1 голов:</div>
+							<div class="param">Больше 2 голов:</div>
+							<div class="param">Больше 3 голов:</div>
+						</div>
+						<div class="column">
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t2_t_gols}}</div>
+							<div style="background: rgb(138, 167, 223)" class="value">{{match.t2_t_gols_0}}</div>
+							<div class="value">{{match.t2_t_gols_more_0}}</div>
+							<div class="value">{{match.t2_t_gols_more_1}}</div>
+							<div class="value">{{match.t2_t_gols_more_2}}</div>
+							<div class="value">{{match.t2_t_gols_more_3}}</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="lol">
+					<div class="for_param">
+						<div class="match">Вердикт</div>
+					</div>
+					<div class="for_param">
+						<div class="column">
+							<div class="param">Ничья:</div>
+							<div class="param">Победы первой команды:</div>
+							<div class="param">Победы второй команды:</div>
+							<div class="param">Нулевой исход:</div>
+							<div class="param">Больше 0 голов:</div>
+							<div class="param">Больше 1 гола:</div>
+							<div class="param">Больше 2 голов:</div>
+						</div>
+						<div class="column">
+							{% if match.favorite == 2 %}
+								<div style="background: rgb(138, 167, 223)" class="value">{{match.t1_t_not_same_drows_l|bet_res:match.t2_t_not_same_drows_f}}</div>
+								<div class="value">{{match.t1_t_not_same_vins_l|bet_res:match.t2_t_not_same_loses_f}}</div>
+								<div class="value">{{match.t1_t_not_same_loses_l|bet_res:match.t2_t_not_same_vins_f}}</div>
+
+							{% elif match.favorite == 1 %}
+								<div style="background: rgb(138, 167, 223)" class="value">{{match.t1_t_not_same_drows_f|bet_res:match.t2_t_not_same_drows_l}}</div>
+								<div class="value">{{match.t1_t_not_same_vins_f|bet_res:match.t2_t_not_same_loses_l}}</div>
+								<div class="value">{{match.t1_t_not_same_loses_f|bet_res:match.t2_t_not_same_vins_l}}</div>
+							{% elif match.favorite == 0 %}
+								<div style="background: rgb(138, 167, 223)" class="value">{{match.t1_t_same_drows|bet_res:match.t2_t_same_drows}}</div>
+								<div class="value">{{match.t1_t_same_vins|bet_res:match.t2_t_same_loses}}</div>
+								<div class="value">{{match.t1_t_same_loses|bet_res:match.t2_t_same_vins}}</div>
+							{% endif%}
+							<div class="value">{{match.t1_t_gols_0|bet_res_multiply:match.t2_t_gols_0}}</div>
+							<div class="value">{{match.t1_t_gols_more_0|bet_res:match.t2_t_gols_more_0}}</div>
+							<div class="value">{{match.t1_t_gols_more_0|bet_res_multiply:match.t2_t_gols_more_0}}</div>
+							{% with match.t1_t_gols_more_0|bet_res_multiply:match.t2_t_gols_more_1 as fs  and match.t1_t_gols_more_1|bet_res_multiply:match.t2_t_gols_more_0 as ss%}
+								<div class="value">{{fs|bet_more_res:ss}}</div>
+							{% endwith%}
+						</div>
+					</div>
+				</div>
+			</div>
+			<table class="config_units" border="0" style="width:1000px;">
+				<tr>
+					<th style="text-align:center; background:gray;">Дата</th>
+					<!--th style="text-align:center; background:gray;">Лига</th-->
+					<th style="text-align:center; background:gray;">Команда 1</th>
+					<th style="text-align:center; background:gray;">Команда 2</th>
+					<th style="text-align:center; background:gray;">к 1</th>
+					<th style="text-align:center; background:gray;">к 2</th>
+					<th style="text-align:center; background:gray;">к 3</th>
+		
+				</tr>
+				{% for k, v in sorted_by_coef_diff.items %}
+					{% if match.key == k %}
+						{% for m in v %}
+							<tr>
+								<th style="text-align:center;"><a style="font-weight: bold;">{{ m.date }}</a></th>
+								<!--th style="text-align:center;"><a style="font-weight: bold;">{{ m.ligue }}</a></th-->
+								<th style="text-align:center;"><a style="font-weight: bold;">{{ m.team1 }}</a></th>
+								<th style="text-align:center;"><a style="font-weight: bold;">{{ m.team2 }}</a></th>
+								<th style="text-align:center;"><a style="font-weight: bold;">{{ m.coef1 }}</a></th>
+								<th style="text-align:center;"><a style="font-weight: bold;">{{ m.coef2 }}</a></th>
+								<th style="text-align:center;"><a style="font-weight: bold;">{{ m.coef3 }}</a></th>
+							<tr>
+						{% endfor %}
+					{% endif %}
+				{% endfor %}
+			</table>
+		</div>
+	{% endfor %}
+	<script>
+		var acc = document.getElementsByClassName("accordion");
+		var i;
+
+		for (i = 0; i < acc.length; i++) {
+			acc[i].addEventListener("click", function() {
+				/* Toggle between adding and removing the "active" class,
+				to highlight the button that controls the panel */
+				this.classList.toggle("active");
+
+				/* Toggle between hiding and showing the active panel */
+				var panel = this.nextElementSibling;
+				if (panel.style.display === "block") {
+					panel.style.display = "none";
+				} else {
+					panel.style.display = "block";
+				}
+			});
+		}
+	</script>
+	<!--table class="config_units" border="0" style="width:120%;">
+		<tr>
+			<th style="text-align:center; background:gray;">Дата</th>
+			<th style="text-align:center; background:gray;">Лига</th>
+			<th style="text-align:center; background:gray;">Команда 1</th>
+			<th style="text-align:center; background:gray;">Команда 2</th>
+			<th style="text-align:center; background:gray;">к 1</th>
+			<th style="text-align:center; background:gray;">к 2</th>
+			<th style="text-align:center; background:gray;">к 3</th>
+
+		</tr>
+		{% for match in matches %}
+			<tr>
+				<th style="text-align:center;"><a style="font-weight: bold;">{{ match.date }}</a></th>
+				<th style="text-align:center;"><a style="font-weight: bold;">{{ match.ligue }}</a></th>
+				<th style="text-align:center;"><a style="font-weight: bold;">{{ match.team1 }}</a></th>
+				<th style="text-align:center;"><a style="font-weight: bold;">{{ match.team2 }}</a></th>
+				<th style="text-align:center;"><a style="font-weight: bold;">{{ match.coef1 }}</a></th>
+				<th style="text-align:center;"><a style="font-weight: bold;">{{ match.coef2 }}</a></th>
+				<th style="text-align:center;"><a style="font-weight: bold;">{{ match.coef3 }}</a></th>
+			<tr>
+		{% endfor %}
+	</table-->
+{% endblock %} 

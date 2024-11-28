@@ -1,0 +1,50 @@
+<!-- Форма добавления комментария -->
+{% load user_filters %}
+
+{% if user.is_authenticated %}
+<div class="card my-4">
+    <form method="post" action="{% url 'sadec_add_comment' task.author.username task.id %}">
+        {% csrf_token %}
+        <h5 class="card-header">Добавить комментарий:</h5>
+        <div class="card-body">
+            <div class="form-group">
+                {{ form.text|addclass:"form-control" }}
+            </div>
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </div>
+    </form>
+</div>
+{% endif %}
+<!-- Форма добавления комментария -->
+<div class="card">
+	<div class="h6">
+		<small class="text-muted ml-1">комментарии</small> 
+    </div>
+	{% for item in task.commts.all %}
+		<div class="media card mb-1 mt-1 ml-1 mr-1">
+			<div class="media-body card-body" style="width:100%">
+				<div class="row">
+					<div class="col-md-4">
+						<h5 class="mt-0">
+							<a href="{% url 'sadec_profile' item.author.username %}"
+							   name="comment_{{ item.id }}">
+								{{ item.author.get_full_name }} 
+							</a>
+						</h5>
+					</div>
+					
+				</div>
+				<p>{{ item.text | linebreaksbr }}</p>
+				<div class="d-flex justify-content-between align-items-center">
+					<div>
+						{% if item.author == request.user %}   
+						<a class="btn btn-sm btn-light" href="{% url 'sadec_delete_comment' task.author task.id item.id %}" role="button">Удалить комментарий</a>
+						{% endif %}
+					</div>
+					<div><small class="text-muted">{{ item.created }}</small></div>
+				</div>
+			</div>
+			
+		</div>
+	{% endfor %}
+</div>

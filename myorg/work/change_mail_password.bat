@@ -1,0 +1,2 @@
+python change_mail_password.py new_one_pas_lol
+pause

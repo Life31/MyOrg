@@ -1,0 +1,149 @@
+{% load static %}
+{% load user_filters %}
+{% if user_widgets.notes %}
+<div class="card" id="6" style="display: flex; width: 49px; height: 54px; overflow: hidden;">
+{% else %}<div class="card" id="6" style="display: none;">
+{% endif %}
+	<div class="title" onmouseover="titleonmouseover(this)" onmouseout="titleonmouseout(this)">
+		<div class="off notes widget_place_for_image" {% if user_widgets.notes_open %}name="open"{% else %}name="close"{% endif %}>
+			<img 
+				class="img_for_btn top_left_screen"
+				onclick="closeOpenCard(this)"
+				style="margin: 10px; width: 80%; height: 80%;"
+				title="свернуть / развернуть виджет"
+				src={% static "notes.png" %}
+			>
+		</div>
+		<div style="width:70%; display: none;">
+			<a style="color: rgb(102, 168, 243); text-decoration: none; font-size: 24px;"
+				title="Перейти на полную версию"
+				href="#">
+				Заметки
+			</a>
+		</div>
+		<div style="width: 10%; display: none; margin-left: 15px;">
+			<a style="display: none;" href="{% url 'user_widget_delete' user.id 'notes' %}">
+				<img style="height: 90%; width: 90%;" title="удалить виджет" src={% static "denay.png" %}>
+			</a>
+		</div>
+	</div>
+	<div class="widget_data">
+		<div style="display: flex; flex-direction: column; width: 100%; height: 100%;
+		margin: 2px; justify-content: top; align-items:left; overflow-y: scroll;">
+			{% for note in user_notes %}
+			<div style="margin-top: 0px; margin-left: 2px; width: 99%; height: 15%; cursor: pointer; display: flex; flex-direction: row; background: white;">
+				<div class="note" id="note_{{note.id}}"
+				style="margin-top: 2px; margin-left: 0px; width:90%; border-bottom: 1px solid rgb(177, 172, 172); cursor: pointer;" onclick="redactForm(this)">
+					<div style="text-align: left; font-weight: bold; margin: 0px;">
+						<a class="text_a">{{note}}</a>
+					</div>
+					<div style="text-align: left; color: rgb(177, 172, 172); margin: 0px; font-size: 12px;">
+						<a>{{note.day_update|date:"d M Y"}}</a>
+					</div>
+				</div>
+				<div id="{{note.id}}" style="width: 20px; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid rgb(177, 172, 172);" onclick="deleteNote(this)">
+					<img style="height: 15px;" src={% static "denay.png" %}>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="widget_footer">
+		<a class="btn widg_f_btn" style="width: 100%; border-radius: 8px 8px 18px 18px;" href="#"
+			onclick="openForm(this)">Добавить заметку</a>
+	</div>	
+</div>
+<div id="noteForm" style="position: absolute; display: none; flex-direction: column; background: rgb(235, 236, 240);
+	width: 600px; height: 500px; padding: 5px; margin: 0px; justify-content: right; align-items:center; overflow-y: auto;
+	border: 4px solid gray; border-radius: 12px; z-index: 100; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);">
+		<div style="display: flex; flex-direction: row; justify-content: right; align-items: right; margin: 2px; width: 99%;">
+			<div style="background: white; height: 30px; border-radius: 3px; border: 1px solid green; margin-right: 5px;">
+				<div style="height: 30px; font-size: 18px; cursor: pointer; color: green; margin-left: 5px; margin-right: 5px;">Поделиться</div>
+			</div>
+			<div style="background: white; height: 30px; border-radius: 3px; border: 1px solid red; margin-right: 200px;">
+				<div style="height: 30px; font-size: 18px; cursor: pointer; color: red; margin-left: 5px; margin-right: 5px;">Удалить</div>
+			</div>
+			<div style="background: white; width: 30px; height: 30px; border-radius: 3px; border: 1px solid red;">
+				<div style="transform: rotate(-45deg); width: 30px; height: 30px; font-size: 18px; cursor: pointer; color: red;" onclick="closeForm(this)">+</div>
+			</div>
+		</div>
+		<form method='post' enctype="multipart/form-data" style="width: 99%;">
+			{% csrf_token %}
+
+			<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+				{% for field in form %}
+					<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+						<div style="width: 100%;">{{ field|addclass:"form-control" }}</div>
+					</div>
+				{% endfor %}
+				<button id="subm" class="btn sib" style="width: 160px; margin-top: 2px; display: inline-block;">сохранить</button>
+			</div> 
+		</form>
+	</div>
+<style>
+	.text_a { font-family: Calibri; font-size: 18px; font-weight: 400; line-height: 20px; letter-spacing: 0em; }
+</style>
+
+	
+	
+</div>
+<script>
+	if (window.history.replaceState) {
+			window.history.replaceState(null, null, window.location.href);
+		}
+	task_same_id = document.getElementById("id_same_id");
+	task_same_id.parentElement.parentElement.style.display = 'none';
+	const data= JSON.parse("{{json_data|escapejs}}");
+	function closeForm(obj) {		
+		obj.parentElement.parentElement.parentElement.style.display = "none";
+		//task_name.textContent = "";
+		//task_state.value = "";
+	}
+	function openForm(obj) {
+		let form = document.getElementById('noteForm');
+		form.style.display = 'flex';
+		let text = document.getElementById('id_text');
+		text.style.background = 'rgb(241, 235, 146)';
+		if (form.parentElement.getBoundingClientRect().top > 700) {
+			form.style.top = '-700px';
+		}
+		else if (form.parentElement.getBoundingClientRect().top > 600) {
+			form.style.top = '-430px';
+		}
+		else if (form.parentElement.getBoundingClientRect().top > 400) {
+			form.style.top = '-300px';
+		} else {
+			form.style.top = '100px';
+		}
+		if (form.parentElement.getBoundingClientRect().left > 1200) {
+			form.style.left = '-620px';
+		} else if (form.parentElement.getBoundingClientRect().left > 900) {
+			form.style.left = '-304px';
+		} else if (form.parentElement.getBoundingClientRect().left > 600) {
+			form.style.left = '12px';
+		} else {
+			form.style.left = '328px';
+		}
+	}
+	function redactForm(obj) {
+		id = obj.id.split('_')[1];
+		let text = document.getElementById('id_text');
+		let same_id = document.getElementById('id_same_id');
+		text.style.background = 'rgb(241, 235, 146)';
+		text.value = data[id][0];
+		same_id.value = data[id][1];
+		openForm(obj);
+
+	}
+	function deleteNote(obj) {
+
+		let url = "{% url 'note_delete' 99999 %}";
+		let arrayFromUrl = url.split('/');
+		arrayFromUrl[3] = obj.id
+		var result = confirm('Вы собираетесь удалить заметку?')		
+		if (result) {
+			let new_url = arrayFromUrl.join("/");
+			location.href=new_url;
+		}	
+	}
+</script>

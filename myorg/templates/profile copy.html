@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Заявки сотрудника{% endblock %}
+{% block header %}Заявки сотрудника{% endblock %}
+{% load thumbnail %}
+{% load static %}
+{% block content %}
+	<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+	<div class="container" id="content">
+	  <div class="row">
+		<div class="col-md-3 mb-3 mt-1">
+		  {% include 'includes/author_card.html' %}
+		</div>
+		<div class="col-md-9">
+		  	<div class="container">
+				{% include "includes/head_for_profile.html" %}
+				{% for post in page %}
+					{% if post.task_state_id == 3 %}
+						{% include "includes/post_item_for_profile.html" with post=post color="border-success" %}
+					{% elif post.task_state_id == 1 %}
+						{% include "includes/post_item_for_profile.html" with post=post color="border-primary"%}
+					{% else %}
+						{% include "includes/post_item_for_profile.html" with post=post color="border-danger"%}
+					{% endif %}
+				{% endfor %}
+				{% include "includes/paginator.html" %}
+		 	</div>
+		</div>
+	  </div>
+	</div> 
+{% endblock %} 

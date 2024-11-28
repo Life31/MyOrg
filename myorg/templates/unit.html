@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block title %}{{ unit.name }} {% endblock %}
+{% load user_filters %}
+{% load static %}
+{% block header %}
+	<div style="display: flex; flex-direction: row; justify-content: left; align-items: center;">
+		<a style="color: black;">{{ unit.name }}</a>
+		<button class="btn sib" id="back_history" style="width: 80px; height: 33px; text-align:center;" type="button" onclick=history.back()>назад</button>
+		<a class="btn sib" id="back_url" style="width: 80px; height: 33px; text-align:center;" href="{% url 'main' %}">назад</a>
+		{% if user.username in storage_rights %}
+			<a class="btn sib" style="width: 80px; height: 33px; text-align:center;" href="{% url 'unit_edit' unit.id %}" role="button">править</a>
+			<a class="btn sib" id="{{ unit.id }}" style="width: 80px; height: 33px; text-align:center;" href="#" onclick="unit_del(this)" role="button">удалить</a>
+			<a class="btn sib" style="width: 210px; height: 33px; text-align:center;" href="{% url 'event_new' unit.id %}" role="button">добавить событие</a>
+			<a class="btn sib" style="width: 30px; height: 33px; text-align:center;" href="{% url 'unit_like' unit.id %}" role="button">
+				{% if unit.id in favorit_units_ids %}
+				<img style="height: 20px;" src={% static "green_star.png" %}>
+				{% else %}
+				<img style="height: 25px;" src={% static "star.png" %}>
+				{% endif %}
+			</a>
+		{% endif %}
+	</div>
+{% endblock %}
+
+
+{% block aside %}
+    {% include 'includes/aside_storage.html' %}
+{% endblock %}
+{% block content %}
+	<style type="text/css"> 
+		.log {
+		border-collapse: separate;
+		border-spacing: 2px 1px;
+		}
+		.log th {
+		text-align: center;
+		background:rgb(164, 214, 243);
+		font-weight: bold;
+		padding: 0px 10px 0px 10px;
+		margin: auto;
+		}
+		.log td {
+		text-align: center;
+
+		padding: 0px 10px 0px 10px;
+		margin: auto;
+		}
+		tbody tr:nth-child(odd){
+			background-color: transparent;
+		}
+		tbody tr:nth-child(even){
+			background-color: white;
+		}
+	</style>
+	<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+	{% load thumbnail %}
+	<table class="log" border="0" style="margin-bottom: 20px;">
+		<tr>
+			<td>
+				<table class="log" border="1">
+					<tbody>
+						<tr>
+							<td style="font-weight: bold; text-align: right; width: 250px;"><a>Наименование</a></td>
+							<td style="font-weight: bold; text-align: left; width: 950px;"><a>{{ unit.name }}</a></td>
+						</tr>
+						<tr>
+							<td style="font-weight: bold; text-align: right;"><a>Обозначение</a></td>
+							<td style="font-weight: bold; text-align: right;"><a>{{ unit.code }}</a></td>
+						</tr>
+						<tr>
+							<td style="font-weight: bold; text-align: right;"><a>Производитель</a></td>
+							<td style="font-weight: bold; text-align: right;"><a>{{ unit.creator }}</a></td>
+						</tr>
+						<tr>
+							<td style="font-weight: bold; text-align: right;"><a>Количество</a></td>
+							<td style="font-weight: bold; text-align: right;"><a>{{ unit.num }} {{ unit.si }}</a></td>
+						</tr>
+						<tr>
+							<td style="font-weight: bold; text-align: right;"><a>Стенд</a></td>
+							<td style="font-weight: bold; text-align: right;"><a>{{ unit.stend }}</a></td>
+						</tr>
+						<tr>
+							<td style="font-weight: bold; text-align: right;"><a>Место на складе</a></td>
+							<td style="font-weight: bold; text-align: right;"><a href="{% url 'storage_where' unit.place %}">{{ unit.place }}</a></td>
+						</tr>
+						<tr>
+							<td style="font-weight: bold; text-align: right;"><a>Коробка</a></td>
+							<td style="font-weight: bold; text-align: right;"><a>{{ unit.box }}</a></td>
+						</tr>
+						<tr>
+							<td style="font-weight: bold; text-align: right;"><a>Учетный номер</a></td>
+							<td style="font-weight: bold; text-align: right;"><a>{{ unit.number }}</a></td>
+						</tr>
+						<tr>
+							<td style="font-weight: bold; text-align: right;"><a>комментарий</a></td>
+							<td style="font-weight: bold; text-align: right;"><a>{{ unit.comment }}</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td style="padding: 0px; width: 250px;">
+				{% thumbnail unit.image "900x900" upscale=True as im %}
+					<a href="{{ im.url }}" ><img style="width: 250px; height: 250px;" src="{{ im.url }}"></a>
+				{% endthumbnail %}
+			</td>
+		</tr>
+	</table>
+
+	<table class="log" border="0" style="width:120%;">
+		<thead>
+			<tr>
+				<th>Тип события</th>
+				<th>Номер накладной</th>
+				<th>Дата</th>
+				<th>Количество</th>
+				<th>Комментарий</th>
+				<th>☰</th>
+			</tr>
+		</thead>
+		<tbody>
+
+			{% for event in page %}
+				<tr>
+					<td style="font-weight: bold; text-align: center;"><a>{{ event.event_name }}</a></td>
+					{% if event.th_name_id != None %}
+						{% for th in ths %}
+							{% if th.id == event.th_name_id %}
+								{% if th.th != "" %}
+									<td style="font-weight: bold; text-align: center;"><a href="{% static th.th.url %}">{{ event.th_name }}</a></td>
+								{% else %}
+									<td style="font-weight: bold; text-align: center;"><a>-</a></td>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+					{% else %}
+						<td style="font-weight: bold; text-align: center;"><a>-</a></td>
+					{% endif %}
+					<td style="font-weight: bold; text-align: center;"><a>{{ event.date|date:"d.m.Y" }}</a></td>
+					<td style="font-weight: bold; text-align: center;"><a>{{ event.num }}</a></td>
+					<td style="font-weight: bold; text-align: left;"><a>{{ event.comment }}</a></td>
+					<td style="font-weight: bold; text-align: center;">
+						<div class="dropdown">
+							<div class="btn-sm btn-outline-secondary" style="height: 30px;">☰</div>
+							<div class="dropdown-content">
+								{% if user.username in storage_rights %}
+									<a class="btn btn-sm" href="{% url 'event_edit' event.id unit.id %}" role="button">
+										Править
+									</a>
+									<a class="btn btn-sm" href="{% url 'event_copy' unit.id event.id %}" role="button">
+										Как шаблон
+									</a>
+									<a class="btn btn-sm" href="{% url 'event_delete' unit.id event.id %}" role="button">
+										Удалить
+									</a>
+								{% endif %}
+							</div>
+						</div>	
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	
+    <div style="width:120%; display: flex; flex-direction: row; justify-content: center; align-items: center;">{% include "includes/paginator.html" %}</div>
+	
+	
+	<script>
+		const b_history = document.getElementById("back_history");
+		const b_url = document.getElementById("back_url");
+		if (document.referrer.indexOf("main") != -1) {
+			b_history.hidden = false;
+			b_url.hidden = true;
+		} else {
+			b_history.hidden = true;
+			b_url.hidden = false;
+		}
+
+		function unit_del(obj) {
+			var result = confirm('Подтвердите удаление записи о блоке')
+			let id = obj.id
+			let url = "{% url 'unit_delete' 99999999 %}";
+			let arrayFromUrl = url.split('/');
+			arrayFromUrl[3] = id;
+			let new_url = arrayFromUrl.join("/");
+			if (result) {
+				location.href=new_url;
+			}
+		}
+	</script>
+{% endblock %}

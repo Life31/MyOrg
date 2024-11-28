@@ -1,0 +1,79 @@
+<div class="card mb-1 mt-1 shadow-sm">
+
+    <div class="container mb-1 mt-1">
+		<div class="row">
+			<div class="cal" style="width: 6%" >
+				<a name="post_text" href="{% url 'mfi_type_sort' post.block_types_id%}">
+					<strong class="d-block text-gray-dark">{{ post.block_types }}</strong>
+				</a>
+			</div>
+			<div class="cal" style="width: 10%" >
+				<a class="card-link muted" href="{% url 'mfi' post.id %}">
+					<strong class="d-block text-gray-dark">{{ post.mfi|linebreaksbr }}</strong>
+				</a>
+			</div>
+			<div class="cal" style="width: 10%" >
+				<a name="post_text" href="{% url 'mfi_all'  fltr=0%}">
+					{{ post.mfi_date|date:"d M Y" }}
+				</a>
+			</div>
+			
+			<div class="cal" style="width: 10%" >
+			{% if post.rework != None %}
+				<a class="btn btn-sm btn-success btn-block">{{ post.rework }}</a>			
+			{% else %}
+				<a name="post_text" >-</a>
+			{% endif %}
+			</div>
+			<div class="cal" style="width: 10%" >
+			{% if post.state != None %}
+				<a class="btn btn-sm btn-success btn-block" href="{% url 'mfi_state_sort' post.state_id%}">{{ post.state }}</a>
+			{% else %}
+				<a name="post_text" >-</a>
+			{% endif %}
+			</div>
+			<div class="cal" style="width: 10%" >
+				{% if post.purpose != None %}
+					<a name="post_text" href="{% url 'mfi_purpose_sort' post.purpose_id%}">{{ post.purpose }}</a>
+				{% else %}
+					<a name="post_text" >-</a>
+				{% endif %}
+			</div>
+			<div class="cal" style="width: 10%" >
+				{% if post.base != None %}
+					<a name="post_text" href="{% url 'mfi_all'  fltr=0%}">{{ post.base }}</a>
+				{% else %}
+					<a name="post_text" >-</a>
+				{% endif %}
+			</div>
+			<div class="cal" style="width: 10%" >
+				{% if post.version != None %}
+					<a name="post_text" href="{% url 'mfi_all'  fltr=0%}">{{ post.version }}</a>
+				{% else %}
+					<a name="post_text" >-</a>
+				{% endif %}
+			</div>
+
+			<div class="cal" style="width: 6%" >
+				{% if post.order != None and post.order != ""%}
+					<a name="post_text" href="{% url 'mfi_order_sort' post.order%}">{{ post.order }}</a>
+				{% else %}
+					<a name="post_text" >-</a>
+				{% endif %}
+			</div>
+			<div class="cal" style="width: 10%" >
+				{% if post.is_in != None %}
+					<a class="card-link muted" href="{% url 'mfi' post.is_in.id %}">
+						<strong class="d-block text-gray-dark">{{ post.is_in }}</strong>
+					</a>							
+				{% else %}
+					<a name="post_text" >-</a>
+				{% endif %}
+				
+			</div>
+		</div>
+   </div>
+</div> 
+
+				
+				

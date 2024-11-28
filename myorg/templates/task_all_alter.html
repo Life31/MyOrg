@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %} Товарные накладные {% endblock %}
+{% block header %}
+	
+{% endblock %}
+{% load static %}
+{% load user_filters %}
+{% block aside %}
+    
+{% endblock %}
+{% block content %}
+	<style type="text/css"> 
+		.log {
+		border-collapse: separate;
+		border-spacing: 2px 1px;
+		}
+		.log th {
+		text-align: center;
+		background:rgb(164, 214, 243);
+		font-weight: bold;
+		padding: 0px 10px 0px 10px;
+		margin: auto;
+		}
+		.log td {
+		text-align: center;
+
+		padding: 0px 10px 0px 10px;
+		margin: auto;
+		}
+		tbody tr:nth-child(odd){
+			background-color: transparent;
+		}
+		tbody tr:nth-child(even){
+			background-color: white;
+		}
+	</style>
+	
+	<div style="display: flex; flex-direction: row; border: 0px solid black;">
+	{%for day in days_in_month %}
+		<div style="display: block; margin: 0px; width: {{width}}%;  border: 1px solid black; color:black;">
+		 	{{day}}
+		</div>
+	{% endfor %}
+	</div>
+	{%for key, value in line_tasks.items %}
+		<div style="display: flex; flex-direction: row; border: 1px solid black;">
+
+			<div style="border: 1px solid black; border-radius: 5px; margin: 0px;  margin-left: {{value.left}}%; width: {{value.range}}%; background: linear-gradient(to right, rgb(150, 238, 150) {{value.task.persent}}%, white {{value.task.persent}}% 100%);">
+				{{value.task.text}}
+			</div>
+		</div>
+	{% endfor %}
+
+{% endblock %}

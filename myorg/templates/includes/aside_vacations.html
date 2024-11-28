@@ -1,0 +1,111 @@
+<style type="text/css"> 
+	h4 {
+		margin-top: 8px;
+		color: #808080;
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 18px;
+		line-height: 22px;
+		text-align: left;
+	}
+	.sib {
+		width: 118px;
+		height: 37px;
+		display: flex; flex-direction: row; justify-content: center; align-items: center;
+		margin: 2px;
+		border: 3px solid white;
+		border-radius: 10px;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 22px;
+	}
+	.sib:hover {
+		transition: 0.4s;
+		background: #3b3b3a;
+		border: 3px solid white;
+		color: white;
+	}
+	.btn-group-vertical {
+	margin: 2px auto;
+	}
+	.circle {background: #01A86B; width: 15px; height: 15px; border-radius: 50%; margin-right: 15px; margin-top: 4px; margin-left: 5px;}
+</style>
+
+{% load static %}
+{% load user_filters %}
+{% with request.resolver_match.view_name as view_name %}
+	<aside class="aside" style="margin: 4px; border-radius: 10px;">
+        {% if user.is_authenticated %}
+		{% with request.get_full_path|url_to_btn as btn %}
+		
+		
+		<h4>Мое подразделение</h4>
+		<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+			<a class="btn sib" style="width: 240px; background: rgb(109, 200, 228);" href="{% url 'vac_2' year otd %}">Отпуск +</a>
+			{% if otd == btn %}
+				<a class="btn sib" style="width: 240px; background: rgb(109, 200, 228);" href="{% url 'vacations' year otd %}">Отдел {{otd}}</a>
+			{% else %}
+				<a class="btn sib" style="width: 240px;" href="{% url 'vacations' year otd %}">Отдел {{otd}}</a>
+			{% endif %}
+			
+		</div>
+		<h4>Доступны для просмотра</h4>	
+		<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+			
+			{% for key, value in bosses.items %}
+				{% if user.get_full_name == key %}
+					{% for nubmer in value %}
+						{% if nubmer == btn %}
+							<a class="btn sib" style="width: 240px; background: rgb(109, 200, 228);" href="{% url 'vacations' year nubmer %}">Отдел {{nubmer}}</a>
+						{% else %}
+							<a class="btn sib" style="width: 240px;" href="{% url 'vacations' year nubmer %}">Отдел {{nubmer}}</a>
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			{% endfor %}
+		</div>
+		{% endwith %}	
+        {% endif %}
+		{% if view_name != 'vacations_start' %}
+			{% if view_name != 'vacations_by_user' %}
+				<h4 style="margin-top: 28px;">Сотрудники</h4>
+				<div class="btn-group-vertical">
+					{% for key, value in user_colors.items %}
+						
+						<a class="btn sib vac_u" style="width: 240px; display: flex; flex-direction: row; justify-content: left; align-items: center;" onclick="showUser(this)">
+							<div class="circle" style="background: {{value}};"></div>
+							{{key}}
+						</a>
+					{% endfor %}
+					<a class="btn sib vac_u" style="width: 240px; display: flex; flex-direction: row; justify-content: center; align-items: center;" onclick="showAll(this)">
+						<div class="circle" style="background: {{value}}; display: none;"></div>
+						Все
+					</a>
+
+				</div>
+			{% endif %}
+			
+			<h4>Функционал</h4>
+			<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+				<!--a class="btn sib" style="width: 240px; color: black" href="{% url 'vacation_new' year otd %}">добавить отпуск</a-->
+				<!--a class="btn sib" style="width: 240px; color: black" href="{% url 'vacations_by_user' year otd %}">редактировать отпуск</a-->
+				<a class="btn sib" style="width: 240px; color: black" href="#">сформировать отчет</a>
+			</div>
+			<h4>Отчет</h4>
+			<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+				{% if pdf|file_exists %}
+				<a class="btn sib" style="width: 240px; color: black" href="{% static pdf %}">Отчет от {{pdf|file_time}} </a>
+				{% endif %}
+			</div>
+			
+			
+		{% endif %}
+    </aside>
+{% endwith %}
+
+
+

@@ -1,0 +1,567 @@
+{% extends "base.html" %}
+{% load cache %}
+{% load static %}
+{% block title %}Задачи{% endblock %}
+{% block header %}
+	<style>
+		.flex_row_c_c { display: flex; flex-direction: row; justify-content: center; align-items: center; }
+		.flex_row_l_c { display: flex; flex-direction: row; justify-content: left; align-items: center; }
+		.flex_row_l_l { display: flex; flex-direction: row; justify-content: left; align-items: left; }
+		.flex_column_c_l { display: flex; flex-direction: column; justify-content: center; align-items: left; }
+		.div_for_controls {
+			margin: 5px; padding: 2px; border-radius: 10px; height: 35px; background: rgb(235, 236, 240); box-shadow:0 1px 0 rgba(9, 30, 66, 0.25);
+		}
+		.div_header { margin-left: -30px; margin-top: -10px; width: 1600px; padding-left: 10px; }
+		.div_owner {
+			font-size: small; margin: 3px; color: black; background: skyblue;
+			border-radius: 3px; padding-left: 3px; padding-right: 3px; cursor: pointer;
+		}
+		.div_plus {
+			height: 20px; width: 20px; border-radius: 4px; margin: 2px;
+			border: 1px solid rgb(193, 194, 197); background-color:rgb(235, 236, 240);
+		}
+		.circle, .circle_trans {background: #01A86B; width: 15px; height: 15px; border-radius: 50%; margin-right: 15px; margin-top: 4px; margin-left: 5px;}
+		.circle_trans {background: transparent;}
+	</style>
+	<div class="div_header flex_column_c_l">
+		<div class="flex_row_l_c">
+			<img style="height: 30px; margin-left: 10px; margin-right: 8px;" src={% static "trello.png" %}>
+			<a style="color: black; margin-right: 10px;">{{bord.name}}</a>
+			<div class="div_for_controls flex_row_c_c">
+				<!--a style="color: rgb(87, 197, 240); margin-right: 10px; font-size: 12px;" href="{% url 'task_all_alter' bord_id %}">альтернативное представление</a-->
+				<a class="no_click" style="color: #808080; margin: 10px; font-size: 12px;" href="#" onclick="showBaseData(this)">развернуть</a>
+				{% if request.user.id == bord.user_id %}
+					<a class="no_click" style="color: #808080; font-size: 12px; margin: 10px;" href="{% url 'bord_delete' bord_id %}">удалить доску</a>
+					<a class="no_click" style="color: #808080; font-size: 12px; margin: 10px;" href="{% url 'bord_rename' bord_id %}">переименовать доску</a>
+				{% endif %}
+			</div>
+		</div>
+		<div class="flex_row_l_l" style="flex-wrap: wrap; height: 15px auto; margin-top: 4px;">
+			<div name="user_on_bord" title="Владелец доски" id="{{bord_owner.id}}" class="div_owner" onclick="filtrByUser(this)">{{bord_owner.get_full_name}}</div>
+			{% for u in users_on_bord %}
+				<div class="dropdown" style="display: block; padding: 1px;">
+					<div name="user_on_bord" id="{{u.id}}" onclick="filtrByUser(this)" 
+					style="font-size: small; margin: 3px; color: black; background: salmon; border-radius: 3px; padding-left: 3px; padding-right: 3px; cursor: pointer;">{{u.get_full_name}}</div>
+					<div class="dropdown-content" style="max-height: 260px; overflow: auto;">
+						{% if request.user.id == bord.user_id %}
+							<a href="#" role="button" style="border-radius: 4px; font-size: small;">Выдать права</a>
+							<a href="{% url 'bord_leave' bord_id u.id %}" role="button" style="border-radius: 4px; font-size: small;">Удалить</a>
+						{% endif %}
+					</div>
+				</div>
+			{% endfor %}
+			{% if request.user.id == bord.user_id %}
+				
+				<div class="dropdown" style="display: block;">
+					<div class="div_plus flex_row_c_c">
+						<a style="font-size: 12px; text-decoration: none; cursor: pointer; font-weight: bold; color: black;">+</a>
+					</div>
+					<div class="dropdown-content" style="max-height: 260px; overflow: auto;">
+						{% for u in all_users %}
+							{% if u not in users_on_bord and u != bord_owner %}
+								<a href="{% url 'bord_invite' bord_id u.id %}" role="button" style="border-radius: 4px; font-size: small;">{{u.get_full_name}}</a>
+							{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+			{% endif %}
+			
+		</div>
+		<div style="display: flex; flex-direction: row;">
+			<div id="filtr_by_user" style="display: none; flex-direction: row; justify-content: left; align-items: center; font-family: 'Calibri'; padding-left: 2px;
+			font-style: normal; font-weight: 400; line-height: 22px; font-size: 18px; color: #808080;">
+				параметры фильтрации: 
+			</div>
+
+			<div id="clear_filtr_by_user"  onclick="clearFiltrByUser()" 
+			style="display: none; font-size: small; margin: 3px; color: red; padding: 1px; cursor: pointer;">
+				Сбросить фильтр
+			</div>
+		</div>
+
+	</div>
+	
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_tasks.html' %}
+{% endblock %}
+{% load thumbnail %}
+{% load user_filters %}
+{% block content %}
+	
+	<style>
+		.bord {
+			display: flex; flex-direction: row; padding: 6px; width: 1600px; cursor: pointer;
+			overflow-y: scroll; overflow-x: hidden; margin-left: -30px; margin-top: -8px; height: calc(100vh - 170px); /* необходимо динамеческое вычисление при фильтрации страницы*/
+		}
+		.card {
+			display: inline-table; margin: 5px; padding-left: 6px; width: 280px; height: 80px; background-color:rgb(235, 236, 240); border-radius: 12px;
+		}
+		.task {
+			margin-bottom: 8px; padding: 6px; text-align: left; width: 274px; background: linear-gradient(to right, rgb(150, 238, 150) 5%, white 5% 100% ); border-radius: 10px; cursor: pointer;
+			box-shadow:0 1px 0 rgba(9, 30, 66, 0.25);
+			font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Noto Sans,Ubuntu,Droid Sans,Helvetica Neue,sans-serif;
+    		font-size: 14px;
+		}
+
+	</style>
+	<div class="bord">
+		{% for card in cards%}
+			<div class="card" id="{{card.id}}" name="{{card.name}}">
+				<div style="display: flex; flex-direction: row;">
+					<div style="padding: 6px; font-weight: bold; text-align: left; width: 240px;">
+						<a style="font-family: 'Calibri'; font-style: normal; font-weight: 700; font-size: 18px; line-height: 22px;">{{card.name}}</a>
+					</div>
+					
+					<div class="dropdown" style="display: block;">
+						<div style="padding: 6px; font-weight: bold; text-align: center; width: 40px;"><a style="color: #808080;">...</a></div>
+						<div class="dropdown-content">
+							{% if request.user.id == bord.user_id %}
+								<a href="{% url 'card_delete' bord_id card.id %}" role="button" style="border-radius: 4px;">Удалить</a>
+								<a href="{% url 'card_rename' bord_id card.id %}" role="button" style="border-radius: 4px;">Переименовать</a>
+							{% endif %}
+							<!--a href="#" role="button" style="border-radius: 4px;">Копировать</a-->
+							<a class="no_click" href="#" role="button" style="border-radius: 4px;" onclick="showCardResults(this)">Развернуть<br>все задачи</a>
+						</div>
+					</div>
+				</div>
+
+				{% for key, value in cards_tasks.items %}
+					{% if key == card.id %}
+					{% for val in value %}
+						<div class="task" id="{{val.id}}" name="{{val.slave.get_full_name}}" 
+						{% if val.state_id == 3 %} style="background: rgb(109, 108, 108); color: white;"
+						{% else %}style="background: linear-gradient(to right, rgb(150, 238, 150) {{val.persent}}%, white {{val.persent}}% 100%); {% if val.new %} border: 2px solid red;{% endif %}"
+						{% endif %}>
+							<div style="font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px; line-height: 22px; max-height: 150px; overflow-y: auto;">{{val.text}}</div>
+							{% if val.bord_link_id %}
+								<a style="border-radius: 5px;  background: rgb(135, 220, 235); font-size: 12px; padding: 2px; margin-left: 2px; color: white"
+								href="{% url 'task_all' val.bord_link_id %}">К задаче</a>
+							{% endif %}
+							{% thumbnail val.image "900x900" upscale=True as im %}
+								<a href="{{ im.url }}" ><img style="width: 250px; height: 250px;" src="{{ im.url }}"></a>
+							{% endthumbnail %}
+							<div class="base_data" style="display: none; flex-direction: row; width: 100%; align-items: right; justify-content: right; margin: 1px;">
+								<div style="display: flex; flex-direction: row; align-items: center; justify-content: right; flex-wrap: wrap;">
+									{% if val.day_start or val.day_end %}
+									<a style="border-radius: 5px; background: skyblue; font-size: 12px; padding: 2px;">{{val.day_start|date:"d M Y"}} - {{val.day_end|date:"d M Y"}}</a>
+									{% endif %}
+									{% if val.file %}
+									<div class="dropdown" style="display: block; margin: 1px;">
+										<a style="border-radius: 5px; padding: 6px; margin-left: 2px;" href="{% static val.file.url %}">
+											<img style="height: 15px; margin: 1px auto;" src={% static "file.png" %}>
+										</a>
+									</div>
+									{% endif %}
+									<div class="dropdown" style="display: block; margin: 1px;">
+										<a style="border-radius: 5px;  background: skyblue; font-size: 12px; padding: 2px; margin-left: 2px;">{{val.master.get_full_name}}</a>
+										<a style="border-radius: 5px;  background: skyblue; font-size: 12px; padding: 2px; margin-left: 2px;">{{val.slave.get_full_name}}</a>
+										<div class="dropdown-content" style="max-height: 260px; overflow: auto;">
+											<a href="{% url 'task_slave_change' bord_id val.id bord_owner.id %}" role="button" style="border-radius: 4px; font-size: small;">{{bord_owner.get_full_name}}</a>
+											{% for u in users_on_bord %}
+												<a href="{% url 'task_slave_change' bord_id val.id u.id %}" role="button" style="border-radius: 4px; font-size: small;">{{u.get_full_name}}</a>
+											{% endfor %}
+										</div>
+									</div>
+									<div class="dropdown" style="display: block; margin: 1px; ">
+										<a style="border-radius: 5px;  background: rgb(190, 189, 189); font-size: 12px; padding: 2px;">Выполнено {{val.persent}}%</a>
+										<div class="dropdown-content" style="max-height: 260px; overflow: auto; min-width: 30px; right: 0px; left: 60px;">
+											<a href="{% url 'task_persent_change' bord_id val.id 10 %}" role="button" style="border-radius: 4px; font-size: small; width: 30px;">10</a>
+											<a href="{% url 'task_persent_change' bord_id val.id 20 %}" role="button" style="border-radius: 4px; font-size: small; width: 30px;">20</a>
+											<a href="{% url 'task_persent_change' bord_id val.id 30 %}" role="button" style="border-radius: 4px; font-size: small; width: 30px;">30</a>
+											<a href="{% url 'task_persent_change' bord_id val.id 40 %}" role="button" style="border-radius: 4px; font-size: small; width: 30px;">40</a>
+											<a href="{% url 'task_persent_change' bord_id val.id 50 %}" role="button" style="border-radius: 4px; font-size: small; width: 30px;">50</a>
+											<a href="{% url 'task_persent_change' bord_id val.id 60 %}" role="button" style="border-radius: 4px; font-size: small; width: 30px;">60</a>
+											<a href="{% url 'task_persent_change' bord_id val.id 70 %}" role="button" style="border-radius: 4px; font-size: small; width: 30px;">70</a>
+											<a href="{% url 'task_persent_change' bord_id val.id 80 %}" role="button" style="border-radius: 4px; font-size: small; width: 30px;">80</a>
+											<a href="{% url 'task_persent_change' bord_id val.id 90 %}" role="button" style="border-radius: 4px; font-size: small; width: 30px;">90</a>
+											<a href="{% url 'task_persent_change' bord_id val.id 100 %}" role="button" style="border-radius: 4px; font-size: small; width: 30px;">100</a>
+										</div>
+									</div>									
+									<div class="dropdown" style="display: block; margin: 1px;">
+										<a style="border-radius: 5px;  background: rgb(190, 189, 189); font-size: 12px; padding: 3px;">{{val.state}}</a>
+										<div class="dropdown-content" style="max-height: 260px; overflow: auto; min-width: 100px; right: 0px; left: 40px;">
+											<a href="{% url 'task_state_change' bord_id val.id 1 %}" role="button" style="border-radius: 4px; font-size: small; width: 100px;">Новая</a>
+											<a href="{% url 'task_state_change' bord_id val.id 2 %}" role="button" style="border-radius: 4px; font-size: small; width: 100px;">В работе</a>
+											<a href="{% url 'task_state_change' bord_id val.id 3 %}" role="button" style="border-radius: 4px; font-size: small; width: 100px;">Завершена</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							{% if val.result %}
+							<div class="base_data" style="display: none; background: rgb(243, 223, 109); align-items: center; justify-content: left; margin-top: 6px; padding: 4px; border-radius: 10px;">
+								<a style="font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px; line-height: 22px; color:black;">
+									Результат:<br>{{val.result}}
+								</a>
+							</div>
+							{% endif %}
+							{% if val.day_real_end %}
+								{% if val.day_end < val.day_real_end %}
+								<a style="border-radius: 5px; color: rgb(241, 104, 104); font-size: 12px; padding: 2px;"><br>{{val.day_real_end|date:"d M Y"}}</a>
+								<a style="border-radius: 5px; color: rgb(241, 104, 104); font-size: 12px; padding: 2px;">Просрочена на {{val.day_real_end|date_minus_date:val.day_end}}</a>
+								{% else %}
+								<a style="border-radius: 5px; color: rgb(30, 219, 61); font-size: 12px; padding: 2px;"><br>{{val.day_real_end|date:"d M Y"}}<br></a>
+								{% endif %}
+							{% endif %}
+							<a class="redact" style="display: none; width: 130px; border-radius: 5px; color: rgb(87, 197, 240); font-size: 12px; padding: 2px;" onclick="show_task(this)">
+								Редактировать
+							</a>
+							{% if request.user.id == bord.user_id or request.user.id == val.master_id %}
+								<a class="del" onclick="task_del(this)" id="{{bord.id}}_{{val.id}}" href="#" style="display: none; text-align: right; width: 127px; border-radius: 5px; color: rgb(241, 104, 104); font-size: 12px; padding: 2px;">
+									Удалить
+								</a>
+							{% endif %}
+						</div>
+					{% endfor %}
+					{% endif %}
+				{% endfor %}
+				
+				<div style="display: flex; flex-direction: row;">
+					<div style="padding: 6px; text-align: left; width: 240px;"><a style="color: #808080; text-decoration: none;" href="#" onclick="new_task(this)">+ Добавить задачу</a></div>
+					<div style="padding: 6px; text-align: center; width: 40px; color:#808080;"><a>*</a></div>
+				</div>
+			</div>
+		{% endfor %}
+		{% if request.user.id == bord.user_id %}
+		<div style="display: flex; justify-content: center; align-items: center; height: 35px; width: 35px; border-radius: 8px; margin: 5px;
+			border: 1px solid rgb(193, 194, 197); background-color:rgb(235, 236, 240);">
+			<a style="height: 35px; width: 35px; font-size: 22px; text-decoration: none; cursor: pointer; font-weight: bold; color: black;" href="{% url 'card_new' bord_id %}">+</a>
+		</div>
+		{% endif %}
+	</div>
+	<div class="show_task" style="overflow-y: auto; display: none; background-color:rgb(235, 236, 240); width: 500px; height: 800px; position: absolute; left: 800px; top: 200px; border-radius: 20px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);">
+		<div style="display: flex; flex-direction: row; justify-content: right; align-items: right; margin: 10px;">
+			<div style="background: white; width: 30px; height: 30px; border-radius: 3px;">
+				<div style="transform: rotate(-45deg); width: 30px; height: 30px; font-size: 18px; cursor: pointer;" onclick="closeForm(this)">+</div>
+			</div>
+		</div>
+		<form method='post' enctype="multipart/form-data">
+			{% csrf_token %}
+			<div class="ques" style="display: flex; flex-direction: column; justify-content: left; align-items: center;">
+				{% for field in form %}
+				<div style="display: flex; flex-direction: row; justify-content: center; align-items: center;" aria-required={% if field.field.required %}"true"{% else %}"false"{% endif %}>
+					<label style="width: 140px; text-align: right; margin: 10px;" for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="required" style="color: red">*</span>{% endif %}</label>
+					<div style="width: 250px;"> {{ field|addclass:"form-control" }}</div>
+				</div>
+					
+				{% endfor %}
+				<button id="subm" class="btn sib" onclick="show_progress(this)" style="width: 160px; margin-top: 20px;">сохранить</button>
+			</div> 
+		</form>
+	</div>
+
+	
+	
+
+	<script>
+		if (window.history.replaceState) {
+			window.history.replaceState(null, null, window.location.href);
+		}
+		const data= JSON.parse("{{json_data|escapejs}}");
+		const block = document.querySelector('.bord');
+		document.onmousedown = mousemove;
+		document.onmouseup = mouseup;
+
+		function mousemove() {
+			block.addEventListener('mousemove', scroll)
+		}
+
+		function scroll(event) {
+
+			const t = event.currentTarget;
+			const xx = Math.min(1, (event.clientX - 400) / t.clientWidth);
+			block.scrollLeft = (t.scrollWidth - t.clientWidth + 600) * xx;
+			clearSelection();
+
+		}
+		function mouseup(){
+			block.removeEventListener('mousemove', scroll)
+		}
+		function clearSelection() {
+			if (window.getSelection) {
+				window.getSelection().removeAllRanges();
+			} else {
+				document.selection.empty();
+			}
+		}
+		function show_task(obj) {
+			
+			setAllComboBox();
+
+			obj = obj.parentElement;
+			task = document.getElementsByClassName("show_task")[0];
+			task.style.display = "block";
+			task_name = document.getElementById("id_text")
+			task_name.textContent = data[obj.id][0];
+			task_state = document.getElementById("id_state")
+			task_state.value = data[obj.id][1];
+			task_persent = document.getElementById("id_persent")
+			task_persent.value = data[obj.id][2];
+			task_day_start = document.getElementById("id_day_start")
+			task_day_start.value = data[obj.id][3];
+			task_day_end = document.getElementById("id_day_end")
+			task_day_end.value = data[obj.id][4];
+			task_result = document.getElementById("id_result")
+			task_result.value = data[obj.id][5];
+
+			//task_master = document.getElementById("id_master")
+			
+			task_master.value = data[obj.id][7];
+			
+			task_slave.value = data[obj.id][8];
+			
+			task_card.value = data[obj.id][9];
+			task_same_id = document.getElementById("id_same_id")
+			task_same_id.value = data[obj.id][10];
+			task_same_id.parentElement.parentElement.style.display = 'none';
+
+			task_bord_link_id = document.getElementById("id_bord_link")
+			task_bord_link_id.value = data[obj.id][11];
+			task_image = document.getElementById("id_image")
+
+			var info = "файл";
+			let dt_image = new DataTransfer();
+			if (data[obj.id][12] != "") {
+				dt_image.items.add(new File([info], data[obj.id][12], {type: 'image/png'}));
+				let file_list = dt_image.files;
+				task_image.files = file_list;
+			}
+			task_file = document.getElementById("id_file")
+			let dt_file = new DataTransfer();
+			if (data[obj.id][13] != "") {
+				dt_file.items.add(new File([info], data[obj.id][13], {type: '*'}));
+				let file_list = dt_file.files;
+				task_file.files = file_list;
+			}
+			
+
+		}
+		function new_task(obj) {
+			task_name = document.getElementById("id_text")
+			task_state = document.getElementById("id_state")
+			task_persent = document.getElementById("id_persent")
+			task_day_start = document.getElementById("id_day_start")
+			task_day_end = document.getElementById("id_day_end")
+			task_result = document.getElementById("id_result")
+			task_slave = document.getElementById("id_slave");
+			task_card = document.getElementById("id_card");
+			task_same_id = document.getElementById("id_same_id")
+
+			task_name.textContent = "";
+
+			task_state.value = "1";
+			task_persent.value = "";
+			task_day_start.value = "";
+			task_day_end.value = "";
+			task_result.value = "";			
+			task_slave.value = "";			
+			task_card.value = "";
+			task_same_id.value = "";
+			task = document.getElementsByClassName("show_task")[0];
+			task.style.display = "block";
+			
+			setAllComboBox();
+
+
+			task_persent = document.getElementById("id_persent")
+			task_persent.value = '0';
+
+			task_card.value = obj.parentElement.parentElement.parentElement.id;
+			
+			task_same_id = document.getElementById("id_same_id")
+			task_same_id.parentElement.parentElement.style.display = 'none';
+
+			task_master.value = "{{request.user.id}}";
+
+		}
+		
+
+		function closeForm(obj) {		
+			obj.parentElement.parentElement.parentElement.style.display = "none";
+			task_name.textContent = "";
+			task_state.value = "";
+			task_persent.value = "";
+			task_day_start.value = "";
+			task_day_end.value = "";
+			task_result.value = "";			
+			task_slave.value = "";			
+			task_card.value = "";
+			task_same_id.value = "";
+
+		}
+		let tasks = document.getElementsByClassName("task");
+		for (let i = 0; i < tasks.length; i++){
+			tasks[i].addEventListener(
+			"click",
+			(event) => {                  
+				setTimeout(function() {
+
+					tasks[i].childNodes[3].style.display = 'flex';
+					tasks[i].childNodes[5].style.display = 'flex';
+					let redact = tasks[i].querySelector(".redact");
+					redact.style.display = 'inline-block';
+					let del = tasks[i].querySelector(".del");
+					del.style.display = 'inline-block';
+					for (let j = 0; j < tasks.length; j++){
+						if( tasks[i] !==  tasks[j]) {
+							tasks[j].childNodes[3].style.display = 'none';
+							tasks[j].childNodes[5].style.display = 'none';
+							let redact = tasks[j].querySelector(".redact");
+							redact.style.display = 'none';
+							let del = tasks[j].querySelector(".del");
+							del.style.display = 'none';
+							
+						}
+					}
+				},
+				200);
+			},
+			false,
+			);
+		}
+		let base_data = document.getElementsByClassName("base_data")
+		function showBaseData(obj) {
+			if (obj.classList.contains("no_click")) {
+				for (let i = 0; i < base_data.length; i++) {
+					base_data[i].style.display = 'flex';
+				}
+				obj.classList.remove("no_click");
+			} else {
+				for (let i = 0; i < base_data.length; i++) {
+					base_data[i].style.display = 'none';
+				}
+				obj.classList.add("no_click");
+			}
+			
+		}
+		function showCardResults(obj) {
+			let card = obj.parentElement.parentElement.parentElement.parentElement;
+			let base_data = card.getElementsByClassName("base_data");
+			
+			if (obj.classList.contains("no_click")) {
+				for (let i = 0; i < base_data.length; i++) {
+					base_data[i].style.display = 'flex';
+				}
+				obj.classList.remove("no_click");
+				obj.innerHTML = "Свернуть<br>все задачи";
+			} else {
+				for (let i = 0; i < base_data.length; i++) {
+					base_data[i].style.display = 'none';
+				}
+				obj.classList.add("no_click");
+				obj.innerHTML = "Развернуть<br>все задачи";
+			}
+		}
+
+		let allTasks = document.getElementsByClassName('task');
+		let filtr_by_user = document.getElementById('filtr_by_user');
+		let clear_filtr_by_user = document.getElementById('clear_filtr_by_user');
+		function filtrByUser(obj) {
+			for (let i = 0; i < allTasks.length; i++) {
+				if (allTasks[i].getAttribute('name') != obj.textContent) {
+					allTasks[i].style.display = 'none';
+				} else {
+					allTasks[i].style.display = 'block';
+				}
+			}
+
+			filtr_by_user.textContent = "параметры фильтрации: " + obj.textContent
+			filtr_by_user.style.display = 'block';
+			clear_filtr_by_user.style.display = 'block';
+		}
+		function clearFiltrByUser() {
+			filtr_by_user.style.display = 'none';
+			clear_filtr_by_user.style.display = 'none';
+			for (let i = 0; i < allTasks.length; i++) {
+				allTasks[i].style.display = 'block';
+			}
+		}
+		function setAllComboBox() {
+
+			let users_on_bord = document.getElementsByName('user_on_bord');
+
+			let users_ids = [];
+
+			for (let i = 0; i < users_on_bord.length; i++) {
+				if (users_ids.indexOf(users_on_bord[i].id) == -1) {
+					users_ids.push(users_on_bord[i].id)
+				}
+			}
+
+			task_master = document.getElementById("id_master")
+			let options = task_master.getElementsByTagName('option');
+
+			for (let i = 0; i < options.length; i++) {
+				if (users_ids.indexOf(options[i].value) == -1) {
+					options[i].style.display = 'none';
+				}
+			}
+
+			task_slave = document.getElementById("id_slave");
+			options = task_slave.getElementsByTagName('option');
+			for (let i = 0; i < options.length; i++) {
+				if (users_ids.indexOf(options[i].value) == -1) {
+					options[i].style.display = 'none';
+				}
+			}
+
+
+
+			let cards =  document.getElementsByClassName('card');
+			let cards_ids = [];
+			for (let i = 0; i < cards.length; i++) {
+				if (cards_ids.indexOf(cards[i].id) == -1) {
+					cards_ids.push(cards[i].id)
+				}
+			}
+
+			task_card = document.getElementById("id_card");
+			options = task_card.getElementsByTagName('option');
+
+			for (let i = 0; i < options.length; i++) {
+				if (cards_ids.indexOf(options[i].value) == -1) {
+					options[i].style.display = 'none';
+				}
+			}
+			//users bords
+			let user_b = document.getElementsByClassName('user_b');
+
+			let user_b_ids = [];
+			for (let i = 0; i < user_b.length; i++) {
+				if (user_b_ids.indexOf(user_b[i].id) == -1) {
+					user_b_ids.push(user_b[i].id)
+				}
+			}
+			task_bord_link = document.getElementById("id_bord_link");
+			options = task_bord_link.getElementsByTagName('option');
+
+			for (let i = 0; i < options.length; i++) {
+				if (user_b_ids.indexOf(options[i].value) == -1) {
+					options[i].style.display = 'none';
+				}
+			}
+		}
+		function show_progress(obj) {
+			let task_name = document.getElementById("id_text");
+			let task_slave = document.getElementById("id_slave");
+			if (task_name.value != "" & task_slave.value != "") {
+				obj.innerHTML = '<img class="circle_trans img_for_btn" src="/static/load.gif">';
+				obj.parentElement.parentElement.onsubmit = function () {obj.disabled = true;}
+			}		
+		}
+		function task_del(obj) {
+			var result = confirm('Подтвердите удаление задачи');
+			let bord_id = obj.id.split('_')[0];
+			let task_id = obj.id.split('_')[1];
+
+			let url = "{% url 'task_delete' bord_id 999999 %}";
+			let arrayFromUrl = url.split('/');
+			arrayFromUrl[4] = task_id;
+			let new_url = arrayFromUrl.join("/");
+			if (result) {
+				location.href=new_url;
+			}
+		}
+	</script>
+	
+{% endblock %} 

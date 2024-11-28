@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %} Товарные накладные {% endblock %}
+{% block header %}
+	<a style="color: black;">Товарные накладные</a>
+	<select
+		onchange="window.location.href = this.options[this.selectedIndex].value"
+		style="margin-left: 10px; font-weight: bold; font-size:medium; height: 30px; width: 160px; background: silver;">
+	  	<option value="#">Фильтр по тегу</option>
+		{% for tag in tags %}
+			<option value="{% url 'th_all_tag' tag.id %}">{{tag.tag}}</option>
+		{% endfor %}
+	</select>
+{% endblock %}
+{% load static %}
+{% load user_filters %}
+{% block aside %}
+    {% include 'includes/aside_storage.html' %}
+{% endblock %}
+{% block content %}
+	<style type="text/css">
+		.div_for_pagi {
+			width: 120%;
+			height: 20px;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			margin-top: 35px;
+		}
+		.log {
+		border-collapse: separate;
+		border-spacing: 2px 1px;
+		}
+		.log td { text-align: center; font-weight: bold; padding: 0px 10px 0px 10px; margin: auto;  border-radius: 5px;}
+
+		.log th {
+		text-align: center;
+		position: sticky; top: 0; background: #E6E6E6; z-index: 100;
+		font-weight: bold;
+		padding: 0px 10px 0px 10px;
+		margin: auto;
+		border-radius: 5px;
+		height: 30px;
+		}
+		.log td {
+		text-align: center;
+
+		padding: 0px 10px 0px 10px;
+		margin: auto;
+		}
+		tbody tr:nth-child(odd){
+			background: rgb(202, 235, 245);
+		}
+		tbody tr:nth-child(even){
+			background: transparent;
+		}
+		.text_a { font-family: Calibri; font-size: 18px; font-weight: 400; line-height: 20px; letter-spacing: 0em; }
+	</style>
+	<div style="width: calc(100vw - 450px); height: 820px; overflow-y: auto;">
+	<table class="log" border="0" style="width: 1315px;">
+        <thead>
+            <tr style="height: 30px; position: sticky; top: 0; background: #E6E6E6; z-index: 100;">
+                <th>Год</th>
+                <th>Вх/Исх</th>
+                <th>№</th>
+                <th>Дата</th>
+                <th>Комментарий</th>
+				<th>☰</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for th in page %}
+                <tr>
+                    <td style="font-weight: bold; text-align: center;"><a class="text_a" style="color: black;" href="{% url 'th_all_year' th.year %}">{{ th.year }}</a></td>
+					<td style="font-weight: bold; text-align: center;"><a class="text_a" style="color: black;" href="{% url 'th_all_type' th.type_th %}">{{ th.type_th }}</a></td>
+					{% if th.th.url != None %}
+						<td style="font-weight: bold; text-align: center;"><a class="text_a" href="{{ th.th.url }}">{{ th.title }}</a></td>
+					{% else %}
+						<td style="font-weight: bold; text-align: center;"><a class="text_a">{{ th.title }}</a></td>								
+					{% endif %}
+					<td style="font-weight: bold; text-align: center;"><a class="text_a">{{ th.day|date:"d.m.Y" }}</a></td>
+					<td style="font-weight: bold; text-align: left; width: 800px; word-break: break-all;"><a class="text_a">{{ th.comment }}</a></td>
+					<td style="font-weight: bold; text-align: center;">
+						<div class="dropdown">
+							<div class="btn-sm btn-outline-secondary" style="height: 30px;">☰</div>
+							<div class="dropdown-content">
+								{% if user.username in storage_rights %}
+									<a class="btn btn-sm" href="{% url 'th_edit' th.id %}" role="button">
+										Править
+									</a>
+									<a class="btn btn-sm" href="{% url 'th_delete' th.id %}" role="button">
+										Удалить
+									</a>
+									<a class="btn btn-sm" href="{% url 'tag_add' th.id %}" role="button">
+										Добавить тег
+									</a>
+									{% if th.unit_number is not Null %}
+										<a class="btn btn-sm" href="{% url 'unit_ths' th.unit_number|unit_id_from_number %}" role="button">
+											Учетная еденица
+										</a>
+									{% endif %}
+									{% for data in th_tags %}
+										{% if data.th_id == th.id %}
+											{% for tag in tags %}
+												{% if tag.id == data.tag_id %}
+													<a class="btn btn-sm" href="{% url 'th_all_tag' tag.id %}" role="button">
+														{{tag.tag}}
+													</a>
+												{% endif %}
+											{% endfor %}
+										{% endif %}
+									{% endfor %}
+								{% endif %}
+							</div>
+						</div>
+					</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+	</div>
+    <div class="div_for_pagi">{% include "includes/paginator.html" %}</div>
+{% endblock %}

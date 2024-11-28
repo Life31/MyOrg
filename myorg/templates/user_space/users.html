@@ -1,0 +1,179 @@
+{% load static %}
+{% load user_filters %}
+<style>
+	.log { border-collapse: separate; border-spacing: 2px 1px; }
+	.log th { text-align: center; font-weight: bold; padding: 0px 2px 0px 2px; margin: auto;  border-radius: 5px; border: 1px outset black;}
+	tbody tr:nth-child(even){ background: transparent; }
+	tbody tr:nth-child(odd){ background: rgb(202, 235, 245);}
+	.text_a { font-family: Calibri; font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: 0em; }
+</style>
+{% if user_widgets.users %}
+<div class="card" id="11" style="display: flex; width: 49px; height: 54px; overflow: hidden;">
+{% else %}<div class="card" id="11" style="display: none;">
+{% endif %}
+	<div class="title" onmouseover="titleonmouseover(this)" onmouseout="titleonmouseout(this)">
+		<div class="off users widget_place_for_image" {% if user_widgets.users_open %}name="open"{% else %}name="close"{% endif %}>
+			<img 
+				class="img_for_btn top_left_screen"
+				onclick="closeOpenCard(this)"
+				style="margin: 10px; width: 80%; height: 80%;"
+				title="свернуть / развернуть виджет"
+				src={% static "user.png" %}
+			>
+		</div>
+		<div style="width:70%; display: none;">
+			<a style="color: rgb(102, 168, 243); text-decoration: none; font-size: 24px;"
+				title="Перейти на полную версию"
+				href="{% url 'users' %}">
+				Пользователи
+			</a>
+		</div>
+		<div style="width: 10%; display: none; margin-left: 15px;">
+			<a style="display: none;" href="{% url 'user_widget_delete' user.id 'users' %}">
+				<img style="height: 90%; width: 90%;" title="удалить виджет" src={% static "denay.png" %}>
+			</a>
+		</div>
+	</div>
+	<div class="widget_data">
+		<div class="task part">Перечень отделов</div>
+		<div class="div_table_otds on" style="display: flex; flex-direction: column; justify-content: top; align-items: center; background: rgb(235, 236, 240);
+		width: 100%; height: 98%; overflow-y: scroll;">
+		   	<table class="log" border="0" style="width: 100%; height: 100%;">
+				<thead>
+					<tr style="height: 30px; position: sticky; top: 0; background: #E6E6E6;">
+						<th>ОТДЕЛ</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for key, value in users_info_for_widget.items %}
+						{% if key is Null %}
+							<tr class="otds" id="{{key}}">	
+								<th style="text-align: left; cursor: pointer; background: rgb(40, 221, 176);"><a class="text_a" style="color: black; text-decoration: none;" href="#">Новые сотрудники</a></th>
+							</tr>
+						{% else %}
+							<tr class="otds" id="{{key}}">	
+								<th style="text-align: left; cursor: pointer;"><a class="text_a" style="color: black; text-decoration: none;" href="#">{{key}}</a></th>
+							</tr>
+						{% endif %}
+					{% endfor %}
+				</tbody>
+		   	</table>
+	  	</div>
+		<div class="div_table_users" style="overflow-y: scroll; display: none; flex-direction: column; justify-content: top; background: rgb(235, 236, 240);
+		align-items: center; width: 100%; height: 100%;">
+			<table class="log" border="0" style="width: 100%;">
+				<thead>
+					<tr style="height: 30px; position: sticky; top: 0; background: #E6E6E6; z-index: 1000;">
+						<th>№</th><th>ФИО</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for key, value in users_info_for_widget.items %}
+						{% for k, v in value.items %}
+						<tr class="users_from_otd_for_widget" name="{{key}}" hidden=true>
+							<th><a class="text_a" style="font-weight: bold; color: green;">{{users_info|get_phone_number:k}}</a></th>
+							
+							<th style="text-align: right;">
+									<a class="text_a user_name" href="{% url 'users_info_change' v.id %}">{{v.get_full_name}}</a>
+							</th>
+	
+						</tr>
+						{% endfor %}
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="widget_footer">
+		<input class="btn widg_f_btn" id="users_search_input" placeholder="Поиск..." style="width: 60%; border-radius: 8px 8px 8px 18px; text-align: left;">
+		<a class="btn widg_f_btn" id="users_search_btn" style="width: 15%; border-radius: 8px"href="#"><img style="height: 15px;" src={% static "lupa.png" %}></a>
+		<a class="btn widg_f_btn" id="users_clear_btn" style="width: 30%;border-radius: 8px 8px 18px 8px; " href="#">Очистить</a>
+	</div>	
+</div>
+
+
+<script>
+	let otds = document.getElementsByClassName('otds');
+	let users = document.getElementsByClassName('users_from_otd_for_widget');
+	let div_table_otds = document.getElementsByClassName('div_table_otds')[0];
+	let div_table_users = document.getElementsByClassName('div_table_users')[0];
+	let  users_search_btn = document.getElementById('users_search_btn');
+	let users_search_input = document.getElementById('users_search_input');
+	let users_clear_btn = document.getElementById('users_clear_btn');
+	users_search_btn.addEventListener("click", function(event) {
+		
+			if (users_search_input.value != "") {
+				div_table_otds.style.display = 'none';
+				for(let i =0; i < users.length; i++) {
+					if (users[i].textContent.includes(users_search_input.value)) {
+						div_table_otds.style.height = '2%';
+						div_table_users.style.height = '96%';
+						div_table_users.style.display = 'flex';
+						users[i].hidden = false;
+
+					} else {
+						users[i].hidden = true;
+					}
+					
+				}
+
+			} else {
+				for(let i =0; i < users.length; i++) {
+					users[i].hidden = false;
+				}
+			}
+			
+		
+	});
+	users_clear_btn.addEventListener("click", function(event) {
+		div_table_otds.style.height = '98%';
+		div_table_otds.style.display = 'flex';
+		div_table_users.style.display = 'none';
+		for(let i =0; i < users.length; i++) {
+			users[i].hidden = true;
+		}
+		div_table_otds.classList.replace('off', 'on');
+		for (let k=0; k < otds.length; k++){
+			otds[k].hidden = false;
+			otds[k].childNodes[1].childNodes[0].style.color = 'black';
+		}
+	});
+
+	for (let i=0; i < otds.length; i++){
+		otds[i].addEventListener("click", function(event) {
+			
+
+			if (div_table_otds.classList.contains('on')){
+				div_table_otds.classList.replace('on', 'off');
+				div_table_otds.style.height = '45%';
+				div_table_users.style.height = '53%';
+				div_table_users.style.display = 'flex';
+				for (let j=0; j < users.length; j++){
+					if (otds[i].id == users[j].getAttribute('name')){
+						users[j].hidden = false;
+					} else {
+						users[j].hidden = true;
+					}
+				}
+				for (let k=0; k < otds.length; k++){
+				if (otds[i] != otds[k]){
+					otds[k].hidden = true;
+				} else {
+					otds[k].childNodes[1].childNodes[0].style.color = 'red';
+				}
+			}
+				
+				
+			}else if (div_table_otds.classList.contains('off')) {
+				div_table_otds.classList.replace('off', 'on');
+				div_table_otds.style.height = '97%';
+				div_table_users.style.display = 'none';
+				for (let k=0; k < otds.length; k++){
+					otds[k].hidden = false;
+					otds[k].childNodes[1].childNodes[0].style.color = 'black';
+				}
+			}
+		})		
+	}
+
+</script>

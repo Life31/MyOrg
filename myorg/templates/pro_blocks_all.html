@@ -1,0 +1,121 @@
+<style type="text/css"> 
+    .log {
+	border-collapse: separate;
+	border-spacing: 2px 1px;
+    }
+    .log th {
+	text-align: center;
+	background:rgb(164, 214, 243);
+    font-weight: bold;
+	padding: 0px 10px 0px 10px;
+	margin: auto;
+    }
+    .log td {
+	text-align: center;
+
+	padding: 0px 10px 0px 10px;
+	margin: auto;
+    }
+    tbody tr:nth-child(odd){
+        background-color: transparent;
+    }
+    tbody tr:nth-child(even){
+        background-color: rgb(243, 239, 239);
+    }
+</style>
+
+{% extends "base.html" %}
+{% load cache %}
+{% block title %}Все блоки{% endblock %}
+{% block header %}
+    <a style="color: rgb(74, 177, 236); font-weight: bold; text-align: left;">Все блоки</a>
+    <a class="btn btn-sm btn-secondary"
+			style="margin-left: 10px; font-weight: bold; width: 100px; color: white;"
+			href="{% url 'blocks_sort' 1 %}">МФИ</a>
+    <a class="btn btn-sm btn-secondary"
+			style="margin-left: 10px; font-weight: bold; width: 100px; color: white;"
+			href="{% url 'blocks_sort' 2 %}">БМ</a>
+            <a class="btn btn-sm btn-secondary"
+			style="margin-left: 10px; font-weight: bold; width: 100px; color: white;"
+			href="{% url 'blocks_sort' 3 %}">ИВС</a>
+    <a class="btn btn-sm btn-secondary"
+			style="margin-left: 10px; font-weight: bold; width: 100px; color: white;"
+			href="{% url 'blocks_sort' 4 %}">МЦВ</a>
+    <a class="btn btn-sm btn-secondary"
+			style="margin-left: 10px; font-weight: bold; width: 100px; color: white;"
+			href="{% url 'blocks_sort' 5 %}">МК</a>
+                    
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_pro.html' %}
+{% endblock %}
+{% load thumbnail %}
+{% load static %}
+{% block content %}  
+    <table class="log" border="0" style="width:120%;">
+        <thead>
+            <tr>
+                <th>Тип</th>
+                <th>Номер</th>
+                <th>Информация</th>
+                <th>Версия</th>
+                <th>Приемка</th>
+                <!--th>Склад</th>
+                <th>Изолятор</th>
+                <th>Вх. контроль</th>
+                <th>Отрем.</th>
+                <th>В рем. у пост.</th-->
+                <th>Изготовлен</th>
+                <th>Дата изг.</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for block in page %} 
+                <tr>
+                    
+                    <td style="font-weight: bold; text-align: right;"><a href="{% url 'blocks_sort' block.block_type_id %}">{{ block.block_type }}</a></td>
+                    <td style="font-weight: bold; text-align: left;">
+                        <div class="dropdown" style="margin: 0; padding: 0;"> 
+                            <a class="btn" style="font-weight: bold; height: 27px; margin: 0; padding: 0;" href="{% url 'pro_events_all' block.id %}">{{ block.number }}</a>
+                            <div class="dropdown-content">
+                                <a class="btn btn-sm" href="{% url 'block_edit' block.id %}" role="button">Редактировать</a>
+                                <a class="btn btn-sm" href="{% url 'pro_event_new' block.id %}" role="button">Добавить событие</a>
+                                <h>Статус</h>
+                                <a class="btn btn-sm" href="#" role="button">В изолятор</a>
+                                <a class="btn btn-sm" href="#" role="button">На склад</a>
+                                <a class="btn btn-sm" href="#" role="button">Вх. контроль</a>
+                                <a class="btn btn-sm" href="#" role="button">В ремонт</a>
+                                <a class="btn btn-sm" href="#" role="button">Отремонтирован</a>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-weight: bold; text-align: left;">{{ block.info }}</td>
+                    <td style="font-weight: bold;">Версия</td>
+                    <td style="font-weight: bold;">Приемка</td>
+                    <!--{% if block.on_storage %} <td style="font-weight: bold; color:green;"> Склад {% else %} <td style="font-weight: bold; color:red;"> - {% endif %} </td>
+                    {% if block.on_injector %} <td style="font-weight: bold; color:green;"> Изолятор {% else %} <td style="font-weight: bold; color:red;"> - {% endif %} </td>
+                    {% if block.on_control %} <td style="font-weight: bold; color:green;"> Вх. контроль {% else %} <td style="font-weight: bold; color:red;"> - {% endif %} </td>
+                    {% if block.on_fix %} <td style="font-weight: bold; color:green;"> Отремонтирован {% else %} <td style="font-weight: bold; color:red;"> - {% endif %} </td>
+                    {% if block.on_fix_developer %} <td style="font-weight: bold; color:green;"> В ремонте {% else %} <td style="font-weight: bold; color:red;"> - {% endif %} </td-->
+                    {% if block.on_ready %} <td style="font-weight: bold; color:green;"> Изготовлен {% else %} <td style="font-weight: bold; color:red;"> - {% endif %} </td>
+                    
+                    <td style="font-weight: bold;">{{ block.day|date:"d M Y" }}</td>
+                    {% if block.block_state_id == 5 %} 
+                        <td style="font-weight: bold; text-align: left; color: red;">{{ block.block_state }}</td>
+                    {% elif block.block_state_id == 4 %} 
+                        <td style="font-weight: bold; text-align: left; color: green;">{{ block.block_state }}</td>
+                    {% elif block.block_state_id == 3 %} 
+                        <td style="font-weight: bold; text-align: left; color: rgb(74, 177, 236);">{{ block.block_state }}</td>
+                    {% elif block.block_state_id == 2 %} 
+                        <td style="font-weight: bold; text-align: left; color: red;">{{ block.block_state }}</td>
+                    {% else %} 
+                        <td style="font-weight: bold; text-align: left;">{{ block.block_state }}</td>
+                    {% endif %} </td>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="width: 120%;" class="row"><div class="col-md-7" style="margin-bottom: 30px; margin-top: 5px;">{% include "includes/paginator.html" %}</div>
+{% endblock %} 

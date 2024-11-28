@@ -1,0 +1,65 @@
+<style type="text/css"> 
+    .log {
+	border-collapse: separate;
+	border-spacing: 2px 1px;
+    }
+    .log th {
+	text-align: center;
+	background:rgb(164, 214, 243);
+    font-weight: bold;
+	padding: 0px 10px 0px 10px;
+	margin: auto;
+    }
+    .log td {
+	text-align: center;
+
+	padding: 0px 10px 0px 10px;
+	margin: auto;
+    }
+    tbody tr:nth-child(odd){
+        background-color: transparent;
+    }
+    tbody tr:nth-child(even){
+        background-color: rgb(243, 239, 239);
+    }
+</style>
+
+{% extends "base.html" %}
+{% load cache %}
+{% block title %}Все блоки{% endblock %}
+{% block header %}
+    <a style="color: rgb(74, 177, 236); font-weight: bold; text-align: left;">Все события блока {{number}} </a>                   
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_pro.html' %}
+{% endblock %}
+{% load thumbnail %}
+{% load static %}
+{% block content %}  
+    <table class="log" border="0" style="width:120%;">
+        <thead>
+            <tr>
+                <th>Тип</th>
+                <th>Описание</th>
+                <th>дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in page %} 
+                <tr>
+                    <td style="font-weight: bold; text-align: left;">
+                        <div class="dropdown" style="margin: 0; padding: 0;"> 
+                            <a class="btn" style="font-weight: bold; height: 27px; margin: 0; padding: 0;" href="#">{{ event.event_type }}</a>
+                            <div class="dropdown-content">
+                                <a class="btn btn-sm" href="#" role="button">Редактировать</a>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-weight: bold; text-align: left;">{{ event.description }}</td>                  
+                    <td style="font-weight: bold;">{{ event.day|date:"d M Y" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% include "includes/paginator.html" %}
+{% endblock %} 

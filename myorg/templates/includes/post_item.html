@@ -1,0 +1,43 @@
+{% load user_filters %}
+	<div class="container mb-0 mt-0">
+		<div class="row">
+			{%if post.t_start_id != 1 %}
+				<div class="cal" style="width: {{post.t_start_html}}%" >
+
+				</div>
+			{%endif%}
+			<div class="cal" style="width: {{post.t_stop_html}}%" >
+
+					{%if post.group_id == 1 %}
+						<a class="btn btn-sm border-white btn-success btn-block text-left" href="{% url 'post' post.author.username post.id %}">
+							{%if post.t_start_id|lange:post.t_stop_id < 4%}
+								{{ post.text }}
+							{%else%}
+								{{ post.text }}: {{ post.purpose }}
+							{%endif%}
+						</a>
+					{% elif post.group_id == 2 %}
+						<a class="btn btn-sm border-white btn-primary btn-block text-left" href="{% url 'post' post.author.username post.id %}">
+							{%if post.t_start_id|lange:post.t_stop_id < 4%}
+								{{ post.text }}
+							{%else%}
+								{{ post.text }}: {{ post.purpose }}
+							{%endif%}
+						</a>
+					{% elif post.group_id == 3 %}
+						<a class="btn btn-sm border-white btn-danger btn-block text-left" href="{% url 'post' post.author.username post.id %}">
+							{%if post.t_start_id|lange:post.t_stop_id < 4%}
+								{{ post.text }}
+							{%else%}
+								{{ post.text }}: {{ post.purpose }}
+							{%endif%}
+						</a>
+					{%endif%}
+												
+			</div>
+		</div>
+	</div>
+
+<!--style="width: 8.333%"-->
+				
+				

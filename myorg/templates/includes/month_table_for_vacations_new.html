@@ -1,0 +1,23 @@
+
+{% load user_filters %}
+<div style="box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2); border-radius: 5%; border: 0px solid black; display: flex; flex-direction: column; justify-content: top; align-items: top; background: transparent; margin: 2px;">
+	{{key}}
+	{% for val in value.values %}
+		<div style="width: 330px; height: 50px; border: 0px solid black; display: flex; flex-direction: row; justify-content: center; align-items: top;">
+			{% for el in val %}
+				{% if el != '' %}
+					<div class="day">
+						<div style="height: 20px; font-weight: bold;"></div>
+						<div style="margin-bottom: -34px;">{{el}}</div>
+						<div style="width: 90px;"><canvas id={{key|year_month:year|day_vacation:el}} class="oilChart"></canvas></div>
+					</div>
+				{% else %}	
+					<div class="day">
+
+					</div>
+				{% endif %}
+				
+			{% endfor %}
+		</div>
+	{% endfor %}
+</div>

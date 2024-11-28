@@ -1,0 +1,310 @@
+﻿{% extends "base.html" %}
+{% block header %}<a style="color: black;">Страница помощи</a>{% endblock %}
+{% load static %}
+{% load user_filters %}
+{% block content %}
+<section class="help">
+	<div class="card mb-3 mt-3 shadow-sm" style="background: #E6E6E6;">
+		<div class="container">
+			<strong class="d-block text-black"> Общие сведения </strong>	
+			<div class="row">
+				<div class="cal" style="width: 5%"></div> 
+				<div class="cal" style="width: 95%">
+					<div class="row"> Ресурс регистрации заявок состоит из:</div>
+					<div class="row">
+						<div class="cal" style="width: 5%"></div> 
+						<div class="cal" style="width: 95%">
+							<div class="row">1) Страница регистрации пользователя;</div>
+							<div class="row">2) Страница создания/редактирования заявки;</div>
+							<div class="row">3) Страница календарей;</div>
+							<div class="row">4) Страница стенда;</div>
+							<div class="row">5) Страница пользователя;</div>
+							<div class="row">6) Страница заявки.</div>
+						</div>
+					</div> 
+					<div class="row"> Функционал ресурса в части создания и редактирования заявок доступен только авторизованным пользователям.</div>
+					<div class="row"> Навигация по ресурсу происходит с помощью бокового меню.</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="card mb-3 mt-3 shadow-sm" style="background: #E6E6E6;">
+		<div class="container">
+			<strong class="d-block text-black"> 1. Регистрация </strong>
+			<div class="row">
+				<div class="cal" style="width: 5%"></div> 
+				<div class="cal" style="width: 95%">
+					<div class="row"> Для регистрации на ресурсе необходимо:</div>
+					<div class="row">
+						<div class="cal" style="width: 5%"></div> 
+						<div class="cal" style="width: 95%">
+							<div class="row">1) Нажать на ссылку «Регистрация» в правом верхнем углу ресурса;</div>
+							<div class="row">2) Заполнить форму регистрации и нажать кнопку «Зарегистрироваться».</div>
+						</div>
+					</div>
+					<div class="row"> Имя пользователя и адрес электронной почты должны соответствовать указанным в почте Outlook.</div>
+					<div class="row"> Пример:«nikolay.emelyanov» и «nikolay.emelyanov@ic.irkut.com»</div>
+				</div>
+			</div> 		
+		</div>
+	</div>
+	
+	<div class="card mb-3 mt-3 shadow-sm" style="background: #E6E6E6;">
+		<div class="container">
+			<strong class="d-block text-black"> 2. Создание заявки </strong>
+			<div class="row">
+				<div class="cal" style="width: 5%"></div> 
+				<div class="cal" style="width: 95%">
+					<div class="row"> Для создания новой заявки необходимо в меню навигации, в разделе «Создать заявку» выбрать нужный стенд:</div>
+					<div class="row">
+						<div class="btn-group-vertical" style="margin-left: 50px;">
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn sib" href="#">
+									<div class="circle"></div><div>SIB</div>
+								</a>
+								<a class="btn fib" href="#">
+									<div class="circle" style="background: #F5DF4C;"></div><div>FIB</div>
+								</a>
+							</div>
+							
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn acib" href="#">
+									<div class="circle" style="background: rgb(74, 177, 236);"></div><div>ACIB</div>
+								</a>
+								<a class="btn nuc" href="#">
+									<div class="circle" style="background: #6B5B95;"></div><div>NUC</div>
+								</a>
+				
+							</div>
+							
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn isib" href="#">
+									<div class="circle" style="background: #F2552C;"></div><div>ISIB</div>
+								</a>
+								<a class="btn fib_bm" href="#">
+									<div class="circle" style="background: #79c753;"></div><div>FIB BM</div>
+								</a>
+							</div>
+							
+							
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn fvb" href="#">
+									<div class="circle" style="background: #e28308;"></div><div>FVB</div>
+								</a>
+							</div>
+						</div>	
+					</div>
+					<div class="row">Далее, заполнить форму создания заявки и нажать кнопку «добавить».</div>
+					
+					<div class="row"> Если нужное подразделение-инициатор отсутствует, необходимо отправить запрос администраторам ресурса на </div>
+					<div class="row"> добавление соответствующего подразделения.</div>
+					<div class="row"> В случае некорректного заполнения формы, заявка не будет создана, а пользователь получит соотвествующее предупреждение.</div>
+					<div class="row">После создания заявки:</div>
+					<div class="row">
+						<div class="cal" style="width: 5%"></div> 
+						<div class="cal" style="width: 95%">
+							<div class="row">1)	Заявке присваивается статус «Не подтверждена»;</div>
+							<div class="row">2)	Заявка отображается на странице заявки;</div>
+							<div class="row">3)	Заявка отображается на странице соответствующего пользователя;</div>
+							<div class="row">4)	Заявка отображается на странице соответствующего стенда;</div>
+							<div class="row">5)	Администраторы ресурса получают почтовое уведомление о создании новой заявки;</div>
+							<div class="row">6)	В случае, если интервал времени испытаний соответствующей заявки, пересекается с интервалом времени уже созданной заявки,</div>
+							<div class="row">пользователь получает предупреждение.</div>	
+						</div>
+					</div>
+					<div class="row">Пользователь может отредактировать заявку или договориться с автором приоритетной заявки.</div>
+					<div class="row">Администратор может подтвердить заявку, отклонить и, при необходимости, оставить комментарий на странице заявки.</div>
+					<div class="row">После подтверждения заявки администратором, она отображается в календарях.</div>
+					<div class="row">Пользователю приходит почтовое уведомление о смене статуса заявки.</div>
+					<div class="row">Доступ к содержимому заявки можно получить:</div>
+					<div class="row">
+						<div class="cal" style="width: 5%"></div> 
+						<div class="cal" style="width: 95%">
+							<div class="row">1)	Нажав на соответствующую заявку на странице календарей;</div>
+							<div class="row">2)	Нажав на соответствующую заявку на странице пользователя;</div>
+							<div class="row">3)	Нажав на соответствующую заявку на странице стенда;</div>
+							<div class="row">4)	Перейдя по ссылке в почтовом уведомлении.</div>
+						</div>
+					</div>
+					<div class="row">При редактировании уже подтвержденной заявки ее статус с «Подтверждена» автоматически меняется на</div>	
+					<div class="row">«Не подтверждена» и администраторы ресурса повторно получают почтовое уведомление о создании новой заявки.</div>	
+				</div>
+			</div>	
+		</div>
+	</div>
+	
+	<div class="card mb-3 mt-3 shadow-sm" style="background: #E6E6E6;">
+		<div class="container">
+			<strong class="d-block text-black"> 3. Календари </strong>
+			<div class="row">
+				<div class="cal" style="width: 5%"></div> 
+				<div class="cal" style="width: 95%">
+					<div class="row">Для перехода на страницу календарей необходимо в меню навигации, в разделе «Календари» выбрать соответствующий календарь:</div>
+					<div class="row">
+						<div class="btn-group-vertical" style="margin-left: 50px;">
+							<div style="display: flex; flex-direction: row;">
+								<a style="display: block; text-align: center;" class="btn user" href="#">День</a>
+								<a style="display: block; text-align: center;" class="btn user" href="#">Неделя</a>
+							</div>
+							<div style="display: flex; flex-direction: row;">
+								<a style="display: block; text-align: center;" class="btn user" href="#">Месяц</a>
+								<a style="display: block; text-align: center;" class="btn user" href="#">Год</a>
+							</div>
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn sib" href="#"><div class="circle"></div><div>SIB</div></a>
+								<a class="btn fib" href="#"><div class="circle" style="background: #F5DF4C;"></div><div>FIB</div></a>
+							</div>
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn acib" href="#"><div class="circle" style="background: rgb(74, 177, 236);"></div><div>ACIB</div></a>
+								<a class="btn nuc" href="#"><div class="circle" style="background: #6B5B95;"></div><div>NUC</div></a>  
+							</div>
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn isib" href="#"><div class="circle" style="background: #F2552C;"></div><div>ISIB</div></a>
+								<a class="btn fib_bm" href="#"><div class="circle" style="background: #79c753;"></div><div>FIB BM</div></a>
+							</div>
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn fvb" style="width: 120px;" href="#"><div class="circle" style="background: #e28308;"></div><div>FVB</div></a>
+							</div>
+						</div>
+					</div>
+					<div class="row">Основная цель календарей - сгруппировать и отобразить заявки в рамках дня/недели/месяца или стенда.</div>
+					<div class="row">Основной функционал – переход из календаря на страницу заявки по клику.</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="card mb-3 mt-3 shadow-sm" style="background: #E6E6E6;">
+		<div class="container">
+			<strong class="d-block text-black"> 4. Стенды </strong>	
+			<div class="row">
+				<div class="cal" style="width: 5%"></div> 
+				<div class="cal" style="width: 95%">
+					<div class="row">Для перехода на страницу стенда необходимо в меню навигации, в разделе «Стенды» выбрать нужный стенд:</div>
+					<div class="row">
+						<div class="btn-group-vertical" style="margin-left: 50px;">
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn sib" href="#">
+									<div class="circle"></div>
+									{% if sib_count > 0 %}
+										<div>SIB(<span style="color: red;">{{sib_count}}</span>)</div>
+									{% else %}
+										<div>SIB</div>
+									{% endif %}
+								</a>
+								<a class="btn fib" href="#">
+									<div class="circle" style="background: #F5DF4C;"></div>
+									<div>FIB</div>
+								</a>
+							</div>
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn acib" href="#">
+									<div class="circle" style="background: #A1C6FF;"></div>
+									{% if acib_count > 0 %}	
+										<div>ACIB(<span style="color: red;">{{acib_count}}</span>)</div>
+									{% else %}
+										<div>ACIB</div>
+									{% endif %}
+								</a>
+								<a class="btn nuc" href="#">
+									<div class="circle" style="background: #6B5B95;"></div>
+									<div>NUC</div>
+								</a>
+							</div>
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn isib" href="#">
+									<div class="circle" style="background: #F2552C;"></div>
+									<div>ISIB</div>
+								</a>
+								<a class="btn fib_bm" href="#">
+									<div class="circle" style="background: #4EE2B8;"></div>
+									<div>FIB BM</div>
+								</a>
+							</div>
+							<div style="display: flex; flex-direction: row;">
+								<a class="btn fvb" href="#">
+									<div class="circle" style="background: #FEB614;"></div>
+									<div>FVB</div>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="row">Основная цель страницы стендов - отображение перечня заявок, отфильтрованных в соответствии с выбранным стендом.</div>
+			
+					<div class="row">Основной функционал:</div>
+					<div class="row">
+						<div class="cal" style="width: 5%"></div> 
+						<div class="cal" style="width: 95%">
+							<div class="row">1)	переход со стенда на страницу заявки по клику;</div>
+							<div class="row">2)	переход на страницу автора заявки (Заявитель) по клику;</div>
+							<div class="row">3)	фильтрация списка заявок по статусу.</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="card mb-3 mt-3 shadow-sm" style="background: #E6E6E6;">
+		<div class="container">
+			<strong class="d-block text-black"> 5. Страница пользователя </strong>
+			<div class="row">
+				<div class="cal" style="width: 5%"></div> 
+				<div class="cal" style="width: 95%">
+					<div class="row">Для перехода на страницу пользователя необходимо в правом верхнем углу нажать на ссылку:</div>			
+					<div class="row">
+						{% if user.is_authenticated %}
+							<a style="color:rgb(74, 177, 236);" href="{% url 'profile' user.username %}">{{ user.username }}</a>
+						{% else %}<a class="btn user" style="width: 240px;" href="#">Имя пользователя</a>{% endif %}
+					</div>
+					<div class="row">Ссылка доступна только авторизованным пользователям.</div>
+					<div class="row">Основная цель страницы пользователя - отображение перечня заявок, отфильтрованных в соответствии с выбранным автором.</div>
+					<div class="row">Основной функционал:</div>
+					<div class="row">
+						<div class="cal" style="width: 5%"></div> 
+						<div class="cal" style="width: 95%">
+							<div class="row">1)	переход со страницы пользователя на страницу стенда по клику;</div>
+							<div class="row">2)	переход со страницы пользователя на страницу заявки по клику;</div>
+							<div class="row">3)	фильтрация списка заявок по статусу.</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="card mb-3 mt-3 shadow-sm" style="background: #E6E6E6;">
+		<div class="container">
+			<strong class="d-block text-black"> 6. Страница заявки </strong>
+			<div class="row">
+				<div class="cal" style="width: 5%"></div> 
+				<div class="cal" style="width: 95%">
+					<div class="row">Доступ к странице заявки можно получить:</div>
+					<div class="row">
+						<div class="cal" style="width: 5%"></div> 
+						<div class="cal" style="width: 95%">
+							<div class="row">1)	Нажав на соответствующую заявку на странице календаря;</div>
+							<div class="row">2)	Нажав на соответствующую заявку на странице пользователя;</div>
+							<div class="row">3)	Нажав на соответствующую заявку на странице стенда;</div>
+							<div class="row">4)	Перейдя по ссылке в почтовом уведомлении.</div>
+						</div>
+					</div>
+					<div class="row">Основная цель страницы заявки - отображение информации о заявке.</div>
+					<div class="row">Основной функционал:</div>
+					<div class="row">
+						<div class="cal" style="width: 5%"></div> 
+						<div class="cal" style="width: 95%">
+							<div class="row">1)	Редактирование заявки (автором заявки);</div>
+							<div class="row">2)	Удаление заявки (автором заявки);</div>
+							<div class="row">3)	Использование заявки в качестве шаблона для новой заявки;</div>
+							<div class="row">4)	Комментирование заявки.</div>
+							<div class="row">5)	Управление реле питания стенда активной заявки (автором заявки).</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %} 

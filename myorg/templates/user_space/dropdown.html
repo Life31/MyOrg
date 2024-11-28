@@ -1,0 +1,75 @@
+{% load static %}
+<style>
+	.drop_text {
+		border-radius: 4px; background: grey; color: white;
+	}
+</style>
+<div class="dropdown" style="display: flex;">
+	<div class="all_flex main_btn">
+		<a style="width: 100%; height: 100%; color: rgb(16, 109, 44); cursor: pointer;
+		font-size: 34px; line-height: 24px; text-decoration: none; text-align: center; z-index: 1000;" href="#">+</a>
+	</div>
+	
+	<div class="dropdown-content" style="font-size: 18px;">
+		{% if user_info.reqs_access and  not user_widgets.reqs %}
+			<a class="drop_text" href="{% url 'user_widget_add' user.id 'reqs' %}" role="button" style="border-radius: 4px; color: black;">Заявки</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Заявки</a>
+		{% endif %}
+		{% if user_info.vacs_access and  not user_widgets.vacs %}
+		<a class="drop_text" href="{% url 'user_widget_add' user.id 'vacs' %}" role="button" style="border-radius: 4px; color: black;">Отпуск</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Отпуск</a>
+		{% endif %}
+		{% if user_info.test_access and  not user_widgets.test %}
+			<a class="drop_text" href="{% url 'user_widget_add' user.id 'test' %}" role="button" style="border-radius: 4px; color: black;">Тесты</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Тесты</a>
+		{% endif %}
+		{% if user_info.corr_access and  not user_widgets.corr %}
+			<a class="drop_text" href="{% url 'user_widget_add' user.id 'corr' %}" role="button" style="border-radius: 4px; color: black;">Корреспонденция</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Корреспонденция</a>
+		{% endif %}
+		{% if user_info.task_access and  not user_widgets.task %}
+			<a class="drop_text" href="{% url 'user_widget_add' user.id 'task' %}" role="button" style="border-radius: 4px; color: black;">Задачи</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Задачи</a>
+		{% endif %}
+		{% if user_info.bibl_access and  not user_widgets.bibl %}
+			<a class="drop_text" href="{% url 'user_widget_add' user.id 'bibl' %}" role="button" style="border-radius: 4px; color: black;">Библиотека</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Библиотека</a>
+		{% endif %}
+		{% if user_info.stor_access and  not user_widgets.stor %}
+			<a class="drop_text" href="{% url 'user_widget_add' user.id 'stor' %}" role="button" style="border-radius: 4px; color: black;">Склад</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Склад</a>
+		{% endif %}
+		{% if user_info.user_access and  not user_widgets.users %}
+			<a class="drop_text" href="{% url 'user_widget_add' user.id 'users' %}" role="button" style="border-radius: 4px; color: black;">Пользователи</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Пользователи</a>
+		{% endif %}
+		{% if user_info.news_access and  not user_widgets.news %}
+			<a class="drop_text" href="{% url 'user_widget_add' user.id 'news' %}" role="button" style="border-radius: 4px; color: black;">Новости</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Новости</a>
+		{% endif %}
+		{% if user_info.mess_access and  not user_widgets.mess %}
+			<a class="drop_text" href="{% url 'user_widget_add' user.id 'mess' %}" role="button" style="border-radius: 4px; color: black;">Мессенджер</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Мессенджер</a>
+		{% endif %}
+		{% if not user_widgets.notes %}
+			<a class="drop_text" href="{% url 'user_widget_add' user.id 'notes' %}" role="button" style="border-radius: 4px; color: black;">Заметки</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Заметки</a>
+		{% endif %}
+		{% if not user_widgets.calc %}
+			<a class="drop_text" href="{% url 'user_widget_add' user.id 'calc' %}" role="button" style="border-radius: 4px; color: black;">Калькулятор</a>
+		{% else %}
+			<a class="drop_text" href="#" role="button" style="border-radius: 4px; background: grey; color: white;">Калькулятор</a>
+		{% endif %}
+	</div>
+</div>

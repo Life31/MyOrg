@@ -1,0 +1,47 @@
+<style>
+	h4 {
+	color: white;
+	margin: 5px;
+	margin-top: 20px;
+	margin-left: 20px;
+	text-align: left;
+	font-family: Wagon;
+	font-weight: bold;
+	}
+	aside .btn {
+		border: transparent;
+		width: 240px;
+		background: transparent;
+		display: block;
+		font-weight: bold;
+		font-size: large;
+		padding: 1px;
+		margin: 1px;
+		margin-left: 10px;
+		text-align: left;
+		color: black;
+	}
+	.btn-group-vertical {
+		margin: 2px auto;
+	}
+	span {
+		color: white;
+	}
+</style>
+{% load static %}
+{% load user_filters %}
+{% with request.resolver_match.view_name as view_name %}
+    <aside class="aside bg-dark" style="border: 4px solid white;">
+		<a class="btn"  href="{% url 'users' %}">Все сотрудники(<span>{{users_counts}}</span>)</a>
+		<a class="btn"  href="{% url 'users_in_otd' 5 %}">Выбор отдела</a>
+		<h4>Права доступа</h4>
+		<a class="btn" href="{% url 'users_access' 'pass' %}">Пропуска(<span>{{users_with_pass_access_counts}}</span>)</a>
+		<a class="btn" href="{% url 'users_access' 'stor' %}">Склад(<span>{{users_with_stor_access_counts}}</span>)</a>
+		<a class="btn" href="{% url 'users_access' 'user' %}">Пользователи(<span>{{users_with_user_access_counts}}</span>)</a>
+		<a class="btn" href="{% url 'users_access' 'task' %}">Задачи(<span>{{users_with_task_access_counts}}</span>)</a>
+		<a class="btn" href="{% url 'users_access' 'corr' %}">Корреспонденця(<span>{{users_with_corr_access_counts}}</span>)</a>
+		<a class="btn" href="{% url 'users_access' 'reqs' %}">Заявки(<span>{{users_with_reqs_access_counts}}</span>)</a>
+		<a class="btn" href="{% url 'users_access' 'conf' %}">Конфигурация(<span>{{users_with_conf_access_counts}}</span>)</a>
+		<a class="btn" href="{% url 'log_all' %}">Лог</a>
+    </aside>
+{% endwith %}

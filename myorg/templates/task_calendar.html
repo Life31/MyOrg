@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load cache %}
+{% block title %}Календарь{% endblock %}
+{% load user_filters %}
+{% load static %}
+{% block header %}
+	<div style="display: flex; flex-direction: row; width: 100%; margin-bottom: 20px; background: #f7f7f7;">
+		<div style="margin-right: 20px;">
+			<a class="btn btn-sm btn-primary"
+					style="width: 100px; height: 30px; border-radius: 25px; font-family: Calibri;
+					font-size: 18px;
+					font-weight: 400;
+					line-height: 20px;
+					letter-spacing: 0em;"
+					href="{% url 'calendar' year|year_minus %}">
+					<img style="height: 20px; margin-right: 2px;" src={% static "left.png" %}>
+					 {{year|year_minus}}</a>
+		</div>
+		<div>
+			<a style="color: black; font-weight: bold; text-align: left; line-height: 50px;">Календарь {{year}}</a>
+		</div>
+		<div style="margin-left: 20px;">
+			<a class="btn btn-sm btn-primary"
+					style="width: 100px; height: 30px; border-radius: 25px; font-family: Calibri;
+					font-size: 18px;
+					font-weight: 400;
+					line-height: 20px;
+					letter-spacing: 0em;"
+					href="{% url 'calendar' year|year_plus %}">
+					{{year|year_plus}}
+					<img style="height: 20px; margin-right: 2px;" src={% static "right.png" %}></a>
+		</div>
+		<div class="btn btn-sm btn-primary month_head_btns" id="ALL-2" title="ВСЕ ВКЛ|ВЫКЛ"
+			style="margin-left: 15px; width: 60px; background: transparent; margin-top: 15px; border: 0px;" onclick="showAllBalls(this)">
+				<div class="month_all_bols" style="margin-top: 2px; background: #F2552C;"></div>
+				<div class="month_all_bols" style="margin-left: 7px; margin-top: -7px; background: #A1C6FF;"></div>
+				<div class="month_all_bols" style="margin-left: 14px; margin-top: -15px; background: #ECDB54;"></div>
+				<div class="month_all_bols" style="margin-left: 21px; margin-top: -23px; background: #6B5B95;"></div>
+				<div class="month_all_bols" style="margin-left: 14px; margin-top: -22px; background: #4EE2B8;"></div>
+				<div class="month_all_bols" style="margin-left: 6px; margin-top: -15px; background: #FEB614;"></div>
+				<div class="month_all_bols" style="margin-left: 10px; margin-top: -8px; background: #01A86B;"></div>
+		</div>
+	</div>
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside.html' %}
+{% endblock %}
+{% block content %}
+	<div style="width: 120%; display: flex; flex-direction: row;">
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Январь" value=Январь %}</div>
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Февраль" value=Февраль %}</div>
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Март" value=Март %}</div>
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Апрель" value=Апрель %}</div>
+	</div>
+	<div style="width: 120%; display: flex; flex-direction: row;">
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Май" value=Май %}</div>
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Июнь" value=Июнь %}</div>
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Июль" value=Июль %}</div>
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Август" value=Август %}</div>
+	</div>
+	<div style="width: 120%; display: flex; flex-direction: row;">
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Сентябрь" value=Сентябрь %}</div>
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Октябрь" value=Октябрь %}</div>
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Ноябрь" value=Ноябрь %}</div>
+		<div style="margin: 5px 40px 5px 0px;">{% include "includes/month_table.html" with key="Декабрь" value=Декабрь %}</div>
+	</div>
+	
+	
+	<script>
+		const over = document.getElementsByClassName("day_over");
+		const next = document.getElementsByClassName("day_next");
+		const chil = document.getElementsByClassName("day_chil");
+		const now = document.getElementsByClassName("day_now");
+
+		const overNext = Array.from(over).concat(Array.from(next));
+		const nowChil = Array.from(now).concat(Array.from(chil));
+		const allDays = Array.from(overNext).concat(Array.from(nowChil));
+
+		for (let i = 0; i < allDays.length; i++){
+			allDays[i].addEventListener(
+				"mouseenter",
+				(event) => {allDays[i].childNodes[3].style.display = "flex";},
+				false,
+				);
+		}
+		for (let i = 0; i < allDays.length; i++){
+			allDays[i].childNodes[3].addEventListener(
+				"mouseenter",
+				(event) => {allDays[i].childNodes[3].style.display = "flex";},
+				false,
+				);
+		}
+		for (let i = 0; i < allDays.length; i++){
+			for (let j = 0; j < allDays.length; j++){
+				allDays[i].childNodes[3].childNodes[j].addEventListener(
+				"mouseenter",
+				(event) => {allDays[i].childNodes[3].style.display = "flex";},
+				false,
+				);
+			}
+		}
+		for (let i = 0; i < allDays.length; i++){
+			allDays[i].addEventListener(
+				"mouseout",
+				(event) => {setTimeout(function() {allDays[i].childNodes[3].style.display = "none";}, 1000);},
+				false,
+				);
+		}	
+		function showAllBalls(obj) {
+			let ballsParents = document.getElementsByClassName("for_balls");			
+			let set = new Set(ballsParents);
+			let no = 0;
+			let yes= 0;
+			for (const item of set) {
+				if( item.style.display == "none"){no += 1;}
+				else {yes += 1;}
+			}
+			if (no >= yes) {for (const item of set) {item.style.display = "flex";}}
+			else {for (const item of set) {item.style.display = "none";}}
+		}
+		
+	</script>
+{% endblock %} 

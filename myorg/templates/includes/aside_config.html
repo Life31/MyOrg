@@ -1,0 +1,124 @@
+<style>
+	h4 {
+	color: #808080;
+	font-family: 'Calibri';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 22px;
+	margin: 2px;
+	text-align: left;
+	}
+	.user{
+		width:240px;
+		height: 37px;
+		border: 3px solid white;
+		border-radius: 10px;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 22px;
+		margin: 4px;
+	}
+	.user:hover {
+		transition: 0.4s;
+		background: #3b3b3a;
+		border: 3px solid white;
+		color: white;
+	}
+
+	.btn-group-vertical {
+	margin: 2px auto;
+	}
+</style>
+{% load static %}
+{% load user_filters %}
+{% with request.resolver_match.view_name as view_name %}
+	<aside class="aside" style="margin: 4px; border-radius: 10px;">
+        {% if user.is_authenticated %}
+            <h4>Конфигурация SIB</h4>
+			<div class="btn-group-vertical">
+				<div style="display: flex; flex-direction: row;">
+					<a class="btn user" href="{% url 'config_current_config' %}">Текущая конфигурация</a>
+				</div>
+				<div style="display: flex; flex-direction: row;">
+					<select class="btn user" onchange="window.location.href = this.options[this.selectedIndex].value">
+						<option value="">Все конфигурации</option>
+						{% for num in config_numbers %}
+							<option value="{% url 'config_units' num %}">{{num}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div><a class="btn user" style="width: 240px;" href="{% url 'config_sib' %}">Схема стенда SIB</a></div>
+			</div>
+			
+			<h4>Изменения</h4>
+			<select class="btn user" onchange="window.location.href = this.options[this.selectedIndex].value">
+				<option value="">Изменения</option>
+				{% for num in config_numbers %}
+					<option value="{% url 'config_changes_cur' num %}">{{num}}</option>
+				{% endfor %}
+			</select>
+			<a class="btn user" style="width: 240px;" href="{% url 'config_units_all' %}">Перечень блоков</a>
+			<a class="btn user" style="width: 240px;" href="{% url 'config_new_unit' %}">Добавить блок</a>
+
+			<a class="btn user" style="width: 240px;" href="{% url 'config_units' cur_conf_num %}">конфигурация(старая)</a>
+			<div id="about_unit" class="btn-group-vertical" style="margin-top: 140px;">
+				<h4 class="unit"></h4>
+				<a class="btn user sn" style="width: 240px;" href="#"></a>
+				<a class="btn user pn" style="width: 240px;" href="#"></a>
+				<a class="btn user descr" style="width: 240px; height: auto;" href="#"></a>
+				<a class="btn user doc" style="width: 240px;" href="#"></a>
+				<a class="btn user stor" style="width: 240px;" href="{% url 'unit_ths' 1 %}"></a>
+				<a class="btn user stor" style="width: 240px;" href="#">Монтаж / Демонтаж</a>
+				
+			</div>
+			
+        {% endif %}
+    </aside>
+	{% if view_name == "config_sib" %}
+		<script>
+			let about_unit = document.getElementById('about_unit');
+			about_unit.style.display = 'none';
+			const obj= JSON.parse("{{json_data|escapejs}}");
+			
+			
+
+			function unit_click(text){
+				
+
+				let btn_unit =document.getElementsByClassName('unit')[0];
+				btn_unit.textContent = text.replaceAll('_', ' ');
+
+				let btn_sn =document.getElementsByClassName('sn')[0];
+				btn_sn.textContent = "S/N: " + obj[1][text]['serial_n'];
+
+				let btn_pn =document.getElementsByClassName('pn')[0];
+				btn_pn.textContent = "P/N: " + obj[1][text]['part_n'];
+
+				let btn_descr =document.getElementsByClassName('descr')[0];
+				btn_descr.textContent = "Описание: " + obj[1][text]['descr'];
+
+				let btn_doc = document.getElementsByClassName('doc')[0];
+				btn_doc.textContent = "Документация";
+				btn_doc.href = obj[1][text]['doc']
+
+				let btn_stor =document.getElementsByClassName('stor')[0];
+				btn_stor.textContent = "На склад";
+				btn_stor.href = btn_stor.href.replaceAll(/[u][n][i][t][/]\d*[/]/g, "unit/" + obj[1][text]['pos_on_stor'] + "/")
+
+				about_unit.style.display = 'block';
+			}
+		</script>
+	{% else %}
+	<script>
+		let about_unit = document.getElementById('about_unit');
+		about_unit.style.display = 'none';
+	</script>
+	{% endif %}
+{% endwith %}
+
+
+

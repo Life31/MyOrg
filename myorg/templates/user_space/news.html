@@ -1,0 +1,123 @@
+<style>
+	.otd_btn {
+		width: 95%;
+		border: 1px solid black;
+		font-size: 12px; line-height: 12px;
+	}
+	.emplo {
+		width:98%;
+	}
+	.otd_emplos {
+		display: flex; flex-direction: column; width: 95%;
+	}
+	.user_info{
+		display: flex; flex-direction: column; justify-content: center; width: 95%; display: none; border: 0px solid black; background: white; margin-top: -2px;
+	}
+</style>
+
+	
+</div>
+{% load static %}
+{% load user_filters %}
+{% if user_widgets.news %}
+<div class="card" id="5" style="display: flex; width: 49px; height: 54px; overflow: hidden;">
+{% else %}<div class="card" id="5" style="display: none;">
+{% endif %}
+	<div class="title" onmouseover="titleonmouseover(this)" onmouseout="titleonmouseout(this)">
+		<div class="off news widget_place_for_image" {% if user_widgets.news_open %}name="open"{% else %}name="close"{% endif %}>
+			<img 
+				class="img_for_btn top_left_screen"
+				onclick="closeOpenCard(this)"
+				style="margin: 10px; width: 80%; height: 80%;"
+				title="свернуть / развернуть виджет"
+				src={% static "news.png" %}
+			>
+		</div>
+		<div style="width:70%; display: none;">
+			<a style="color: rgb(102, 168, 243); text-decoration: none; font-size: 24px;"
+				title="Перейти на полную версию"
+				href="#">
+				Новости
+			</a>
+		</div>
+		<div style="width: 10%; display: none; margin-left: 15px;">
+			<a style="display: none;" href="{% url 'user_widget_delete' user.id 'news' %}">
+				<img style="height: 90%; width: 90%;" title="удалить виджет" src={% static "denay.png" %}>
+			</a>
+		</div>
+	</div>
+	<div class="widget_data">
+		<div style="display: flex; flex-direction: column; overflow-y: scroll; width: 99%; height: 100%;">
+			<div style="flex-direction: column; justify-content: left; align-items: center; text-align: left;" onclick="showNews(this)">
+				<div class="task emplo" style="flex-direction: row; justify-content: left; align-items: center; text-align: left;">
+					<img style="margin: 10px; width: 15px; height: 15px;" src={% static "news.png" %}>
+					Субботник в филиале Центр комплексирования
+				</div>
+				
+				<div class="user_info" style="background: transparent;">
+					<div style="display: flex; flex-direction: column;">
+						<img style="width: 100%;" src={% static "news_0.png" %}>
+						<div style="display: flex; flex-direction: column;">
+							<div style="color: black; font-size: 12px; line-height: 12px; text-align: left;" href="#">По традиции апрель – месяц проведения субботника, время Большой уборки. 
+								27 апреля мы приглашаем вас принять участие в субботнике: привести в порядок свои рабочие места и кабинеты, собрать и  освободиться от макулатуры. 
+								Место сбора макулатуры: ул. Смольная 24, кор. Д, 7 этаж справа от лифта за стеклянной дверью (макулатуру необходимо освободить от скрепок и файлов).
+								Вырученные средства от сдачи макулатуры будут направлены на нужды детей Переславль-Залесского санаторного детского дома.
+								Участие в мероприятии является абсолютно добровольным.
+							</div>
+							<div><a style="color: red" href="{% url 'test' 2 %}">Кто с нами?</a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style="flex-direction: column; justify-content: left; align-items: center; text-align: center;" onclick="showNews(this)">
+				<div class="task emplo" style="flex-direction: row; justify-content: left; align-items: center; text-align: left;">
+					<img style="margin: 10px; width: 15px; height: 15px;" src={% static "news.png" %}>
+					Елка желаний
+				</div>
+				
+				<div class="user_info" style="background: transparent;">
+					<div style="display: flex; flex-direction: column;">
+						<img style="width: 100%;" src={% static "news_1.jpg" %}>
+						<div style="display: flex; flex-direction: column;">
+							<div style="color: black; font-size: 12px; line-height: 12px; text-align: left;" href="#">Уважаемые коллеги!
+	 
+								У нас в компании есть добрая традиция – в канун Нового года дарить радость детям, оказавшимся в трудной жизненной ситуации. Мы приглашаем вас присоединиться к «Ёлке желаний» и подарить подарок воспитанникам «Переславль-Залесского санаторного детского дома» в Ярославской области.
+								7 декабря в холле 7 этажа появится необычная ёлка: каждая игрушка на ней – это мечта ребенка, которую мы с вами можем воплотить. 
+								Возьмите любой шарик с ёлки
+								Прочитайте пожелание 
+								Купите подарок и до 19 декабря передайте его в отдел персонала 
+								Вы можете приобрести подарок как от себя лично, так и вместе с коллегами. 
+								Внутри шарика вы найдёте QR-код, который ведёт на сайт интернет-магазина с возможным вариантом подарка. Вы можете выбрать его или подобрать аналогичный вариант. 
+								Затем мы соберём все подарки, обернём в новогоднюю упаковку и доставим в Переславль-Залесский. И обязательно поделимся с вами фотографиями в нашем телеграм-канале. 
+								По всем возникающим вопросам, пожалуйста, обращайтесь к <a style="color: rgb(60, 129, 209);" href="{% url 'messages' user.id 2 %}">Айдимировой Светлане</a>
+								или <a style="color: rgb(60, 129, 209);" href="{% url 'messages' user.id 12 %}">Кочковской Анне</a>.
+								
+							</div>
+							<div><a style="color: red" href="{% url 'test' 2 %}">Кто с нами?</a></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<div class="widget_footer">
+		<a class="btn widg_f_btn" style="width: 100%; border-radius: 8px 8px 18px 18px;" href="#">Добавить новость</a>
+	</div>
+	<script>
+		function showNews(obj) {			
+			
+			let user_info = document.getElementsByClassName('user_info');
+			let emplos = document.getElementsByClassName('emplo');
+			for (let i = 0; i < user_info.length; i++) {
+				user_info[i].style.display = 'none';
+			}
+			for (let i = 0; i < emplos.length; i++) {
+				if (emplos[i] != obj) {
+					emplos[i].style.background = 'white';
+				}
+			}
+			obj.childNodes[3].style.display = 'flex';
+		}
+	</script>	
+</div>

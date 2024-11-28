@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% block title %}Заявки {{ group.title }}{% endblock %}
+{% block header %}
+	<a style="color: rgb(74, 177, 236); font-weight: bold; text-align: left;">Управляемые реле</a>
+{% endblock %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+{% block content %}
+	{% if user.username in rights %}
+	{% include "includes/menu.html" %}
+	<div class="card"> 
+	
+		<div class="card-body">
+			<div style="font-size:24pt;text-align: left;">Реле ISIB</div>
+			<div class="h6 text-black">
+				<table align="left">
+					<tr style="text-align: left; background: rgb(74, 177, 236);">
+						<td width="100">
+							<a class="text" style="color: white; font-weight: bold;">Реле</a>
+						</td>
+						
+						<td width="200" colspan=2>
+							<a class="text" style="color: white; font-weight: bold;">Кнопки управления</a>
+						</td>
+						<td width="100">
+							<a class="text" style="color: white; font-weight: bold;">Статус</a>
+						</td>
+					</tr>
+					<tr style="text-align: left;">
+						<td width="100">
+							<a class="text" style="color: rgb(74, 177, 236); font-weight: bold;">1 (БМ1)</a>
+						</td>
+						
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 0 'on' %}" style="width: 80px; color: white; font-weight: bold;">ON</a>
+						</td>
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 0 'off' %}" style="width: 80px; color: white; font-weight: bold;">OFF</a>
+						</td>
+						<td width="100">
+							<a class="text" id="Relay1" style="color: rgb(74, 177, 236); font-weight: bold;"></a>
+						</td>
+					</tr>
+					<tr style="text-align: left;">
+						<td width="100">
+							<a class="text" style="color: rgb(74, 177, 236); font-weight: bold;">2 (БМ1)</a>
+						</td>
+						
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 1 'on' %}" style="width: 80px; color: white; font-weight: bold;">ON</a>
+						</td>
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 1 'off' %}" style="width: 80px; color: white; font-weight: bold;">OFF</a>
+						</td>
+						<td width="100">
+							<a class="text" id="Relay2" style="color: rgb(74, 177, 236); font-weight: bold;"></a>
+						</td>
+					</tr>
+					<tr style="text-align: left;">
+						<td width="100">
+							<a class="text" style="color: rgb(74, 177, 236); font-weight: bold;">3 (БМ2)</a>
+						</td>
+						
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 2 'on' %}" style="width: 80px; color: white; font-weight: bold;">ON</a>
+						</td>
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 2 'off' %}" style="width: 80px; color: white; font-weight: bold;">OFF</a>
+						</td>
+						<td width="100">
+							<a class="text" id="Relay3" style="color: rgb(74, 177, 236); font-weight: bold;"></a>
+						</td>
+					</tr>
+					<tr style="text-align: left;">
+						<td width="100">
+							<a class="text" style="color: rgb(74, 177, 236); font-weight: bold;">4 (БМ2)</a>
+						</td>
+						
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 3 'on' %}" style="width: 80px; color: white; font-weight: bold;">ON</a>
+						</td>
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 3 'off' %}" style="width: 80px; color: white; font-weight: bold;">OFF</a>
+						</td>
+						<td width="100">
+							<a class="text" id="Relay4" style="color: rgb(74, 177, 236); font-weight: bold;"></a>
+						</td>
+					</tr>
+					<tr style="text-align: left;">
+						<td width="100">
+							<a class="text" style="color: rgb(74, 177, 236); font-weight: bold;">5 (БМ3)</a>
+						</td>
+						
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 4 'on' %}" style="width: 80px; color: white; font-weight: bold;">ON</a>
+						</td>
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 4 'off' %}" style="width: 80px; color: white; font-weight: bold;">OFF</a>
+						</td>
+						<td width="100">
+							<a class="text" id="Relay5" style="color: rgb(74, 177, 236); font-weight: bold;"></a>
+						</td>
+					</tr>
+					<tr style="text-align: left;">
+						<td width="100">
+							<a class="text" style="color: rgb(74, 177, 236); font-weight: bold;">6 (БМ3)</a>
+						</td>
+						
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 5 'on' %}" style="width: 80px; color: white; font-weight: bold;">ON</a>
+						</td>
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 5 'off' %}" style="width: 80px; color: white; font-weight: bold;">OFF</a>
+						</td>
+						<td width="100">
+							<a class="text" id="Relay6" style="color: rgb(74, 177, 236); font-weight: bold;"></a>
+						</td>
+					</tr>
+					<tr style="text-align: left;">
+						<td width="100">
+							<a class="text" style="color: rgb(74, 177, 236); font-weight: bold;">7 (резерв)</a>
+						</td>
+						
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 6 'on' %}" style="width: 80px; color: white; font-weight: bold;">ON</a>
+						</td>
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 6 'off' %}" style="width: 80px; color: white; font-weight: bold;">OFF</a>
+						</td>
+						<td width="100">
+							<a class="text" id="Relay7" style="color: rgb(74, 177, 236); font-weight: bold;"></a>
+						</td>
+					</tr>
+					<tr style="text-align: left;">
+						<td width="100">
+							<a class="text" style="color: rgb(74, 177, 236); font-weight: bold;">8 (резерв)</a>
+						</td>
+						
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 7 'on' %}" style="width: 80px; color: white; font-weight: bold;">ON</a>
+						</td>
+						<td width="100">
+							<a class="btn btn-sm btn-secondary" href="{% url 'rele_on_off' '10.1.98.249' 7 'off' %}" style="width: 80px; color: white; font-weight: bold;">OFF</a>
+						</td>
+						<td width="100">
+							<a class="text" id="Relay8" style="color: rgb(74, 177, 236); font-weight: bold;"></a>
+						</td>
+					</tr>
+					
+				</table>
+
+				<script type="text/javascript">
+					var IP_ADDR = "10.1.98.249"
+					var RequestPeriodMS = 1000
+					var ErrorCount = 0
+					var ErrorThreshold = 3
+					function StatusParse(StatusSTR)
+						{
+						if ( StatusSTR == null )
+							{
+							if ( ErrorCount === ErrorThreshold ) { document.getElementById("RelayST").innerHTML = "undefined"; }
+							else { ErrorCount++; }
+
+							return;
+							}
+						ErrorCount = 0;
+						var xmlDOC;
+						if (window.DOMParser)
+							{
+							parser = new DOMParser();
+							xmlDOC = parser.parseFromString(StatusSTR,"text/xml");
+							}
+							else
+								{
+								xmlDOC = new ActiveXObject("Microsoft.XMLDOM");
+								xmlDOC.async = false;
+								xmlDOC.loadXML(StatusSTR);
+								}
+						var RelayCounter = 0;
+						while (1)
+							{
+							var RelayOBJ = xmlDOC.getElementsByTagName("rl" + RelayCounter.toString() + "string");
+							if (RelayOBJ.length === 1)
+								{
+								RelayCounter++;
+								if ( RelayOBJ[0].childNodes[0].nodeValue == 1 ) 
+									{ 
+									document.getElementById("Relay"+RelayCounter).innerHTML = "ON";
+									document.getElementById("Relay"+RelayCounter).style.color = "green";
+									}
+									else 
+										{ 
+										document.getElementById("Relay"+RelayCounter).innerHTML = "OFF";
+										document.getElementById("Relay"+RelayCounter).style.color = "red";}
+										}
+								else { break; }
+							}
+						}	
+					function SendHttpAsyncRequest(Request)
+						{
+						var req = null;
+						if (window.XMLHttpRequest) { req = new XMLHttpRequest(); }
+						else if (window.ActiveXObject) { req = new ActiveXObject("Microsoft.XMLHTTP"); }
+						if (req) {
+							req.open('GET', Request, true);
+							req.timeout = 2000;
+							req.onreadystatechange = function (e) {
+								if (req.readyState == 4)
+									{
+									if (req.status == 200) { StatusParse(req.responseText); }
+									else { StatusParse(null); }
+									}
+								};
+							req.onerror = function (e) { StatusParse(null); }
+							req.ontimeout = function (e) { StatusParse(null); }
+							req.send();
+							}
+						}
+					setInterval(function(){SendHttpAsyncRequest("http://" + IP_ADDR + "/pstat.xml")}, RequestPeriodMS);
+				</script>
+			</div>
+		</div>
+	{% else %}	
+		<div class="card-body">
+			<div style="font-size:24pt;text-align: left;">Страница только для администраторов</div>
+		</div>
+	{% endif%}
+	</div>
+{% endblock %}
+
+

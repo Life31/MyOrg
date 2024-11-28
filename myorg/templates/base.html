@@ -1,0 +1,179 @@
+<!doctype html>
+<style type="text/css">
+    
+    body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    line-height: 100%;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 1.5em;
+    color: #333;
+    }
+    .nav {
+    order: -1;
+    background: #E6E6E6;
+    }
+    .footer {
+    text-align: center;
+    height: 49px;
+    padding: 1em;
+    }
+    .wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    background: #f7f7f7;
+    }
+    .main {
+
+		background: #f7f7f7;
+		text-align: center;
+		overflow-y: auto;
+
+		height: calc(100vh - 65px);
+    }
+    .aside {
+		background: #E6E6E6;
+        box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		padding: 1em;
+		text-align: center;
+		overflow-y: auto;
+		height: calc(100vh - 70px);
+    }
+    .container {
+        width: 100%;
+        max-width: 800px;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        margin: 0 auto;
+    }
+    @media (max-width: 30em) {
+        .main {
+            flex: 1 0 auto;
+        }
+    }
+    @media (min-width: 30em) {
+        .nav {
+            display: block;
+        }
+        .wrapper {
+            flex-direction: row;
+        }
+        .main {
+            flex: 1 1 auto;
+        }
+        .aside {
+            width: 300px;  
+        }
+    }
+    .preloader {
+        position: fixed;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: #e0e0e0;
+        z-index: 1001;
+    }
+    .preloader__row {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        width: 70px;
+        height: 70px;
+        margin-top: -35px;
+        margin-left: -35px;
+        text-align: center;
+        animation: preloader-rotate 2s infinite linear;
+    }
+    .preloader__item {
+        position: absolute;
+        display: inline-block;
+        top: 0;
+        background-color: #337ab7;
+        border-radius: 100%;
+        width: 35px;
+        height: 35px;
+        animation: preloader-bounce 2s infinite ease-in-out;
+    }
+    .preloader__item:last-child {
+        top: auto;
+        bottom: 0;
+        animation-delay: -1s;
+    }
+    @keyframes preloader-rotate {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    @keyframes preloader-bounce {
+        0%,
+        100% {
+            transform: scale(0);
+        }
+        50% {
+            transform: scale(1);
+        }
+    }
+    .loaded_hiding .preloader {
+        transition: 0.3s opacity;
+        opacity: 0;
+    }
+    .loaded .preloader {
+        display: none;
+    }
+
+</style>
+
+
+
+
+{% load static %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        
+        <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
+        <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+        <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+		<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+    </head>
+
+    <body>
+        <div class="preloader">
+            <div class="preloader__row"> 
+                <div class="preloader__item"></div>
+                <div class="preloader__item"></div>
+            </div>
+        </div>
+        {% include 'includes/nav.html' %}
+        <div class="wrapper">
+            {% block aside %}
+                {% include 'includes/aside.html' %}
+            {% endblock %}
+            
+            <main class="main">
+                <div class="container" style="margin: 1em;">
+                    <h1>{% block header %}Ресурс{% endblock %}</h1>
+                    {% block content %}
+                    <!-- Содержимое страницы -->
+                    {% endblock %}
+                </div>
+            </main> 
+        </div>
+        <!--{% include 'includes/footer.html' %}-->
+        <script>
+            window.onload = function() {
+                document.body.classList.add('loaded_hiding');
+                window.setTimeout(function() {
+                    document.body.classList.add('loaded');
+                    document.body.classList.remove('loaded_hiding');
+                }, 500)
+            }
+        </script>
+    </body>
+</html> 

@@ -1,0 +1,57 @@
+{% load user_filters %}
+{% load static %}
+	<div class="card" style="margin: 5px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">
+		<table>
+			<tr>
+				<th style="width: 270px;">
+					<div style="display: flex; flex-direction: row; margin-left: 10px;">
+						{% if post.group_id == 1 %}
+						<div class="circle"></div>
+						{% elif post.group_id == 2 %}
+						<div style="background: rgb(74, 177, 236);" class="circle"></div>
+						{% elif post.group_id == 3 %}
+						<div style="background: #F2552C;" class="circle"></div>
+						{% elif post.group_id == 4 %}
+						<div style="background: #F5DF4C;" class="circle"></div>
+						{% elif post.group_id == 5 %}
+						<div style="background: #6B5B95;" class="circle"></div>
+						{% elif post.group_id == 6 %}
+						<div style="background: #79c753;" class="circle"></div>
+						{% elif post.group_id == 7 %}
+						<div style="background: #e28308;" class="circle"></div>
+						{% endif %}
+						<a style="color: rgb(74, 177, 236);" href="{% url 'post' post.author.username post.id %}">
+							{{ post.text|linebreaksbr }}
+						</a>
+					</div>
+				</th>
+				<th style="width: 200px;">{{ post.day|day_to_date }}</th>
+				<th style="width: 250px;">
+					<div style="display: flex; flex-direction: row; justify-content: left; align-items: center;">
+						{% if post.task_state_id == 1 %}
+							<img style="height: 15px; margin-left: 30px; margin-right: 10px;" src={% static "new.png" %}>
+						{% elif post.task_state_id == 2 %}
+							<img style="height: 15px; margin-left: 30px; margin-right: 10px;" src={% static "ok.png" %}>
+						{% elif post.task_state_id == 3 %}
+							<img style="height: 15px; margin-left: 30px; margin-right: 10px;" src={% static "ok_over.png" %}>	
+						{% elif post.task_state_id == 4 %}
+							<img style="height: 15px; margin-left: 30px; margin-right: 10px;" src={% static "denay.png" %}>	
+						{% endif %}
+							{{ post.task_state }}
+						
+					</div>
+				</th>
+				<th style="width: 280px;">
+					<a style="color: rgb(74, 177, 236); font-weight: bold;" href="{% url 'profile' post.author.username %}">
+						<strong class="d-block text-gray-dark">{{ post.author.get_full_name }}</strong>
+					</a>
+				</th>
+				<th style="width: 40px;">
+					<div class="dropdown">
+						<div class="btn-sm btn-outline-secondary font-weight-bold" style="height: 30px;">☰</div>
+						{% include "includes/dropdown.html" %}
+					</div>
+				</th>
+			</tr>
+		</table>
+	</div>

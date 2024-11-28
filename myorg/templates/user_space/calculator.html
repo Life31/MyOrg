@@ -1,0 +1,215 @@
+{% load static %}
+{% load user_filters %}
+{% if user_widgets.calc %}
+<div class="card" id="2" style="display: flex; width: 49px; height: 54px; overflow: hidden;">
+{% else %}<div class="card" id="2" style="display: none;">
+{% endif %}
+	<div class="title" onmouseover="titleonmouseover(this)" onmouseout="titleonmouseout(this)">
+		<div class="off calc widget_place_for_image" {% if user_widgets.calc_open %}name="open"{% else %}name="close"{% endif %}>
+			<img 
+				class="img_for_btn top_left_screen"
+				onclick="closeOpenCard(this)"
+				style="margin: 10px; width: 80%; height: 80%;"
+				title="свернуть / развернуть виджет"
+				src={% static "calc.png" %}
+			>
+		</div>
+		<div style="width:70%; display: none;">
+			<a style="color: rgb(102, 168, 243); text-decoration: none; font-size: 24px;"
+				title="Перейти на полную версию"
+				href="#">
+				Калькулятор
+			</a>
+		</div>
+		<div style="width: 10%; display: none; margin-left: 15px;">
+			<a style="display: none;" href="{% url 'user_widget_delete' user.id 'calc' %}">
+				<img style="height: 90%; width: 90%;" title="удалить виджет" src={% static "denay.png" %}>
+			</a>
+		</div>
+	</div>
+	<div class="widget_data" style="height: 88%; border-radius: 8px 8px 18px 18px;">
+		<div style="display: flex; flex-direction: column; justify-content: center; align-items: center; overflow-y:hidden;">
+			<div class="task" style="justify-content: center; width: 90%; height: 47px; margin: 2px; border: 1px solid black; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);">
+				<a class="screen" style="color: black; font-size: 20px; text-decoration: none; line-height: 30px;" href="#"></a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				<a class="task calc_btn" style="background: #E6E6E6; color: black; text-decoration: none;" onclick="clearScreen()" href="#">C</a>
+				<a class="task calc_btn" style="background: #E6E6E6; color: black; text-decoration: none;" onclick="clickPlusMinus()" href="#">+/-</a>
+				<a class="task calc_btn" style="border: 2px solid #e71010; background: linear-gradient(to bottom left, #E6E6E6 48%, red 48% 52%, #E6E6E6 52% 100%); color: black; text-decoration: none;" title="Доступно в премиум подписке" href="#">%</a>
+				<a class="task calc_btn" style="background: rgb(248, 185, 68); color: white; text-decoration: none;" onclick="clickOperator(this)" href="#">/</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				<a class="task calc_btn" style="color: white; text-decoration: none;" onclick="clickNum(this)" href="#">7</a>
+				<a class="task calc_btn" style="color: white; text-decoration: none;" onclick="clickNum(this)" href="#">8</a>
+				<a class="task calc_btn" style="color: white; text-decoration: none;" onclick="clickNum(this)" href="#">9</a>
+				<a class="task calc_btn" style="background: rgb(248, 185, 68); color: white; text-decoration: none;" onclick="clickOperator(this)" href="#">✕</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				<a class="task calc_btn"  style="color: white; text-decoration: none;" onclick="clickNum(this)" href="#">4</a>
+				<a class="task calc_btn"  style="color: white; text-decoration: none;" onclick="clickNum(this)" href="#">5</a>
+				<a class="task calc_btn"  style="color: white; text-decoration: none;" onclick="clickNum(this)" href="#">6</a>
+				<a class="task calc_btn" style="background: rgb(248, 185, 68); color: white; text-decoration: none;" onclick="clickOperator(this)" href="#">-</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				<a class="task calc_btn" style="color: white; text-decoration: none;" onclick="clickNum(this)" href="#">1</a>
+				<a class="task calc_btn" style="color: white; text-decoration: none;" onclick="clickNum(this)" href="#">2</a>
+				<a class="task calc_btn" style="color: white; text-decoration: none;" onclick="clickNum(this)" href="#">3</a>
+				<a class="task calc_btn" style="background: rgb(248, 185, 68); color: white; text-decoration: none;" onclick="clickOperator(this)" href="#">+</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				<div class="task calc_btn" style="width: 100px; border-radius: 40px; justify-content: left;
+				color: white;  margin-left: 13px; text-decoration: none;" onclick="clickNum(this)" href="#"><a style=" margin-left: 12px; color: white; text-decoration: none;" onclick="clickNum(this)" href="#">0</a></div>
+	
+				<a class="task calc_btn" style="color: white; text-decoration: none;" onclick="clickComma()" href="#">,</a>
+				<a class="task calc_btn" style="background: rgb(248, 185, 68); color: white; text-decoration: none; margin-right: 13px;" onclick="clickRes()" href="#">=</a>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+	
+	<script>
+		let firstNum = "";
+		let secondNum = "";
+		let operator ="";
+		let screen = document.getElementsByClassName("screen")[0];
+		let calc_btns = document.getElementsByClassName("calc_btn");
+		let range = 15;
+		function checkScreen(){
+			
+			if (screen.textContent.length > range) {
+				let oldSize = parseInt(screen.style.fontSize);
+				screen.style.fontSize = oldSize * 0.8 + 'px';
+				range = range * 1.35;
+
+			}
+		}
+		function gotFirstNum() {
+			if (firstNum != "") {return true;}
+			return false;
+		}
+		function gotSecondNum() {
+			if (secondNum != "") {return true;}
+			return false;
+		}
+		function gotOperator() {
+			if (operator != "") {return true;}
+			return false;
+		}
+		function clickOperator(obj) {
+			if (gotFirstNum()) {
+				if (!gotOperator()) {
+					operator = obj.textContent;
+					screen.textContent += obj.textContent;
+				} else {
+					if (!gotSecondNum()) {
+						operator = obj.textContent;
+						screen.textContent = firstNum + obj.textContent;
+					} else {
+						calc();
+						operator = obj.textContent;
+						screen.textContent += obj.textContent;
+					}
+					
+				}
+			}
+			checkScreen();
+		}
+		function clickRes(){
+			if (gotFirstNum() & gotOperator() & gotSecondNum()) {
+				calc();
+				checkScreen();
+			}
+		}
+		function calc(){
+			if (operator == "+"){screen.textContent = Number(firstNum) + Number(secondNum);
+				firstNum = screen.textContent;}
+			else if (operator == "-"){screen.textContent = Number(firstNum) - Number(secondNum);
+				firstNum = screen.textContent;}
+			else if (operator == "✕"){screen.textContent = Number(firstNum) * Number(secondNum);
+				firstNum = screen.textContent;}
+			else if (operator == "/"){
+				if(Number(secondNum) == 0){
+					screen.textContent = "На нуль делить нельзя";
+					clearScreen();
+				}else{
+					screen.textContent = Number(firstNum) / Number(secondNum);
+					firstNum = screen.textContent;										
+				}
+			}
+			firstNum = screen.textContent;
+			operator = "";
+			secondNum = "";
+			checkScreen();
+		}
+		function clickNum(obj) {
+			if (!gotFirstNum()) {
+				firstNum += obj.textContent;
+				screen.textContent += obj.textContent;
+			} else {
+				if (!gotOperator()) {
+					firstNum += obj.textContent;
+					screen.textContent += obj.textContent;
+				} else {
+					secondNum += obj.textContent;
+					screen.textContent += obj.textContent;
+				}
+			}
+			checkScreen();
+		}
+		function clearScreen() {
+			firstNum = "";
+			operator = "";
+			secondNum = "";
+			screen.textContent = "";
+			screen.style.fontSize = '20px';
+			range = 15;
+		}
+		function clickPlusMinus() {
+			if (gotFirstNum()) {
+				if (!gotOperator()) {
+					if (firstNum[0] != "-"){
+						firstNum = "-" + firstNum;
+						screen.textContent = firstNum;
+					}else{
+						firstNum = firstNum.slice(1);
+						screen.textContent = firstNum;
+					}
+				} else {
+					if (gotSecondNum()) {
+						if (secondNum[0] != "-"){
+							secondNum = "-" + secondNum;
+							screen.textContent = firstNum + operator + secondNum;
+						}else{
+							secondNum = secondNum.slice(1);
+							screen.textContent = firstNum + operator + secondNum;
+						}
+					}
+				}
+			}
+			checkScreen();
+		}
+		function clickComma() {
+			if (gotFirstNum()) {
+				if (!gotOperator()) {
+					if (!firstNum.includes(".")) {
+						firstNum += ".";
+						screen.textContent += ",";
+					}
+				} else {
+					if (gotSecondNum()) {
+						if (!secondNum.includes(".")) {
+							secondNum += ".";
+							screen.textContent += ",";
+						}
+					}
+				}
+			} else {
+				firstNum = "0.";
+				screen.textContent = "0,";
+			}
+			checkScreen();
+		}
+	</script>
+

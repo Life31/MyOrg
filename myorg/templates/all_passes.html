@@ -1,0 +1,135 @@
+<style type="text/css"> 
+    .log {
+	border-collapse: separate;
+	border-spacing: 2px 1px;
+    }
+    .log th {
+	text-align: center;
+	background:rgb(164, 214, 243);
+    font-weight: bold;
+	padding: 0px 10px 0px 10px;
+	margin: auto;
+    }
+    .log td {
+	text-align: left;
+
+	padding: 0px 10px 0px 10px;
+	margin: auto;
+    }
+    tbody tr:nth-child(odd){
+        background-color: transparent;
+    }
+    tbody tr:nth-child(even){
+        background-color: rgb(243, 239, 239);
+    }
+
+	* {box-sizing: border-box;}
+
+	form {
+	position: relative;
+	width: 240px;
+	margin: 0 auto;
+	border-radius: 5px;
+	}
+	.d1 {background: #A3D0C3;  border-radius: 10px; height: 37px;}
+	.d1 input {
+	width: 100%;
+	height: 37px;
+	padding-left: 10px;
+	border: 2px solid #7BA7AB;
+	border-radius: 5px;
+	outline: none;
+	font-size: 14px;
+	background: #F9F0DA;
+	color: #9E9C9C;
+	border-radius: 5px;
+	}
+	.d1 button {
+	position: absolute; 
+	top: -20;
+	right: 0px;
+	width: 37px;
+	height: 37px;
+	background:#7BA7AB;
+	border: 2px solid #7BA7AB;
+	border-radius: 0 5px 5px 0;
+	cursor: pointer;
+	}
+	.d1 button::before{
+		content: "\F50D";
+		font-family: FontAwesome;
+		font-size: 16px;
+		color: #F9F0DA;
+	}
+</style>
+
+{% extends "base.html" %}
+{% load cache %}
+{% block title %}Все пропуска{% endblock %}
+{% load static %}
+{% block header %}
+	<nav class="navbar navbar-expand-md" style="background: transparent; width: 120%; height: 50px;">
+		<a style="color: black; font-weight: bold; text-align: left; line-height: 10px;">Разовые пропуска</a>
+		<ul class="navbar-nav ml-auto">	
+			<div class="d1">
+				<form action="{% url 'pass_search' %}" method="GET">
+					<input type="text"  placeholder="Поиск..." name="q">
+					<button type="submit">
+						
+					</button>
+				</form>
+			</div>
+		</ul>
+	</nav>
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_passes.html' %}
+{% endblock %}
+{% load thumbnail %}
+{% load user_filters %}
+{% block content %}
+<section class="passes">
+	
+    <table class="log" border="0" style="width:120%;">
+        <thead>
+            <tr>
+				<th width="30">№</th>
+				<th width="300">ФИО</th>
+				<th width="300">Откуда</th>
+				<th width="160">Дата</th>
+				<th width="120">Паспорт</th>
+				<th width="200">Комментарий</th>
+				<th width="30">☰</th>
+			</tr>
+        </thead>
+        <tbody>
+            {% for pass in page %} 
+				<tr>
+					<td style="font-weight: bold; text-align: center;">{{ pass.num }}</td>
+					<td><a href="{% url 'pass_name_filtr' pass.sec_name %}" >{{ pass.sec_name }}</a> {{ pass.name }} {{ pass.patro }}</td>
+					<td>{{ pass.where }}</td>
+					<td>{{ pass.day|day_to_date }}</td>
+					<td>{{ pass.pasport }}</td>
+					<td>{{ pass.comment }}</td>
+					<td style="font-weight: bold; text-align: center;">
+						<div class="dropdown"> 
+							<div class="btn-sm btn-outline-secondary" style="height: 30px;">☰</div>
+							<div class="dropdown-content">
+							{% if user.username in passes_rights %}
+								<a class="btn btn-sm" href="{% url 'pass_copy' pass.id %}" role="button">Как шаблон</a>
+								<a class="btn btn-sm" href="{% url 'pass_edit' pass.id %}" role="button">Править</a>
+								<a class="btn btn-sm" href="{% url 'pass_delete' pass.id %}" role="button">Удалить</a>
+								{% if pass.file.url != None %}
+									<a class="btn btn-sm" href="{% static pass.file.url %}" role="button">Печать</a>
+								{% endif %}	
+							{% endif %}	
+							</div>
+						</div>
+					</td>
+				</tr>
+			{% endfor %}
+        </tbody>
+    </table>
+    <div style="width:120%; display: flex; flex-direction: row; justify-content: center; align-items: center;">{% include "includes/paginator.html" %}</div>
+</section>
+{% endblock %} 

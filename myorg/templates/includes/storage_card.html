@@ -1,0 +1,35 @@
+<div class="card" style="background-color: #48D1CC;">
+	<div class="card-body">
+		<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'main' %}">
+			Учетные единицы
+		</a>
+		<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'th_all' %}">
+			Накладные
+		</a>
+	</div>
+    <ul class="list-group list-group-flush" >       
+        <li class="list-group-item" style="background-color: #48D1CC;">
+            <div class="h6 text-muted">
+				
+				<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'unit_new' %}">
+					Добавить уч. единицу
+				</a>
+                <a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'th_new' %}">
+					Добавить т. накладную
+				</a> 
+				<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'creator_new' %}">
+					Добавить Производителя
+				</a> 
+				<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'si_new' %}">
+					Добавить ед. измерения
+				</a>
+				<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'ctgry_new' %}">
+					Добавить категорию
+				</a>
+				<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'place_new' %}">
+					Добавить место хранения
+				</a> 
+            </div>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,122 @@
+<style type="text/css"> 
+	h4 {
+	color: #808080;
+	font-family: 'Calibri';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 22px;
+	margin: 0px;
+	text-align: left;
+	}
+	.sib {
+		width: 118px;
+		height: 37px;
+		display: flex; flex-direction: row; justify-content: center; align-items: center;
+		margin: 2px;
+		border: 3px solid white;
+		border-radius: 10px;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 22px;
+	}
+	.sib:hover {
+		transition: 0.4s;
+		background: #3b3b3a;
+		border: 3px solid white;
+		color: white;
+	}
+	.btn-group-vertical {
+	margin: 2px auto;
+	}
+</style>
+
+{% load static %}
+{% load user_filters %}
+{% with request.resolver_match.view_name as view_name %}
+	<aside class="aside" style="margin: 4px; border-radius: 10px;">
+        {% if user.username in rights or  user.username in storage_rights %}		
+			<div class="btn-group-vertical">
+				<div style="display: flex; flex-direction: row;">
+					<a class="btn sib" style="width: 240px;" href="{% url 'storage' %}">Карта склада</a>
+				</div>
+				<h4 style="margin-top: 20px;">Накладные</h4>
+				
+				<div style="display: flex; flex-direction: row;">
+					<a class="btn sib" style="width: 80px;" href="{% url 'th_all' %}">Все</a>
+					<a class="btn sib" style="width: 156px; display: flex; flex-direction: row; align-items: center; justify-content: left;" href="{% url 'th_new' %}">
+						<img style="height: 15px; margin-left: 0px; margin-right: 10px;" src={% static "plus.png" %}>
+						Добавить
+					</a>
+				</div>
+				<div style="display: flex; flex-direction: row;">
+					<a class="btn sib" href="{% url 'th_all_type' 'Входящие' %}">Входящие</a>
+					<a class="btn sib" href="{% url 'th_all_type' 'Исходящие' %}">Исходящие</a>
+				</div>
+			</div>
+			<div class="btn-group-vertical">
+				<h4 style="margin-top: 20px;">Учетные единицы</h4>
+				<div style="display: flex; flex-direction: row;">
+					<a class="btn sib" style="width: 240px;" href="{% url 'main' %}">Учетные единицы</a>
+				</div>
+				<div style="display: flex; flex-direction: row;">
+					<a class="btn sib" style="width: 240px; display: flex; flex-direction: row; align-items: center; justify-content: center;" href="{% url 'main_likes' %}">
+						<img style="height: 15px; margin-left: 0px; margin-right: 10px;" src={% static "green_star.png" %}>
+						Избранные
+					</a>
+				</div>
+				<h4 style="margin-top: 20px;">Добавить</h4>
+				<div style="display: flex; flex-direction: row;">
+					
+					<a class="btn sib" style="width: 240px; display: flex; flex-direction: row; align-items: center; justify-content: left;" href="{% url 'unit_new' %}">
+						<img style="height: 15px; margin-left: 0px; margin-right: 10px;" src={% static "plus.png" %}>
+						Учетную единицу
+					</a>
+				</div>
+				<div style="display: flex; flex-direction: row;">
+					<a class="btn sib" style="width: 240px; display: flex; flex-direction: row; align-items: center; justify-content: left;" href="{% url 'creator_new' %}">
+						<img style="height: 15px; margin-left: 0px; margin-right: 10px;" src={% static "plus.png" %}>
+						Производителя
+					</a>
+				</div>
+				<div style="display: flex; flex-direction: row;">
+					<a class="btn sib" style="width: 240px; display: flex; flex-direction: row; align-items: center; justify-content: left;" href="{% url 'si_new' %}">
+						<img style="height: 15px; margin-left: 0px; margin-right: 10px;" src={% static "plus.png" %}>
+						Еденицу измерения
+					</a>
+				</div>
+				<div style="display: flex; flex-direction: row;">
+					<a class="btn sib" style="width: 156px; display: flex; flex-direction: row; align-items: center; justify-content: left;" href="{% url 'ctgry_new' %}">
+						<img style="height: 15px; margin-left: 0px; margin-right: 10px;" src={% static "plus.png" %}>
+						Категорию
+					</a>
+					<a class="btn sib" style="width:80px; display: flex; flex-direction: row; align-items: center; justify-content: left;" href="{% url 'tag_new' %}">
+						<img style="height: 15px; margin-left: 0px; margin-right: 10px;" src={% static "plus.png" %}>
+						Тег
+					</a>
+				</div>
+				<div style="display: flex; flex-direction: row;">
+					<a class="btn sib" style="width: 240px; display: flex; flex-direction: row; align-items: center; justify-content: left;" href="{% url 'place_new' %}">
+						<img style="height: 15px; margin-left: 0px; margin-right: 10px;" src={% static "plus.png" %}>
+						Место хранения
+					</a>
+				</div>
+				<div style="display: flex; flex-direction: row;">
+					<a class="btn sib" style="width: 240px; display: flex; flex-direction: row; align-items: center; justify-content: left;" href="{% url 'stend_new' %}">
+						<img style="height: 15px; margin-left: 0px; margin-right: 10px;" src={% static "plus.png" %}>
+						Стенд
+					</a>
+				</div>
+				<div style="display: flex; flex-direction: row;">
+					
+				</div>
+			</div>
+        {% endif %}
+    </aside>
+{% endwith %}
+
+
+

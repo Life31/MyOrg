@@ -1,0 +1,140 @@
+<style>
+
+	.text_b {
+		height: 26px; font-size: 12px; font-weight: bold; line-height: 10px; background: white; color: gray; margin: 0px; border: 1px groove white;
+	}
+	.day_in_week, .day_over, .day_now, .day_chil, .day_hol, .day_norm,.empty_day {
+		display: flex; flex-direction: row;
+		width: 45px;
+		height: 37px;
+		margin: 1px;
+		border-radius: 0px;
+		padding: 0px;
+		align-items: center;
+		justify-content: center;
+		color: #808080;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		border: 1px solid gray;
+	}
+	
+	.day_in_week {background: transparent; box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.2); border: 0px solid gray;}
+	.day_norm {background: transparent;}
+	.day_now {box-shadow: rgb(21, 163, 98) 0px 0px 0px 3px inset; border: 1px solid rgb(113, 226, 241); border-radius: 2px;}
+	.day_chil {background-color: rgb(219, 219, 219);}
+	.day_hol {background-color: rgb(219, 219, 219); color: red;}
+	.empty_day {background: transparent; box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.2); border: 0px solid gray;}
+
+</style>
+{% load static %}
+{% load user_filters %}
+{% if user_widgets.vacs %}
+<div class="card" id="12" style="display: flex; width: 49px; height: 54px; overflow: hidden;">
+{% else %}<div class="card" id="12" style="display: none;">
+{% endif %}
+	<div class="title" onmouseover="titleonmouseover(this)" onmouseout="titleonmouseout(this)">
+		<div class="off vacs widget_place_for_image" {% if user_widgets.vacs_open %}name="open"{% else %}name="close"{% endif %}>
+			<img 
+				class="img_for_btn top_left_screen"
+				onclick="closeOpenCard(this)"
+				style="margin: 10px; width: 80%; height: 80%;"
+				title="свернуть / развернуть виджет"
+				src={% static "vacation.png" %}
+			>
+		</div>
+		<div style="width:70%; display: none;">
+			<a style="color: rgb(102, 168, 243); text-decoration: none; font-size: 24px;"
+				title="Перейти на полную версию"
+				href="{% url 'vacations_start' %}">
+				Календарь
+			</a>
+		</div>
+		<div style="width: 10%; display: none; margin-left: 15px;">
+			<a style="display: none;" href="{% url 'user_widget_delete' user.id 'vacs' %}">
+				<img style="height: 90%; width: 90%;" title="удалить виджет" src={% static "denay.png" %}>
+			</a>
+		</div>
+	</div>
+	<div class="widget_data">
+		<div style="display: flex; flex-direction: row; justify-content: center; align-items: top; width: 100%; height: 99%; margin-top: 2px; background: rgb(235, 236, 240);">
+			<div class="prev-button task part" style="position: absolute; width: 40px; height:30px; line-height: 20px; cursor: pointer; justify-content: center; left: 20%;" aria-label="Предыдущий">&lt;</div>
+			<div class="slider-container" style="display: flex; flex-direction: row; justify-content: center; align-items: center; width: 100%;">
+				<div class="slider" style="display: flex; transition: 0.5s ease-in-out; height: 300px;">
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Январь" value=Январь %}</div>
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Февраль" value=Февраль %}</div>
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Март" value=Март %}</div>
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Апрель" value=Апрель %}</div>
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Май" value=Май %}</div>
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Июнь" value=Июнь %}</div>
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Июль" value=Июль %}</div>
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Август" value=Август %}</div>
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Сентябрь" value=Сентябрь %}</div>
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Октябрь" value=Октябрь %}</div>
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Ноябрь" value=Ноябрь %}</div>
+					<div class="slider-slide">{% include "includes/vac_month_table.html" with key="Декабрь" value=Декабрь %}</div>
+				</div>
+			</div>
+			<div class="next-button task part" style="position: absolute; width: 40px; height: 30px; line-height: 20px; cursor: pointer; justify-content: center; right: 20%;" aria-label="Следующий">&gt;</div>
+		</div>
+		<div class="my_vac" style="display: none; flex-direction: column; justify-content: left; align-items: center; position: absolute; left: 2px; bottom: 35px;">
+		{% for v in vacations %}
+			{% if v.day_start|today_or_not == False %}
+				<a class="btn widg_f_btn" style="color: black;" href="#">{{ v.day_start|good_date|date:"d.m.Y" }} -- {{ v.day_end|good_date|date:"d.m.Y" }}</a>
+			{% elif v.day_start|today_or_not and v.day_end|today_or_not == False %}
+				<a class="btn widg_f_btn" style="color: rgb(41, 201, 126); font-weight: bold; background: white;" href="#">{{ v.day_start|good_date|date:"d.m.Y" }} -- {{ v.day_end|good_date|date:"d.m.Y" }}</a>
+			{% elif v.day_end|today_or_not %}
+				<a class="btn widg_f_btn" style="color: rgb(150, 148, 148); text-decoration: line-through; text-decoration-style: double; text-decoration-color: tomato;" href="#">{{ v.day_start|good_date|date:"d.m.Y" }} -- {{ v.day_end|good_date|date:"d.m.Y" }}</a>
+			{% endif %}
+		{% endfor %}
+		</div>
+	</div>
+	<div class="widget_footer">
+		<a class="btn widg_f_btn" style="width: 75%; border-radius: 8px 8px 8px 18px; color:#e28308;" onclick="showMyVac()" href="#">Мой отпуск</a>
+		<a class=" widg_f_btn" style="width: 25%; border-radius: 8px 8px 18px 8px; color: white; text-decoration: none; background: gray; cursor: default;" href="#">{{year}}</a>
+		
+	</div>	
+</div>
+
+<script>
+	const slider = document.querySelector('.slider');
+	const prevButton = document.querySelector('.prev-button');
+	const nextButton = document.querySelector('.next-button');
+	const slides = Array.from(slider.querySelectorAll('.slider-slide'));
+	const slideCount = slides.length;
+	let currentDate = new Date();
+	let slideIndex = currentDate.getMonth();
+	// Устанавливаем обработчики событий для кнопок
+	prevButton.addEventListener('click', showPreviousSlide);
+	nextButton.addEventListener('click', showNextSlide);
+	// Функция для показа предыдущего слайда
+	function showPreviousSlide() {
+	slideIndex = (slideIndex - 1 + slideCount) % slideCount;
+	updateSlider();
+	}
+	// Функция для показа следующего слайда
+	function showNextSlide() {
+	slideIndex = (slideIndex + 1) % slideCount;
+	updateSlider();
+	}
+	// Функция для обновления отображения слайдера
+	function updateSlider() {
+	slides.forEach((slide, index) => {
+		if (index === slideIndex) {
+		slide.style.display = 'block';
+		} else {
+		slide.style.display = 'none';
+		}
+	});
+	}
+	// Инициализация слайдера
+	updateSlider();
+
+	function showMyVac() {
+		let all_my_vac = document.querySelector('.my_vac');
+		if ( all_my_vac.style.display == 'none') {
+			all_my_vac.style.display = 'flex';
+		} else {
+			all_my_vac.style.display = 'none';
+		}
+			
+	}
+</script>

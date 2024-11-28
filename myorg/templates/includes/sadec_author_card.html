@@ -1,0 +1,32 @@
+<div class="card">
+	
+    <div class="card-body">
+        <div class="h3">
+            {{ author.get_full_name }}
+        </div>
+        <div>
+            <a name="post_{{ post.id }}" href="{% url 'sadec_profile' author.username %}">
+                <strong class="d-block text-gray-dark">{{ author.username }}</strong>
+            </a>
+        </div>
+    </div>
+    <ul class="list-group list-group-flush" >
+        <li class="list-group-item">
+            <div class="h6 text-muted">
+                Всего задач: {{ count }} <br />
+                <a name="posts_state" href="{% url 'sadec_profile_state' author.username 1 %}">
+                    <strong class="d-block text-gray-dark">Новых: {{ count_new }}</strong>
+                </a>
+                <a name="posts_state" href="{% url 'sadec_profile_state' author.username 2 %}">
+                    <strong class="d-block text-gray-dark">В работе: {{ count_in_progr }}</strong>
+                </a>
+                <a name="posts_state" href="{% url 'sadec_profile_state' author.username 3 %}">
+                    <strong class="d-block text-gray-dark">Завершено: {{ count_finished }}</strong>
+                </a>
+                <a name="posts_state" href="{% url 'sadec_profile_state' author.username 4 %}">
+                    <strong class="d-block text-gray-dark">Отложено: {{ count_postponed }}</strong>
+                </a> 
+            </div>
+        </li>
+    </ul>
+</div>

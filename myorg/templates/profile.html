@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Заявки сотрудника{% endblock %}
+{% block header %}
+	<a style="color: black; font-weight: bold; text-align: left;">Заявки сотрудника</a>
+{% endblock %}
+{% load thumbnail %}
+{% load static %}
+{% load user_filters %}
+<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+{% block content %}
+	<div style="display: flex; flex-direction: row; width: 120%; margin-top: 30px;">
+		<div>
+			{% include 'includes/author_card.html' %}
+		</div>
+		<div style="margin-top: -35px;">
+			<div style="margin: 5px;">
+				<table>
+					<tr>
+						<th style="width: 250px;">Заявка</th>
+						<th style="width: 200px;">Дата</th>
+						<th style="width: 250px;">Статус</th>
+						<th style="width: 100px;">Стенд</th>
+						<th style="width: 40px;"></th>
+					</tr>
+				</table>
+			</div>
+			{% for post in page %}
+				{% if post.task_state_id == 3 %}
+					{% include "includes/post_item_for_profile.html" with post=post color="border-success" %}
+				{% elif post.task_state_id == 1 %}
+					{% include "includes/post_item_for_profile.html" with post=post color="border-primary"%}
+				{% else %}
+					{% include "includes/post_item_for_profile.html" with post=post color="border-danger"%}
+				{% endif %}
+			{% endfor %}
+			<div style=" display: flex; flex-direction: row; justify-content: center; align-items: center;">{% include "includes/paginator.html" %}</div>
+		</div>
+	</div>
+{% endblock %} 

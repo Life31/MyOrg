@@ -1,0 +1,28 @@
+{% load user_filters %}
+<div class="dropdown-content">
+	<a class="btn btn-sm" href="{% url 'profile' post.author %}" role="button">{{post.author.get_full_name}},<br>{{post.unit|get_unit}}</br></a>
+	{% with request.resolver_match.view_name as view_name %}
+		{% if view_name == "month" %}
+			<a class="btn btn-sm" onclick=filtr_from_dropdown(this) role="button">Отфильтровать</a>
+		{% endif %}	
+	{% endwith %}
+	{% if user.username in rights %}
+		<a class="btn btn-sm" href="{% url 'post_edit' post.author post.id %}" role="button">Править</a>
+		<a class="btn btn-sm" href="{% url 'post_delete' post.author post.id %}" role="button">Удалить</a>
+		<a class="btn btn-sm" href="{% url 'post_copy' post.author post.id %}" role="button">Шаблон</a>
+		
+		<a class="btn btn-sm" href="{% url 'post_view_change' post.author post.id 2 %}" role="button">Подтвердить</a>
+		<a class="btn btn-sm" href="{% url 'post_view_change' post.author post.id 3 %}" role="button">Завершить</a>
+		<a class="btn btn-sm" href="{% url 'post_view_change' post.author post.id 4 %}" role="button">Отклонить</a>
+	{% endif %}
+	{% if user == post.author and user.username not in rights %}
+		{% if post.task_state_id != 3 %}
+			<a class="btn btn-sm" href="{% url 'post_view_change' post.author post.id 3 %}" role="button">Завершить</a>
+		{% endif %}
+		<a class="btn btn-sm" href="{% url 'post_copy' post.author post.id %}" role="button">Шаблон</a>
+		{% if post.task_state_id == 1 or post.task_state_id == 4 %}
+			<a class="btn btn-sm" href="{% url 'post_edit' post.author post.id %}" role="button">Править</a>
+			<a class="btn btn-sm" href="{% url 'post_delete' post.author post.id %}" role="button">Удалить</a>
+		{% endif %}
+	{% endif %}										
+</div>

@@ -1,0 +1,89 @@
+<style>
+	
+
+	.day_in_week, .day_over, .day_now, .day_chil, .day_next {
+		display: flex; flex-direction: column;
+		width: 40px;
+		height: 35px;
+		border-radius: 5px;
+		margin: 1px;
+		padding: 1px;
+		font-weight: bold;
+		justify-content: center;
+	}
+
+	.day_in_week {background: transparent; color: #808080;}
+	.day_over {background: #E6E6E6; color: #808080;}
+	.day_now {background: #808080; color: #FFFFFF;}
+	.day_chil {background: #E6E6E6; color: red;}
+	.day_next {background: #E6E6E6; color: #000000;}
+	.small_circle {background: #00A591; width: 7px; height: 7px; border-radius: 50%; justify-content: center; align-items: center;}
+	.text_in_circle {font-size: 3px; color: black; font-family: Calibri; line-height: 3px;letter-spacing: 0em; text-align: center; padding: 2px; margin:2px;}
+
+	.day_over:hover, .day_now:hover, .day_chil:hover, .day_next:hover{
+		transition: 0.8s;
+		transform: scale(400%) translate(10px, 0px);
+	}
+
+</style>
+
+{% load user_filters %}
+<div style="font-weight: bold; text-align: left;">
+	<a style="color: #808080;" href="{% url 'month' key|year_month:year|cur_month_new %}">
+		{{key}}
+	</a>
+</div>
+<div style ="display: flex; flex-direction: row;">
+	<div class="day_in_week">Пн</div>
+	<div class="day_in_week">Вт</div>
+	<div class="day_in_week">Ср</div>
+	<div class="day_in_week">Чт</div>
+	<div class="day_in_week">Пт</div>
+	<div class="day_in_week">Сб</div>
+	<div class="day_in_week">Вс</div>
+</div>
+{% for val in value.values %}
+	<div style ="display: flex; flex-direction: row;">
+		{% for el in val %}
+			{% if el.name != '' %}
+				{% if key|year_month:year|today_check:el.name == True %}
+					<a class="btn btn-sm day_over" href="{% url 'day' key|year_month:year|today:el.name %}" role="button">
+						{% include "includes/circles_for_month_table.html" with el=el %}
+					</a>	
+				{% elif key|year_month:year|today_check:el.name == "=" %}
+					<a class="btn btn-sm day_now" href="{% url 'day' key|year_month:year|today:el.name %}" role="button">
+						{% include "includes/circles_for_month_table.html" with el=el %}
+					</a>
+				{% elif val|index_of:el == 5 or val|index_of:el == 6 %}
+					<a class="btn btn-sm day_chil" href="{% url 'day' key|year_month:year|today:el.name %}" role="button">
+						{% include "includes/circles_for_month_table.html" with el=el %}
+					</a>
+				{% else %}
+					{% if holidays|dict_len != 0 %}
+						{% for month, days in holidays.items %}
+							{% if key == month %}
+								{% if el.name in days %}
+									<a class="btn btn-sm day_chil" href="{% url 'day' key|year_month:year|today:el.name %}" role="button">
+										{% include "includes/circles_for_month_table.html" with el=el %}
+									</a>
+								{% else %}	
+									<a class="btn btn-sm day_next" href="{% url 'day' key|year_month:year|today:el.name %}" role="button">
+										{% include "includes/circles_for_month_table.html" with el=el %}
+									</a>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+					{% else %}
+						<a class="btn btn-sm day_next" href="{% url 'day' key|year_month:year|today:el.name %}" role="button">
+							{% include "includes/circles_for_month_table.html" with el=el %}
+						</a>
+					{% endif %}	
+				{% endif %}
+			{% else %}	
+				<div  style="width: 40px; background: transparent; margin: 1px;"></div>
+			{% endif %}					
+		{% endfor %}
+	</div>
+	
+{% endfor %}
+

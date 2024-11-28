@@ -1,0 +1,434 @@
+{% extends "base.html" %}
+{% load cache %}
+{% block title %}Календарь{% endblock %}
+{% load user_filters %}
+{% load static %}
+{% block header %}
+	<div style="display: flex; flex-direction: row; justify-content: left; align-items: center;">
+		<a style="color: black; font-weight: bold; text-align: left; line-height: 50px;">Календарь отпусков на {{year}}</a>
+
+		<select name="filtr_otd" id="filtr_otd" style="font-size: 18px; padding: 2px 5px; border: 1px solid rgb(206, 202, 202); color: #808080; font-family: 'Calibri';
+										font-style: normal; font-weight: 400; line-height: 22px; width: 100px; height: 35px; margin-left: 20px; cursor: pointer;"
+										onchange="window.location.href = this.options[this.selectedIndex].value">
+			<option value="305">Отдел</option>
+			{% for otd in otds_for_choise %}
+				<option value="{% url 'vac_2' year otd %}">{{otd}}</option>
+			{% endfor %}
+			<option value="{% url 'vac_2' year 0 %}">Все</option>
+		</select>
+		<select name="filtr_year" id="filtr_year" style="font-size: 18px; padding: 2px 5px; border: 1px solid rgb(206, 202, 202); color: #808080; font-family: 'Calibri';
+										font-style: normal; font-weight: 400; line-height: 22px; width: 100px; height: 35px; margin-left: 20px; cursor: pointer;"
+										onchange="window.location.href = this.options[this.selectedIndex].value">
+			<option value="305">Год</option>
+			<option value="{% url 'vac_2' 2023 otd %}">2023</option>
+			<option value="{% url 'vac_2' 2024 otd %}">2024</option>
+		</select>
+		<select name="filtr_year" id="filtr_year" style="font-size: 18px; padding: 2px 5px; border: 1px solid rgb(206, 202, 202); color: #808080; font-family: 'Calibri';
+										font-style: normal; font-weight: 400; line-height: 22px; width: 200px; height: 35px; margin-left: 20px; cursor: pointer;"
+										onchange="window.location.href = this.options[this.selectedIndex].value">
+			<option value="">Экспорт</option>
+			<option value="#">Сформировать отчет (linux не работает)[url 'vacations_print' year otd]</option>
+
+			{% if pdf|file_exists %}
+			<option value="{% static pdf %}">Отчет от {{pdf|file_time}}</option>
+			{% endif %}
+		</select>
+	</div>
+	<div style="display: flex; flex-direction: row; justify-content: left; align-items: center; font-family: 'Calibri';
+	font-style: normal; font-weight: 400; line-height: 22px; font-size: 18px; color: #808080;">
+		параметры фильтрации: отдел<span style="color: #20c997;">&nbsp;{% if otd == 0%}Все отделы{% else %}{{otd}}{% endif %},&nbsp;</span>год<span style="color: #20c997;">&nbsp;{{year}}</span>
+	</div>
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_vac_new.html' %}
+{% endblock %}
+
+{% block content %}
+	<div style="width: 110%; display: flex; flex-direction: row;">
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Январь" value=Январь %}</div>
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Февраль" value=Февраль %}</div>
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Март" value=Март %}</div>
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Апрель" value=Апрель %}</div>
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Май" value=Май %}</div>
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Июнь" value=Июнь %}</div>
+	</div>
+
+	<div style="width: 110%; display: flex; flex-direction: row;">
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Июль" value=Июль %}</div>
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Август" value=Август %}</div>
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Сентябрь" value=Сентябрь %}</div>
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Октябрь" value=Октябрь %}</div>
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Ноябрь" value=Ноябрь %}</div>
+		<div style="margin: 5px 20px 5px 0px;">{% include "includes/vac_month_table.html" with key="Декабрь" value=Декабрь %}</div>
+	</div>
+	{%if len_cross_vacations > 0 %}
+	<div style="width: 110%; display: flex; flex-direction: row; margin-top: 15px;">
+		<div style="background:linear-gradient(135deg, #df691a 22.22%, #4e5d6c 22.22%, #4e5d6c 50%, #df691a 50%, #df691a 72.22%, #4e5d6c 72.22%, #4e5d6c 100%);
+		width: 80px; height: 20px;">
+		</div>
+		<a>&nbsp;- дни с пересекающимися отпусками от 2 сотрудников.</a>
+	</div>
+	{% endif %}
+	<div style="width: 110%; display: flex; flex-direction: row; margin-top: 15px;">
+		<table style="width: 900px;">
+			<tr style="border-bottom: 1px solid black;">
+				<th style="text-align: left;">Сотрудник</th><th>Отдел</th><th>Дней</th>
+			</tr>
+
+			{% for key, value in vacations_by_user.items%}
+				<tr style="border-bottom: 1px solid rgb(187, 185, 185); height: 40px;">
+					<th style="text-align: left;">
+						<div style="display: flex; flex-direction: row; justify-content: left; align-items: center;">
+							<div style="width: 15px; height: 15px; background: {{value.color}}; border: 1px solid black; margin-right: 6px;"></div>
+							<a style="color: black" href="#" onclick="filtrByUser(this)">{{key}}</a>
+						</div>
+					</th>
+					<th>{{value.otd }}</th>
+					<th>{{value.sum }}</th>	
+				</tr>
+			{% endfor %}
+		</table>
+		<div style="border: 1px solid rgb(187, 185, 185); padding: 5px;">
+			<div>В данный момент нет сотрудников в отпуске.</div>
+			<div id="info" style="margin-top: 20px; border: 1px solid rgb(187, 185, 185);">
+				
+			</div>
+		</div>
+	</div>
+	<div id="add_new_vac" style="display: none; flex-direction: column; justify-content: top; align-items: center; position: absolute; left: 420px; top: 150px;
+	 border: 1px solid black; width: 280px; height: 360px auto; background: rgb(187, 185, 185); opacity: 0.9;">
+		<div style="display: flex; flex-direction: row; justify-content: right; align-items: right; margin: 10px; width: 250px;">
+			<div style="background: white; width: 30px; height: 30px; border-radius: 3px;">
+				<div style="transform: rotate(-45deg); width: 30px; height: 30px; font-size: 18px; cursor: pointer;" onclick="closeForm()">+</div>
+			</div>
+		</div>
+		<div style="width: 250px; padding: 2px 5px; color:black;">Сотрудник</div>
+		<select name="filtr_user" id="filtr_user" style="font-size: 18px; padding: 2px 5px; border: 1px solid rgb(206, 202, 202); color: #808080; font-family: 'Calibri';
+										font-style: normal; font-weight: 400; line-height: 22px; width: 250px; height: 35px; cursor: pointer;">
+			{% for user in otd_users_full_names %}
+				<option id="{{user.id}}" value="{{user.get_full_name}}">{{user.get_full_name}}</option>
+			{% endfor %}
+
+		</select>
+		<div style="width: 250px; padding: 2px 5px; color:black;">Дата начала</div>
+		<input id="day_start" style="width: 250px; padding: 2px 5px; border: 1px solid rgb(206, 202, 202);" type="date"/>
+		<div style="width: 250px; padding: 2px 5px; color:black;">Дата завершения</div>
+		<input id="day_end" style="width: 250px; padding: 2px 5px; border: 1px solid rgb(206, 202, 202);" type="date"/>
+		<div style="width: 250px; padding: 2px 5px; color:black;">Продолжительность (дней)</div>
+		<input id="days_long" style="width: 250px; padding: 2px 5px; border: 1px solid rgb(206, 202, 202);" title="если поле заполнено, то дата завершения рассчитывается, а не берется из поля выше"/>
+		<a id="add_btn" class="btn sib" style="background: #15a362; width: 250px;  margin: 10px;" href="#" onclick="createVac()">
+			<div style="cursor: pointer; justify-content: center; align-items: center;">
+				<img style="height: 20px; margin-right: 5px;" src={% static "trello_plus.png" %}>
+			</div>
+			Добавить
+		</a>
+		{% if request.user.get_full_name in bosses %}
+			<a id="can_redact" name="can_redact" class="btn sib" style="display: none; background: #15a362; width: 250px;  margin: 10px;" href="#" onclick="confirmVac(this)">Подтвердить</a>
+		{% else %}
+			<a id="mulaj" name="can_redact" style="display: none;" href="#"></a>
+		{% endif %}
+		<a id="vac_delete" class="btn sib" style="display: none; background: #15a362; width: 250px;  margin: 10px;" href="#" onclick="deleteVac(this)">Удалить</a>
+		<a id="hide_vac_idid" style="display: none; " href="#">vac_id</a>
+		
+	</div>
+	<script>
+		if (window.history.replaceState) {
+			window.history.replaceState(null, null, window.location.href);
+		}
+		let data = JSON.parse("{{json_data|escapejs}}");
+		let vacs = JSON.parse("{{json_data_vacs|escapejs}}");
+
+		function showCrossData(obj) {
+			let month = obj.id.split('_')[0].toString().trim()
+			let week = obj.id.split('_')[1].toString().trim()
+			let day = Number(obj.id.split('_')[2].toString().trim())			
+			let info = document.getElementById('info');
+			if (month == "Март" | month == "Август") {
+				month_for_lbl = month.substring(0, month.length) + 'а';
+			} else {
+				month_for_lbl = month.substring(0, month.length - 1) + 'я';
+			}		
+			var innerHtml = data[month][week][day]["name"] + ' ' + month_for_lbl + ' {{year}}'
+			if (Object.keys(data[month][week][day]['date']).length > 0){
+				for (const [k, v] of Object.entries(data[month][week][day]['date'])) {
+					let first_date = v['date'].split(' - ')[0];
+					let dayMonthYear_day = first_date.split('-')[2];
+					let dayMonthYear_month = first_date.split('-')[1];
+					let dayMonthYear_year = first_date.split('-')[0];
+					first_date = dayMonthYear_day + '-' + dayMonthYear_month + '-' + dayMonthYear_year;
+					let second_date = v['date'].split(' - ')[1];
+					dayMonthYear_day = second_date.split('-')[2];
+					dayMonthYear_month = second_date.split('-')[1];
+					dayMonthYear_year = second_date.split('-')[0];
+					second_date = dayMonthYear_day + '-' + dayMonthYear_month + '-' + dayMonthYear_year;
+					let period = first_date + ' - ' + second_date;
+
+					innerHtml += (`<div style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+						<div style="width: 15px; height: 15px; background: ${v['color']}; border: 1px solid black; margin-right: 6px;"></div><div>${k}</div></div>`)
+					innerHtml += `<div>${period}</div>`;
+					info.innerHTML = innerHtml;
+				}
+			} else {
+				info.innerHTML = '';
+			}
+			
+		}
+		let canRedact = document.getElementById('can_redact');
+		let vacDelete = document.getElementById('vac_delete');
+		let hide_vac_idid = document.getElementById('hide_vac_idid');
+		let add_btn = document.getElementById('add_btn');
+
+
+		function openFormCreateVac(obj) {
+			
+			closeForm();
+			
+			let form = document.getElementById('add_new_vac');
+			form.style.display = "flex";
+			add_btn.childNodes[1].style.display = "flex";
+			add_btn.childNodes[2].textContent = "Добавить";
+			add_btn.onclick = createVac;
+
+			if (obj.id.split('_')[0] == "creat") {
+				document.getElementById('filtr_user').value = obj.id.split('_')[2];
+			}
+
+
+		}
+		
+		function openFormEditVac(obj) {
+			closeForm();
+			
+			let months = {'Янв': '01', 'Фев': '02', 'Мар': '03', 'Апр': '04', 'Май': '05', 'Июн': '06',
+			'Июл': '07', 'Авг': '08', 'Сен': '09', 'Окт': '10', 'Ноя': '11', 'Дек': '12',};
+			let form = document.getElementById('add_new_vac');
+			let vac = vacs[obj.id.split('_')[1]]
+
+
+			hide_vac_idid.textContent = obj.id.split('_')[1];
+			
+
+			add_btn.childNodes[1].style.display = "none";
+			add_btn.childNodes[2].textContent = "Редактировать";
+			add_btn.onclick = redactVac;
+			
+
+			document.getElementById('filtr_user').value = obj.id.split('_')[0];
+			document.getElementById('day_start').value = vac[0];
+			document.getElementById('day_end').value = vac[1];
+			document.getElementById('days_long').value = vac[2];
+			
+			let user_id = 0;
+			let options = document.getElementsByTagName('option');
+			for (let i = 0; i < options.length; i++) {
+				if (options[i].textContent == obj.id.split('_')[0]) {
+					user_id = options[i].id;
+				}
+			}
+			form.style.height = "500px auto";
+			
+			vacDelete.style.display = "flex";
+			vacDelete.id = 'del_' + obj.id.split('_')[1];
+			let canRedact = document.getElementsByName('can_redact')[0];
+			
+
+			if (vac[3]) {
+				if (canRedact.id != "mulaj"){
+					canRedact.textContent = "Подтвердить";
+				}	
+			}else {
+				if (canRedact.id != "mulaj"){
+					canRedact.textContent = "Отклонить";
+				}
+				
+				vacDelete.style.display = "none";
+			}
+			if (canRedact.id != "mulaj"){
+				canRedact.style.display = "flex";
+			}
+			
+			form.style.display = "flex";
+			//canRedact.id = 'red_' + obj.id.split('_')[1];
+		}
+		
+		
+		function closeForm() {
+			let form = document.getElementById('add_new_vac');
+			form.style.height = "360px auto";
+			
+			document.getElementById('filtr_user').value = '';
+			document.getElementById('day_start').value = '';
+			document.getElementById('day_end').value = '';
+			document.getElementById('days_long').value = '';
+			
+
+			vacDelete.style.display = "none";
+
+			let canRedact = document.getElementsByName('can_redact')[0];
+			canRedact.style.display = "none";
+			form.style.display = "none";
+			
+		}
+		function deleteVac(obj) {
+			let url = "{% url 'vacation_delete' otd year 99 %}";
+			//alert(url);
+			let arrayFromUrl = url.split('/');
+			arrayFromUrl[6] = obj.id.split('_')[1];
+			let new_url = arrayFromUrl.join("/");
+			//alert(new_url);
+			location.href=new_url;	
+		}
+		function redactVac() {
+			let filtr_user = document.getElementById('filtr_user').value;
+			let options = document.getElementsByTagName('option');
+			let user_id = 0;
+			for (let i = 0; i < options.length; i++) {
+				if (options[i].textContent == filtr_user) {
+					user_id = options[i].id;
+				}
+			}
+			let day_start = document.getElementById('day_start').value;
+			let day_end = document.getElementById('day_end').value;
+			let days_long = document.getElementById('days_long').value;
+			let months = {'января': '01', 'февраля': '02', 'марта': '03', 'апреля': '04', 'мая': '05', 'июня': '06',
+			'июля': '07', 'августа': '08', 'сентября': '09', 'октября': '10', 'ноября': '11', 'декабря': '12',};
+
+
+			let day = day_start.split('-')[2];
+			let month = day_start.split('-')[1];
+			let year = day_start.split('-')[0];
+
+			let day_e = day_end.split('-')[2];
+			let month_e = day_end.split('-')[1];
+			let year_e = day_end.split('-')[0];
+			let vac_id = hide_vac_idid.textContent;
+			let url = "{% url 'vac_edit' otd 99 99 year 99 99 99 99 99 %}";
+			let arrayFromUrl = url.split('/');
+			arrayFromUrl[5] = day;
+			arrayFromUrl[6] = month;
+			if (!isNaN(days_long) & days_long != '') {
+				arrayFromUrl[8] = days_long;
+			} else {
+				arrayFromUrl[8] = '0';
+			}
+			arrayFromUrl[9] = day_e;
+			arrayFromUrl[10] = month_e;
+			arrayFromUrl[11] = user_id;
+			arrayFromUrl[12] = vac_id;
+			let new_url = arrayFromUrl.join("/");
+
+			if (day_start == '') {
+				alert('Введите дату начала отпуска!')
+			} else{
+				if (day_end == '') {
+					alert('Введите дату окончания отпуска!')
+				} else {
+					location.href=new_url;
+				}
+				
+			}
+		}
+		function confirmVac(obj) {
+
+			let url = "{% url 'vacation_confirm' year otd 99 %}";
+			let arrayFromUrl = url.split('/');
+			arrayFromUrl[6] = hide_vac_idid.textContent;
+			let new_url = arrayFromUrl.join("/");
+			location.href=new_url;	
+
+		}
+		function createVac() {
+			let filtr_user = document.getElementById('filtr_user').value;
+			let options = document.getElementsByTagName('option');
+			let user_id = 0;
+			for (let i = 0; i < options.length; i++) {
+				if (options[i].textContent == filtr_user) {
+					user_id = options[i].id;
+				}
+			}
+			let day_start = document.getElementById('day_start').value;
+			let day_end = document.getElementById('day_end').value;
+			let days_long = document.getElementById('days_long').value;
+			
+			let months = {'января': '01', 'февраля': '02', 'марта': '03', 'апреля': '04', 'мая': '05', 'июня': '06',
+			'июля': '07', 'августа': '08', 'сентября': '09', 'октября': '10', 'ноября': '11', 'декабря': '12',};
+
+
+			let day = day_start.split('-')[2];
+			let month = day_start.split('-')[1];
+			let year = day_start.split('-')[0];
+
+			let day_e = day_end.split('-')[2];
+			let month_e = day_end.split('-')[1];
+			let year_e = day_end.split('-')[0];
+
+			let url = "{% url 'add_new_vac' otd 99 99 year 99 99 99 99 %}";
+			let arrayFromUrl = url.split('/');
+			arrayFromUrl[5] = day;
+			arrayFromUrl[6] = month;
+			if (!isNaN(days_long) & days_long != '') {
+				arrayFromUrl[8] = days_long;
+			} else {
+				arrayFromUrl[8] = '0';
+			}
+			arrayFromUrl[9] = day_e;
+			arrayFromUrl[10] = month_e;
+			arrayFromUrl[11] = user_id;
+			let new_url = arrayFromUrl.join("/");
+			if (user_id == 0) {
+				alert('Выберите пользователя!')	
+			} else {
+				if (day_start == '') {
+					alert('Введите дату начала отпуска!')
+				} else{
+					if (day_end == '') {
+						alert('Введите дату окончания отпуска!')
+					} else {
+						location.href=new_url;
+					}					
+				}
+			}						
+		}
+		function filtrByUser(obj) {
+			let days = document.getElementsByName('day');
+			for (let i = 0; i < days.length; i++) {
+				let month = days[i].id.split('_')[0];
+				let week = days[i].id.split('_')[1];
+				let day = days[i].id.split('_')[2];
+				if (Object.entries(data[month][week][day]['data']).length > 1) {
+					for (const [k, v] of Object.entries(data[month][week][day]['data'])) {
+						if (k != obj.textContent) {
+							if (day == 5 | day == 6) {
+								days[i].childNodes[1].style.background = 'rgb(219, 219, 219)';
+							} else {
+								days[i].childNodes[1].style.background = 'transparent';
+							}
+							days[i].childNodes[1].style.color = '#808080';
+							
+						} else {
+							days[i].childNodes[1].style.background = 'linear-gradient(135deg, #df691a 50%, #4e5d6c 50%, #4e5d6c 100%)';
+							days[i].childNodes[1].style.color = 'white';
+							break;
+						}
+					}
+				} else {
+					for (const [k, v] of Object.entries(data[month][week][day]['data'])) {
+						if (k != obj.textContent) {
+							if (day == 5 | day == 6) {
+								days[i].childNodes[1].style.background = 'rgb(219, 219, 219)';
+							} else {
+								days[i].childNodes[1].style.background = 'transparent';
+							}							
+							days[i].childNodes[1].style.color = '#808080';							
+						} else {
+							days[i].childNodes[1].style.background = obj.parentElement.childNodes[1].style.background;
+							break;
+						}
+					}
+				}				
+			}			
+		}		
+	</script>
+	
+{% endblock %} 
+

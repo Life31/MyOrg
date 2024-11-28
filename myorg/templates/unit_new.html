@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Добавить учетную еденицу{% endblock %}
+{% block header %}
+  {% if edit %}
+  	<a style="color: black;">Редактировать учетную еденицу {{ unit.name }}</a>
+    
+  {% else %}
+  	<a style="color: black;">Добавить учетную еденицу</a>
+    
+  {% endif %}
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_storage.html' %}
+{% endblock %}
+{% block content %}
+{% load user_filters %}
+{% load thumbnail %}
+<div class="row" id="content">
+	<div class="col-md-12">
+		<div class="container border-primary">
+			<form method='post' enctype="multipart/form-data">
+				{% csrf_token %}
+				{% for field in form %}
+						<div class="form-group row" aria-required={% if field.field.required %}"true"{% else %}"false"{% endif %}> 
+							<label for="{{ field.id_for_label }}" class="col-md-2 col-form-label text-md-right">{{ field.label }}{% if field.field.required %}<span class="required">*</span>{% endif %}</label>
+							<div class="col-md-4">
+								{{ field|addclass:"form-control" }}
+								{% if field.help_text %}
+									<small id="{{ field.id_for_label }}-help" class="form-text text-muted">{{ field.help_text|safe }}</small>
+								{% endif %}    
+							</div>
+							
+						</div>
+				{% endfor %}
+				<div class="col-md-2 offset-md-3" style="display: flex; flex-direction: row;">
+					<button class="btn btn-primary" type="button" style="margin-right: 5px;" onclick=history.back()>назад</button>
+					<button type="submit" class="btn btn-primary">
+						{% if edit %}
+							Сохранить
+						{% else %}
+							Добавить
+						{% endif %}
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>    
+
+{% endblock %} 

@@ -1,0 +1,15 @@
+<div class="row">
+	{%if post.group_id == 1 %}
+		<a class="btn btn-sm border-white btn-success btn-block text-left" href="{% url 'post' post.author.username post.id %}">
+			{{ post.text }}: {{ post.purpose }}
+		</a>
+	{% elif post.group_id == 2 %}
+		<a class="btn btn-sm border-white btn-primary btn-block text-left" href="{% url 'post' post.author.username post.id %}">
+			{{ post.text }}: {{ post.purpose }}
+		</a>
+	{% elif post.group_id == 3 %}
+		<a class="btn btn-sm border-white btn-danger btn-block text-left" href="{% url 'post' post.author.username post.id %}">
+			{{ post.text }}: {{ post.purpose }}
+		</a>
+	{%endif%}
+</div>

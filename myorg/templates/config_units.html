@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}Перечень блоков{% endblock %}
+{% block header %}
+	<a style="font-weight: bold; text-align: left;">Перечень блоков, конфигурация №{{number}}</a>
+{% endblock %}
+{% load thumbnail %}
+{% load static %}
+{% load user_filters %}
+<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+{% block aside %}
+    {% include 'includes/aside_config.html' %}
+{% endblock %}
+{% block content %}			
+
+	<table class="config_units" border="0">
+		<tr>
+			<th style="width: 200px; text-align:center; background:transparent;">Блок</th>
+			<th style="width: 200px; text-align:center; background:transparent;">Производитель</th>
+			<th style="width: 200px; text-align:center; background:transparent;">S/N</th>
+			<th style="width: 200px; text-align:center; background:transparent;">P/N</th>
+			<th style="width: 40px; background:transparent;">☰</th>
+		</tr>
+	</table>
+	{% for unit in units %}
+		<button class="accordion" style="margin-left: -257px;">
+			<table class="config_units" border="0">
+				<tr>
+					<th style="width: 200px; text-align:center;"><a style="font-weight: bold;">{{ unit.unit_type }}</a></th>
+					<th style="width: 200px; text-align:center;"><a style="font-weight: bold;">{{ unit.creator }}</a></th>
+					<th style="width: 200px; text-align:center;"><a style="font-weight: bold;">{{ unit.serial_n }}</a></th>
+					<th style="width: 200px; text-align:center;"><a style="font-weight: bold;">{{ unit.part_n }}</a></th>
+					<th style="width: 40px; text-align:center;"><div class="dropdown">
+						<div class="btn-sm btn-outline-secondary font-weight-bold" style="height: 30px;">☰</div>
+						<div class="dropdown-content" style="left: 30px;">
+							<a class="btn btn-sm" href="{% url 'config_new_include' unit.id %}" role="button">добавить параметр</a>
+							<a class="btn btn-sm" href="#" role="button">править</a>					
+						</div>
+					</th>	
+				<tr>
+			</table>
+		</button>
+		<div class="panel_config" style="width:120%;">
+			<table class="config_units_includes" border="0">
+				<tr>
+					<th style="width: 150px; text-align:center; background:rgb(252, 242, 242);">Компонент</th>
+					<th style="width: 150px; text-align:center; background:rgb(252, 242, 242);">P/N</th>
+					<th style="width: 150px; text-align:center; background:rgb(252, 242, 242);">проч. инфо.</th>
+					<th style="width: 350px; text-align:center; background:rgb(252, 242, 242);">Примечание</th>
+					<th style="width: 100px; text-align:center; background:rgb(252, 242, 242);">документ</th>
+					<th style="width:40px; text-align:center; background:rgb(252, 242, 242);"></th>
+				</tr>
+				{% for cur in current %}
+					{% if cur.unit_id == unit.id %}
+
+							<tr>
+								<th><a style="width: 150px; font-weight: bold;">{{ cur.parametr }}</a></th>
+								<th><a style="width: 150px; font-weight: bold;">{{ cur.part_n }}</a></th>
+								<th><a style="width: 150px; font-weight: bold;">{{ cur.other_info }}</a></th>
+								<th><a style="width: 350px; font-weight: bold;">{{ cur.descr }}</a></th>
+								{% if cur.doc %}
+									<th style="width: 100px;"><a style="font-weight: bold;" href="{% static cur.doc.url %}">Акт</a></th>	
+								{% else %}	
+									<th style="width: 100px;"><a style="color: black; font-weight: bold;" href="#">Без акта</a></th>	
+								{% endif %}
+								
+								<th  style="width: 40px;">
+									<div class="dropdown">
+										<div class="btn-sm btn-outline-secondary font-weight-bold" style="height: 30px;">☰</div>
+										<div class="dropdown-content" style="left: 30px;">
+											<a class="btn btn-sm" href="#" role="button">новая конфигурация</a>
+											<a class="btn btn-sm" href="#" role="button">править</a>					
+										</div>
+									</div>
+								</th>	
+							<tr>
+						
+					{% endif %}	
+				{% endfor %}
+				
+			</table>
+		</div>
+	{% endfor %}
+
+	<script>
+		var acc = document.getElementsByClassName("accordion");
+		var i;
+
+		for (i = 0; i < acc.length; i++) {
+			acc[i].addEventListener("click", function() {
+				/* Toggle between adding and removing the "active" class,
+				to highlight the button that controls the panel */
+				this.classList.toggle("active");
+
+				/* Toggle between hiding and showing the active panel */
+				var panel = this.nextElementSibling;
+				if (panel.style.display === "block") {
+					panel.style.display = "none";
+				} else {
+					panel.style.display = "block";
+				}
+			});
+		}
+	</script>
+{% endblock %} 

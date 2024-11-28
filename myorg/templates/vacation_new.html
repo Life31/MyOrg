@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load user_filters %}
+{% block title %}Добавить отпуск{% endblock %}
+{% block header %}
+  {% if edit %}
+    <a style="color: black;">Редактировать отпуск сотрудника "{{user.get_full_name}}"</a>
+  {% else %}
+  <a style="color: black;">Добавить отпуск сотрудника "{{user.get_full_name}}"</a>
+  {% endif %}
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_vac_new.html' %}
+{% endblock %}
+{% block content %}
+    
+    {% load thumbnail %}
+		<form method='post' enctype="multipart/form-data">
+			{% csrf_token %}
+			{% for field in form %}
+					<div class="form-group row" aria-required={% if field.field.required %}"true"{% else %}"false"{% endif %}> 
+						<label for="{{ field.id_for_label }}" class="col-md-4 col-form-label text-md-right">{{ field.label }}{% if field.field.required %}<span style="color:red;">*</span>{% endif %}</label>
+						<div class="col-md-6">
+							{{ field|addclass:"form-control" }}
+							{% if field.help_text %}
+								<small id="{{ field.id_for_label }}-help" class="form-text text-muted">{{ field.help_text|safe }}</small>
+							{% endif %}    
+						</div>
+						
+					</div>
+			{% endfor %}
+			<div class="col-md-6 offset-md-4" >	
+				<button type="submit" class="btn btn-primary" style="width: 120px;">
+					{% if edit %} Сохранить {% else %} Добавить {% endif %}
+				</button>
+			</div>
+		</form>
+		{% if edit %}
+			<div class="col-md-6 offset-md-4" style="margin-top: 10px;">	
+				<a class="btn btn-primary" onclick=history.back() href="#" style="width: 120px;">
+					Отмена
+				</a>
+				{% if request.user.get_full_name in bosses %}
+					<a class="btn btn-primary" id="pro" onclick="redact(this)"  href="#" style="width: 120px;">Подтвердить</a>
+				{% endif %}
+				<a class="btn btn-primary" href="{% url 'vacation_delete' otd year vac_id %}" style="width: 120px;">
+					Удалить
+				</a>
+			</div>
+		{% endif %}
+		<script>
+			let red = document.getElementsByName("can_redact")[0];
+			let pro = document.getElementById("pro");
+
+			if (red.value == "False") {
+				pro.textContent = "Отклонить";
+			}
+			function redact(obj) {
+				let red = document.getElementsByName("can_redact")[0];
+				if (obj.textContent.trim() == "Подтвердить") {					
+					red.value = "False";
+					obj.textContent = "Отклонить";
+				} else {
+					red.value = "True";
+					obj.textContent = "Подтвердить";
+				}
+			}	
+		</script>
+{% endblock %} 

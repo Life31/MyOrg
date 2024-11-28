@@ -1,0 +1,153 @@
+<!-- author card -->
+{% load user_filters %}
+{% load static %}
+<div class="card" style="width: 300px; margin-right: 20px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);"> 
+    <div class="card-body" style="text-align: center;">
+		<div style="display: flex; flex-direction: row; justify-content: center; align-items: center; margin-bottom: 15px;">
+			<img style="height: 40px; margin-left: 15px; margin-right: 25px;" src={% static "user.png" %}>
+			<div style="text-align: left;" class="h3">{{ author.get_full_name }}</div>
+		</div>
+		
+		
+		{% if author.email %}
+			<div><a style="color: #1571FF; font-family: Calibri;
+				font-size: 18px;
+				font-weight: 700;
+				line-height: 22px;
+				letter-spacing: 0em;
+				text-align: center;
+				" href="{% url 'profile' author.username %}"><strong>{{ author.email }}</strong></a></div>
+		{% else %}
+			<div><a style="color: red; font-weight: bold;" href="#"><strong>Необходимо передать email для связи администраторам ресурса</strong></a></div>
+		{% endif %}
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"  style="border-radius: 10px; border: 0px;">
+			{% with request.resolver_match.view_name as view_name and request.get_full_path|url_to_state_id as state %}
+				<div class="h6 text-black" style="text-align: center; display: flex; flex-direction: column;">
+					{% if view_name == 'profile' %}
+						<a class="btn counts" 
+						style="background: #1571FF; color: white;" 
+						href="{% url 'profile' author.username %}">Всего заявок: {{ count }}</a>
+					{% else %}
+						<a class="btn counts" 
+						href="{% url 'profile' author.username %}">Всего заявок: {{ count }}</a>
+					{% endif %}
+					{% if state == '1' %}
+						<a class="btn counts" 
+						style="background: #1571FF; color: white;" 
+						href="{% url 'profile_state' author.username 1 %}">Не подтверждено: {{ count_new }}</a>
+					{% else %}
+						<a class="btn counts" 
+						href="{% url 'profile_state' author.username 1 %}">Не подтверждено: {{ count_new }}</a>
+					{% endif %}
+					{% if state == '2' %}
+						<a class="btn counts" 
+						style="background: #1571FF; color: white;" 
+						href="{% url 'profile_state' author.username 2 %}">Подтверждено: {{ count_in_progr }}</a>
+					{% else %}
+						<a class="btn counts" 
+						href="{% url 'profile_state' author.username 2 %}">Подтверждено: {{ count_in_progr }}</a>
+					{% endif %}
+					{% if state == '3' %}
+						<a class="btn counts" 
+						style="background: #1571FF; color: white;" 
+						href="{% url 'profile_state' author.username 3 %}">Завершено: {{ count_finished }}</a>
+					{% else %}
+						<a class="btn counts" 
+						href="{% url 'profile_state' author.username 3 %}">Завершено: {{ count_finished }}</a>
+					{% endif %}
+					{% if state == '4' %}
+						<a class="btn counts" 
+						style="background: #1571FF; color: white;" 
+						href="{% url 'profile_state' author.username 4 %}">Отклонено: {{ count_postponed }}</a>
+					{% else %}
+						<a class="btn counts" 
+						href="{% url 'profile_state' author.username 4 %}">Отклонено: {{ count_postponed }}</a>
+					{% endif %}
+
+					
+					
+					
+				</div>
+			{% endwith %}
+        </li>
+    </ul>
+	<ul class="list-group list-group-flush">
+		{% if dunger %}
+			<li class="list-group-item"  style="border-radius: 10px; border: 0px;">
+				<div class="h6 text-black" style="text-align: center;">
+					<a class text href="{% url 'day' day %}"><span style="color:red; font-weight: bold;" >{{dunger}}</span></a>
+				</div>
+			</li>
+		{% endif %}
+	</ul>
+	<!--ul class="list-group list-group-flush">
+		{% if post.text|check_for_fib == 'FIB-' %}
+			{% if user == post.author or user.username in rights %}
+				<div style="display: flex; flex-direction: row; justify-content: top; align-items: center;">
+					<div style="display: flex; flex-direction: column; justify-content: top; align-items: top;">
+						<div>Добавить:</div>
+						{% for name in post.text|get_fib_not_in_nambers %}
+							{% if name != "" and name != None %}
+							<div>
+								<a class="btn manage" style="background: rgb(241, 177, 57); margin: 0px 0px 4px 15px;"
+										href="{% url 'fib_multi_plus' post.group_id name post.id %}">fib {{ name }}</a>
+							</div>
+							{% endif %}
+						{% endfor %}
+					</div>
+					<div style="display: flex; flex-direction: column; justify-content: top; align-items: top;">
+						<div>Удалить:</div>
+						{% for name in post.text|get_fib_nambers %}
+							{% if name != "" and name != None %}
+							<div>
+								<a class="btn manage" style="background: rgb(170, 162, 162); margin: 0px 0px 4px 15px;"
+										href="{% url 'fib_multi_plus' post.group_id name post.id %}">fib {{ name }}</a>
+							</div>
+							{% endif %}
+						{% endfor %}
+						
+					</div>
+				</div>
+				
+				
+			{% endif %}
+		{% endif %}
+	</ul-->
+	{% if user == post.author and post|show_rele %}
+		<ul class="list-group list-group-flush" style="margin: 2px; padding: 2px;">
+			<div class="card my-2" style="border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);"> 
+				<div class="card-body">
+					<div class="h3">Реле FIB</div>
+					
+					<div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+						<div style="display: flex; flex-direction: row; justify-content: center; align-items: center; margin: 1px; padding: 1px;">
+							<div style="margin-right: 37px;">Реле</div>
+							<div style="margin: 1px;">Вкл / Выкл</div>
+							<div style="margin-left: 17px;">Статус</div>
+						</div>
+						{% for p in post|get_num_rele %}
+						<div style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+							<div style="margin-right: 17px; font-weight: bold;">FIB {{p}}</div>
+		
+							<div style="margin: 1px;">
+								<a class="btn manage" href="{% url 'rele_on_off' '1' p|minus_one 'on' %}"
+								style="width: 50px; font-weight: bold; font-size: small; margin: 2px;">ON</a>
+							</div>
+							<div style="margin: 1px;">
+								<a class="btn manage" href="{% url 'rele_on_off' '1' p|minus_one 'off' %}"
+								style="width: 50px; font-weight: bold; font-size: small; margin: 2px; ">OFF</a>
+							</div>
+							<div style="margin-left: 17px;"><a class="text" id="Relay{{p}}" style="font-weight: bold;"></a></div>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</ul>
+	{% endif %}
+	
+	
+</div>
+<!-- author card -->

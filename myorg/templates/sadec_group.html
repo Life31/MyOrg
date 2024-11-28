@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Задачи {{ group.title }}{% endblock %}
+{% block header %}Задачи объекта контроля{% endblock %}
+{% block content %}
+    <bdi role="main" class="container">
+        <div class="row">
+            <div class="col-md-3 mb-3 mt-1">
+                {% include 'includes/sadec_group_card.html' %}
+            </div>
+            <div class="col-md-9">
+                <div class="container">
+                    {% include "includes/sadec_head_for_group.html" %}
+                    {% for post in page %}
+                        {% if post.task_state_id == 3 %}
+                            {% include "includes/sadec_post_item_for_group.html" with post=post color="border-success" %}
+                        {% elif post.task_state_id == 1 %}
+                            {% include "includes/sadec_post_item_for_group.html" with post=post color="border-primary"%}
+                        {% else %}
+                            {% include "includes/sadec_post_item_for_group.html" with post=post color="border-danger"%}
+                        {% endif %}
+                    {% endfor %}
+                    {% include "includes/paginator.html" %}
+                </div>
+                
+            </div>
+        </div>
+    </main> 
+{% endblock %}

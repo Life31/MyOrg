@@ -1,0 +1,284 @@
+<style>
+	h4 {
+	color: #808080;
+	font-family: 'Calibri';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 22px;
+	margin: 0px;
+	text-align: left;
+	}
+	.sib, .acib, .isib, .fib, .nuc, .fib_bm, .fvb, .user{
+		width: 120px;
+		height: 37px;
+		display: flex; flex-direction: row;
+		margin: 2px;
+		border: 3px solid white;
+		border-radius: 10px;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 22px;
+	}
+	.sib:hover {
+		transition: 0.4s;
+		background: #3b3b3a;
+		border: 3px solid white;
+		color: white;
+	}
+
+	.btn-group-vertical {
+	margin: 2px auto;
+	}
+	.circle, .circle_trans {background: #01A86B; width: 15px; height: 15px; border-radius: 50%; margin-right: 15px; margin-top: 4px; margin-left: 5px;}
+	.circle_trans {background: transparent;}
+	.mini-circle {background: #01A86B; width: 15px; height: 15px; border-radius: 50%; margin-right: 5px; margin-left: 5px;}
+	.in {width: 200px; display: flex; flex-direction: row; display: flex; flex-direction: row; justify-content: left; align-items: center;}
+
+</style>
+{% load static %}
+{% load user_filters %}
+{% with request.resolver_match.view_name as view_name %}
+    <aside class="aside" style="margin: 4px; border-radius: 10px;">
+        
+        <div class="btn-group-vertical">
+			<h4>Стенды</h4>
+			<div style="display: flex; flex-direction: row;">
+				<a class="btn sib" onclick="show_load(this)" href="{% url 'group' 'sib' %}">
+					<div class="circle"></div>
+					{% if sib_count > 0 %}
+						<div>SIB(<span style="color: red;">{{sib_count}}</span>)</div>
+					{% else %}
+						<div>SIB</div>
+					{% endif %}
+				</a>
+				<a class="btn fib" onclick="show_load(this)" href="{% url 'group' 'fib' %}">
+					<div class="circle" style="background: #F5DF4C;"></div>
+					<div>FIB</div>
+				</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				<a class="btn acib" onclick="show_load(this)" href="{% url 'group' 'acib' %}">
+					<div class="circle" style="background: #A1C6FF;"></div>
+					{% if acib_count > 0 %}	
+						<div>ACIB(<span style="color: red;">{{acib_count}}</span>)</div>
+					{% else %}
+						<div>ACIB</div>
+					{% endif %}
+				</a>
+				<a class="btn nuc" onclick="show_load(this)" href="{% url 'group' 'nuc' %}">
+					<div class="circle" style="background: #6B5B95;"></div>
+					<div>NUC</div>
+				</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				<a class="btn isib" onclick="show_load(this)" href="{% url 'group' 'isib' %}">
+					<div class="circle" style="background: #F2552C;"></div>
+					<div>ISIB</div>
+				</a>
+				<a class="btn fib_bm" onclick="show_load(this)" href="{% url 'group' 'fib_bm' %}">
+					<div class="circle" style="background: #4EE2B8;"></div>
+					<div>FIB BM</div>
+				</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				<a class="btn fvb" onclick="show_load(this)" href="{% url 'group' 'fvb' %}">
+					<div class="circle" style="background: #FEB614;"></div>
+					<div>FVB</div>
+				</a>
+			</div>
+			
+        </div>
+        
+        <div class="btn-group-vertical">
+			<h4>Календари</h4>
+            <div style="display: flex; flex-direction: row;">
+                <a style="display: block; text-align: center;" class="btn user" href="{% url 'day' day|cur_day %}">День</a>
+                <a style="display: block; text-align: center;" class="btn user" href="{% url 'week' wk|cur_week %}">Неделя</a>
+            </div>
+			<div style="display: flex; flex-direction: row;">
+                <a style="display: block; text-align: center;" class="btn user" href="{% url 'month' month|cur_month %}">Месяц</a>
+				<a style="display: block; text-align: center;" class="btn user" href="{% url 'calendar' 0 %}">Год</a>
+            </div>
+            <div style="display: flex; flex-direction: row;">
+                <a class="btn sib" onclick="show_load(this)" href="{% url 'stend' group_id=1%}"><div class="circle"></div><div>SIB</div></a>
+                <a class="btn fib" onclick="show_load(this)" href="{% url 'stend' group_id=4%}"><div class="circle" style="background: #F5DF4C;"></div><div>FIB</div></a>
+            </div>
+			<div style="display: flex; flex-direction: row;">
+				<a class="btn acib" onclick="show_load(this)" href="{% url 'stend' group_id=2%}"><div class="circle" style="background: #A1C6FF;"></div><div>ACIB</div></a>
+				<a class="btn nuc" onclick="show_load(this)" href="{% url 'stend' group_id=5%}"><div class="circle" style="background: #6B5B95;"></div><div>NUC</div></a>  
+            </div>
+			<div style="display: flex; flex-direction: row;">
+                <a class="btn isib" onclick="show_load(this)" href="{% url 'stend' group_id=3%}"><div class="circle" style="background: #F2552C;"></div><div>ISIB</div></a>
+				<a class="btn fib_bm" onclick="show_load(this)" href="{% url 'stend' group_id=6%}"><div class="circle" style="background: #4EE2B8;"></div><div>FIB BM</div></a>
+            </div>
+			<div style="display: flex; flex-direction: row;">
+				<a class="btn fvb" style="width: 120px;" onclick="show_load(this)" href="{% url 'stend' group_id=7%}"><div class="circle" style="background: #FEB614;"></div><div>FVB</div></a>
+			</div>
+        </div>
+        
+        <div class="btn-group-vertical" style="margin: 2px auto; ">
+			<h4>Создать заявку</h4>
+			<div style="display: flex; flex-direction: row;">
+				<a class="btn sib" onclick="show_load(this)" href="{% url 'post_new' group_id=1 bm='_'%}">
+					<div class="circle"></div><div>SIB</div>
+				</a>
+				<a class="btn fib" href="#" onclick='list(this)'>
+					<div class="circle" style="background: #F5DF4C;"></div><div>FIB</div>
+				</a>
+            </div>
+			<!--FIB выпадающий список-->
+			<div class="fib_list" style="display: none; flex-direction: column;">
+				<a class="btn fib in" onclick="show_load(this)" href="{% url 'post_new' group_id=4 bm='(1)'%}">
+					<div class="mini-circle" style="background: #F5DF4C;"></div><div>FIB CPIOM 1</div>
+				</a>
+				<a class="btn fib in" onclick="show_load(this)" href="{% url 'post_new' group_id=4 bm='(2)'%}">
+					<div class="mini-circle" style="background: #F5DF4C;"></div><div>FIB CPIOM 2</div>
+				</a>
+				<a class="btn fib in" onclick="show_load(this)" href="{% url 'post_new' group_id=4 bm='(3)'%}">
+					<div class="mini-circle" style="background: #F5DF4C;"></div><div>FIB CPIOM 3</div>
+				</a>
+				<a class="btn fib in" onclick="show_load(this)" href="{% url 'post_new' group_id=4 bm='(4)'%}">
+					<div class="mini-circle" style="background: #F5DF4C;"></div><div>FIB CPIOM 4</div>
+				</a>
+				<a class="btn fib in" onclick="show_load(this)" href="{% url 'post_new' group_id=4 bm='(5)'%}">
+					<div class="mini-circle" style="background: #F5DF4C;"></div><div>FIB CPIOM 5</div>
+				</a>
+				<a class="btn fib in" onclick="show_load(this)" href="{% url 'post_new' group_id=4 bm='(MDU)'%}">
+					<div class="mini-circle" style="background: #F5DF4C;"></div><div>FIB MDU</div>
+				</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				<a class="btn acib" onclick="show_load(this)" href="{% url 'post_new' group_id=2 bm='_'%}">
+					<div class="circle" style="background: #A1C6FF;"></div><div>ACIB</div>
+				</a>
+				<a class="btn nuc" href="#" onclick='list(this)'>
+					<div class="circle" style="background: #6B5B95;"></div><div>NUC</div>
+				</a>
+
+            </div>
+			<!--NUC выпадающий список-->
+			<div class="nuc_list" style="display: none; flex-direction: column;">
+				<a class="btn nuc in" onclick="show_load(this)" href="{% url 'post_new' group_id=5 bm='(227)'%}">
+					<div class="mini-circle" style="background: #6B5B95;"></div><div>NUC227 (ABSINT)</div>
+				</a>
+				<a class="btn nuc in" onclick="show_load(this)" href="{% url 'post_new' group_id=5 bm='(237)'%}">
+					<div class="mini-circle" style="background: #6B5B95;"></div><div>NUC237</div>
+				</a>
+				<a class="btn nuc in" onclick="show_load(this)" href="{% url 'post_new' group_id=5 bm='(238)'%}">
+					<div class="mini-circle" style="background: #6B5B95;"></div><div>NUC238</div>
+				</a>
+				<a class="btn nuc in" onclick="show_load(this)" href="{% url 'post_new' group_id=5 bm='(239)'%}">
+					<div class="mini-circle" style="background: #6B5B95;"></div><div>NUC239</div>
+				</a>
+			</div>
+
+			<div style="display: flex; flex-direction: row;">
+				<a class="btn isib" href="#" onclick='list(this)'>
+					<div class="circle" style="background: #F2552C;"></div><div>ISIB</div>
+				</a>
+				<a class="btn fib_bm" href="#" onclick='list(this)'>
+					<div class="circle" style="background: #4EE2B8;"></div><div>FIB BM</div>
+				</a>
+            </div>
+			<!--ISIB выпадающий список-->
+			<div class="isib_list" style="display: none; flex-direction: column;">
+				<a class="btn isib in" onclick="show_load(this)" href="{% url 'post_new' group_id=3 bm='_'%}">
+					<div class="mini-circle" style="background: #F2552C;"></div><div>ISIB (Без БМ)</div>
+				</a>
+				<a class="btn isib in" onclick="show_load(this)" href="{% url 'post_new' group_id=3 bm='(БМ1)'%}">
+					<div class="mini-circle" style="background: #F2552C;"></div><div>ISIB (+ БМ1)</div>
+				</a>
+				<a class="btn isib in" onclick="show_load(this)" href="{% url 'post_new' group_id=3 bm='(БМ2)'%}">
+					<div class="mini-circle" style="background: #F2552C;"></div><div>ISIB (+ БМ2)</div>
+				</a>
+				<a class="btn isib in" onclick="show_load(this)" href="{% url 'post_new' group_id=3 bm='(БМ3)'%}">
+					<div class="mini-circle" style="background: #F2552C;"></div><div>ISIB (+ БМ3)</div>
+				</a>
+			</div>
+			<!--FIB BM выпадающий список-->
+			<div class="fib_bm_list" style="display: none; flex-direction: column;">
+				<a class="btn isib in" onclick="show_load(this)" href="{% url 'post_new' group_id=6 bm='(Linux)'%}">
+					<div class="mini-circle" style="background: #4EE2B8;"></div><div>FIB BM Linux</div>
+				</a>
+				<a class="btn isib in" onclick="show_load(this)" href="{% url 'post_new' group_id=6 bm='(Windows)'%}">
+					<div class="mini-circle" style="background: #4EE2B8;"></div><div>FIB BM Windows</div>
+				</a>
+			</div>
+
+			<div style="display: flex; flex-direction: row;">
+				<a class="btn fvb" href="#" onclick='list(this)'>
+					<div class="circle" style="background: #FEB614;"></div><div>FVB</div>
+				</a>
+			</div>
+			<!--FVB выпадающий список-->
+			<div class="fvb_list" style="display: none; flex-direction: column;">
+				<a class="btn fvb in" onclick="show_load(this)" href="{% url 'post_new' group_id=7 bm='(3)'%}">
+					<div class="mini-circle" style="background: #FEB614;"></div><div>FVB 3</div>
+				</a>
+				<a class="btn fvb in" onclick="show_load(this)" href="{% url 'post_new' group_id=7 bm='(4)'%}">
+					<div class="mini-circle" style="background: #FEB614;"></div><div>FVB 4</div>
+				</a>
+				<a class="btn fvb in" onclick="show_load(this)" href="{% url 'post_new' group_id=7 bm='(5)'%}">
+					<div class="mini-circle" style="background: #FEB614;"></div><div>FVB 5</div>
+				</a>
+				<a class="btn fvb in" onclick="show_load(this)" href="{% url 'post_new' group_id=7 bm='(7)'%}">
+					<div class="mini-circle" style="background: #FEB614;"></div><div>FVB 7</div>
+				</a>
+			</div>
+
+        </div>
+        
+		<div class="btn-group-vertical">
+			<h4>Помощь</h4>
+			<div style="display: flex; flex-direction: row;">
+
+
+				
+	
+	
+	
+
+
+				<a class="btn user" style="display: block; text-align: center; width: 244px; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;" href="{% url 'feedbacks' %}">
+					{% if feedbacks_count > 0 %}
+						Предложения(<span style="color: red;">{{feedbacks_count}}</span>)
+					{% else %}
+						Предложения
+					{% endif %}
+				</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				<a style="display: block; text-align: center; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;" class="btn user" href="{% url 'help' %}">Инструкция</a>
+				<a style="display: block; text-align: center; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;" class="btn user" href="{% url 'about:author' %}">Контакты</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				{% if user.username in rights %}
+					<a style="display: block; text-align: center; width: 244px; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;" class="btn user" href="{% url 'rele_isib' %}">Реле(<span style="color: green;">{{count_of_1}}</span>/14)</a>
+				{% endif %}
+			</div>
+		</div>  
+    </aside>
+	<script>
+		let arr = ['isib_list', 'fib_list', 'fvb_list', 'fib_bm_list', 'nuc_list'];
+
+		function list(obj){
+			var name = obj.classList[1].toString() + "_list"
+			var list = document.getElementsByClassName(name)[0];
+			if (list.style.display === "flex") {list.style.display = "none";}
+			else {list.style.display = "flex";}
+			for (var list of arr) {
+				if (list !== name) {
+					var fv = document.getElementsByClassName(list)[0];
+					fv.style.display = "none";
+				}
+			}
+		}
+		function show_load(obj){
+				obj.innerHTML = `<img class="circle_trans img_for_btn" src="/static/load.gif">${obj.innerText}`;
+			}
+	</script>
+{% endwith %}

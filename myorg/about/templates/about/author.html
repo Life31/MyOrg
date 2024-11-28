@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block header %}Контакты{% endblock %}
+{% load static %}
+{% block content %}
+	<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+	<table border="0" width=120%>
+		<tr>
+			<th style="width: 150px; text-align:center; background:rgb(164, 214, 243); border-right:0px">ФИО</th>
+			<th style="width: 190px; text-align:center; background:rgb(164, 214, 243); border-right:0px">Должность</th>
+			<th style="width: 150px; text-align:center; background:rgb(164, 214, 243); border-right:0px">Отдел</th>
+			<th style="text-align:center;background:rgb(164, 214, 243);border-right:0px">e-mail</th>
+			<th style="text-align:center;background:rgb(164, 214, 243);border-right:0px">Рабочий телефон</th>
+			<th style="text-align:center;background:rgb(164, 214, 243);border-right:0px">Мобильный телефон</th>
+		</tr>
+		<tr>
+			<th style="text-align:center;">Николай Емельянов</th>
+			<th style="text-align:center;">Инженер-конструктор 1 кат.</th>
+			<th style="text-align:center;">Отдел стендовой отработки №306</th>
+			<th style="text-align:center; color:rgb(74, 177, 236);">nikolay.emelyanov@ic.irkut.com</th>
+			<th style="text-align:center;">+7 (495) 9872071 доб. 151</th>
+			<th style="text-align:center;">+7 (909) 6790141</th>
+		</tr>
+	</table>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Запросы на изменение конфигурации{% endblock %}
+{% block header %}
+	<a style="color: rgb(74, 177, 236); font-weight: bold; text-align: left;">Запросы на изменение конфигурации</a>
+{% endblock %}
+{% load thumbnail %}
+{% load static %}
+{% load user_filters %}
+<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+{% block aside %}
+    {% include 'includes/aside_config.html' %}
+{% endblock %}
+{% block content %}
+	<div class="card" style="width: 280px;"> 
+		<div class="card-body">
+			<a class="btn user" style="background: silver; width: 240px; margin: 5px auto;" href="{% url 'config_query_creat' %}">Добавить запрос на изменение конфигурации</a>
+		</div>
+	</div>
+	<table class="config_units" border="1" width=120%>
+		<tr>
+			<th style="width: 100px; text-align:center; background:rgb(164, 214, 243); ">Номер запроса</th>
+			<th style="width: 100px; text-align:center; background:rgb(164, 214, 243); ">Статус</th>
+			<th style="width: 100px; text-align:center; background:rgb(164, 214, 243); ">Автор</th>
+			<th style="width: 100px; text-align:center; background:rgb(164, 214, 243); ">Дата</th>
+			<th style="width: 100px; text-align:center; background:rgb(164, 214, 243); ">Номер конфигурации</th>
+		</tr>
+		{% for post in querys %}
+			<tr>
+				<th><a style="color: rgb(74, 177, 236); font-weight: bold;" href="{% url 'config_changes' post.id %}">{{ post.id }}</a></th>
+				<th><a style="color: rgb(74, 177, 236); font-weight: bold;">{{ post.state }}</a></th>
+				<th><a style="color: rgb(74, 177, 236); font-weight: bold;">{{ post.author }}</a></th>
+				<th><a style="color: rgb(74, 177, 236); font-weight: bold;">{{ post.pub_date|day_to_date }}</a></th>
+				<th><a style="color: rgb(74, 177, 236); font-weight: bold;">{{ post.number }}</a></th>
+			<tr>
+		{% endfor %}
+	</table>		
+{% endblock %} 

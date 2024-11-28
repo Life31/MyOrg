@@ -1,0 +1,119 @@
+{% load static %}
+{% load user_filters %}
+{% if user_widgets.task %}
+<div class="card" id="9" style="display: flex; width: 49px; height: 54px; overflow: hidden;">
+{% else %}<div class="card" id="9" style="display: none;">
+{% endif %}
+	<div class="title" onmouseover="titleonmouseover(this)" onmouseout="titleonmouseout(this)">
+		<div class="off tasks widget_place_for_image" {% if user_widgets.task_open %}name="open"{% else %}name="close"{% endif %}>
+			<img 
+				class="img_for_btn top_left_screen"
+				onclick="closeOpenCard(this)"
+				style="margin: 10px; width: 80%; height: 80%;"
+				title="свернуть / развернуть виджет"
+				src={% static "trello.png" %}
+			>
+		</div>
+		<div style="width:70%; display: none;">
+			<a style="color: rgb(102, 168, 243); text-decoration: none; font-size: 24px;"
+				title="Перейти на полную версию"
+				href="{% url 'task_all' user_start_bord_id %}">
+				Задачи
+			</a>
+		</div>
+		<div style="width: 10%; display: none; margin-left: 15px;">
+			<a style="display: none;" href="{% url 'user_widget_delete' user.id 'task' %}">
+				<img style="height: 90%; width: 90%;" title="удалить виджет" src={% static "denay.png" %}>
+			</a>
+		</div>
+	</div>
+	<div class="widget_data">
+		<div style="display: flex; flex-direction: row; justify-content: center; align-items: center; margin-top: 0px;">
+			<div class="prev-b task part" style="width: 20px; line-height: 20px; cursor: pointer; display: flex; flex-direction: row; justify-content: center; align-items: center;" aria-label="Предыдущий">&lt;</div>
+			<div class="cur_b task part" style="width: 240px; display: flex; flex-direction: row; justify-content: center; align-items: center;">Назначенные доски</div>
+			<div class="next-b task part" style="width: 20px; line-height: 20px; cursor: pointer; display: flex; flex-direction: row; justify-content: center; align-items: center;" aria-label="Следующий">&gt;</div>
+		</div>
+		<div class="slider_t-container" style="margin: 1px; display: flex; flex-direction: column; justify-content: top; align-items: center; width: 100%; height: 90%;">
+			<div class="slider_t" style="display: flex; flex-direction: column; justify-content: top; align-items: center; width: 100%; height: 100%; transition: 0.5s ease-in-out;">
+				<div class="slider_t-slide" style="width: 100%; height: 100%;">
+					<div style="overflow-y: scroll; display: flex; flex-direction: column; justify-content: top; align-items: center; margin-bottom: 1px; height: 100%; width: 100%;">
+		
+						{% for bord in user_bords %}
+							{% if bord.user != user %}
+							<a class="task" style="color: black; justify-content: left; align-items: center; width: 96%;" href="{% url 'task_all' bord.id %}">
+								<img style="margin: 10px; width: 15px; height: 15px;" src={% static "trello.png" %}>
+								{{bord.name}}
+								{% if  bord.id in new_tasks_sorted_by_bords.keys %}
+								<span style="color: red">(+{{new_tasks_sorted_by_bords|get_value_from_dict:bord.id}})</span>
+								{% endif %}
+							</a>		
+							{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+				<div class="slider_t-slide" style="width: 100%; height: 100%;">
+					<div style="overflow-y: scroll; display: flex; flex-direction: column; justify-content: top; align-items: center; margin-bottom: 6px; height: 100%; width: 100%;">
+						{% for bord in user_bords %}
+							{% if bord.user == user %}
+							<a class="task" style="color: black; justify-content: left; align-items: center; width: 96%;" href="{% url 'task_all' bord.id %}">
+								<img style="margin: 10px; width: 15px; height: 15px;" src={% static "trello.png" %}>
+								{{bord.name}}
+								{% if  bord.id in new_tasks_sorted_by_bords.keys %}
+								<span style="color: red">(+{{new_tasks_sorted_by_bords|get_value_from_dict:bord.id}})</span>
+								{% endif %}
+							</a>
+							{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="widget_footer">
+		<a class="btn widg_f_btn"
+			style="width: 100%; border-radius: 8px 8px 18px 18px;"
+			href="{% url 'bord_new' %}">
+			Добавить доску
+		</a>
+	</div>	
+</div>
+<script>
+	const slider_t = document.querySelector('.slider_t');
+	const prevButton_t = document.querySelector('.prev-b');
+	const nextButton_t = document.querySelector('.next-b');
+	const cur_b = document.querySelector('.cur_b')
+	const slides_t = Array.from(slider_t.querySelectorAll('.slider_t-slide'));
+	const slideCount_t = slides_t.length;
+	let slideIndex_t = 0;
+	// Устанавливаем обработчики событий для кнопок
+	prevButton_t.addEventListener('click', showPreviousSlide_t);
+	nextButton_t.addEventListener('click', showNextSlide_t);
+	// Функция для показа предыдущего слайда
+	function showPreviousSlide_t() {
+		slideIndex_t = (slideIndex_t - 1 + slideCount_t) % slideCount_t;
+		updateSlider_t();
+	}
+	// Функция для показа следующего слайда
+	function showNextSlide_t() {
+		slideIndex_t = (slideIndex_t + 1) % slideCount_t;
+		updateSlider_t();
+	}
+	// Функция для обновления отображения слайдера
+	function updateSlider_t() {
+		slides_t.forEach((slide, index) => {
+			if (index === slideIndex_t) {
+				slide.style.display = 'block';
+			} else {
+				slide.style.display = 'none';
+			}
+		});
+		if (slideIndex_t === 0) {
+			cur_b.textContent = "Назначенные доски";
+		} else if (slideIndex_t === 1) {
+			cur_b.textContent = "Мои доски";
+		}
+	}
+	// Инициализация слайдера
+	updateSlider_t();
+</script>

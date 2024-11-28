@@ -1,0 +1,61 @@
+<div class="card {{color}} mb-1 mt-1 shadow-sm">
+
+    <div class="container mb-1 mt-1">
+		<div class="row">
+			<div class="col-md-5">
+				<a name="post_text" href="{% url 'sadec_post' post.author.username post.id %}">
+					{{ post.text|linebreaksbr }}
+				</a>
+			</div>
+			<div class="col-md-1">
+				{{ post.percent }}
+			</div>
+			<div class="col-md-2">
+				
+				{% if post.task_state_id == 3 %}
+					<a
+						class="btn btn-sm btn-success btn-block">
+						{{ post.task_state }}
+					</a>
+				{% elif post.task_state_id == 1 %}
+					<a
+						class="btn btn-sm btn-outline-primary btn-block">
+						{{ post.task_state }}
+					</a>
+				{% elif post.task_state_id == 4 %}
+					<a
+						class="btn btn-sm btn-outline-secondary btn-block">
+						{{ post.task_state }}
+					</a>
+				{% else %}
+					<a
+						class="btn btn-sm btn-outline-warning btn-block">
+						{{ post.task_state }}
+					</a>
+				
+				{% endif %}
+			</div>
+			<div class="col-md-3">
+				<p class="card-text">
+					<a name="post_{{ post.id }}" href="{% url 'sadec_profile' post.author.username %}">
+						<strong class="d-block text-gray-dark">{{ post.author }}</strong>
+					</a>
+            
+				</p>
+			</div>
+			{% if post.file.url != None %}
+				{% load static %}
+				<div class="col-md-1">
+					<a class="card-link muted" href="{% static post.file.url %}">
+						<strong class="d-block text-gray-dark">file</strong>
+					</a>
+
+				</div>
+			{% else %}
+				<div class="col-md-1">
+					<strong class="d-block text-gray-dark">file</strong>
+				</div>
+			{% endif %}
+		</div>
+   </div>
+</div> 

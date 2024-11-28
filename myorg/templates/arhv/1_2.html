@@ -1,0 +1,96 @@
+<style>
+	.reuse2_bet {
+		width: 100px;
+		border: 1px solid white;
+		text-align: center;
+	}
+</style>
+<div style="display: flex; flex-direction: row;">
+	<div style="display: flex; flex-direction: column;">
+		<div>
+			<label for="bet_1">Ставка 1</label>
+			<input id="bet_1" class="reuse2_bet" type="number" step="100" value="1000">		
+			<label for="coef_1">Коеф. 1</label>
+			<input id="coef_1" class="reuse2_bet" type="number" step="0.1" value="2">		
+			<label for="win_1">Выигрышь 1</label>
+			<input id="win_1" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="0.1" value="">
+			<label for="g">Жадность</label>
+			<input id="g" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="100" value="">	
+			<label for="p">Выгода</label>
+			<input id="p" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="100" value="">		
+		</div>
+		<div>
+			<label for="bet_2">Ставка 2</label>
+			<input id="bet_2" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="100" value="">		
+			<label for="coef_2">Коеф. 2</label>
+			<input id="coef_2" class="reuse2_bet" type="number" step="0.1" value="2">		
+			<label for="win_2">Выигрышь 1</label>
+			<input id="win_2" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="0.1" value="">
+			<label for="greed_1">Жадность</label>
+			<input id="greed_1" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="100" value="">	
+			<label for="prof_1">Выгода</label>
+			<input id="prof_1" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="100" value="">		
+		</div>
+		<div>
+			<label for="bet_2_bed">Ставка 2</label>
+			<input id="bet_2_bed" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="100" value="">		
+			<label for="coef_2_bed">Коеф. 2</label>
+			<input id="coef_2_bed" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="0.1" value="2">		
+			<label for="win_2_bed">Выигрышь 1</label>
+			<input id="win_2_bed" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="0.1" value="">
+			<label for="greed_2">Жадность</label>
+			<input id="greed_2" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="100" value="">	
+			<label for="prof_2">Выгода</label>
+			<input id="prof_2" class="reuse2_bet" style="background: transparent;" readonly=true type="number" step="100" value="">		
+		</div>
+	</div>
+</div>
+
+<script>
+	let bet_1 = document.getElementById('bet_1');
+	let coef_1 = document.getElementById('coef_1');
+	let win_1 = document.getElementById('win_1');
+
+	let bet_2 = document.getElementById('bet_2');
+	let coef_2 = document.getElementById('coef_2');
+	let win_2 = document.getElementById('win_2');
+
+	let bet_2_bed = document.getElementById('bet_2_bed');
+	let coef_2_bed = document.getElementById('coef_2_bed');
+	let win_2_bed = document.getElementById('win_2_bed');
+
+	let greed_1 = document.getElementById('greed_1');
+	let prof_1 = document.getElementById('prof_1');
+
+	let greed_2 = document.getElementById('greed_2');
+	let prof_2 = document.getElementById('prof_2');
+
+	let elems = [coef_1, coef_2, bet_1];
+	elems.forEach((element) => {
+		element.addEventListener(
+			"input",
+			(event) => {                  
+				setTimeout(function() {
+					if (coef_1.value != 0 & coef_2.value != 0 & bet_1.value != 0) {
+						win_1.value = coef_1.value * bet_1.value;
+						let greed = Number(100 - (100/coef_1.value + 100/coef_2.value)).toFixed(2);
+						bet_2.value =  Number(bet_1.value * coef_1.value / coef_2.value).toFixed(2);
+						win_2.value = Number(bet_2.value * coef_2.value).toFixed(2);
+
+						greed_1.value = greed;
+						prof_1.value = Number(win_1.value - bet_1.value - bet_2.value).toFixed(2);	
+						
+						bet_2_bed.value = Number(win_1.value - bet_1.value).toFixed(2);
+						coef_2_bed.value = coef_2.value;
+						win_2_bed.value = Number(bet_2_bed.value * coef_2_bed.value).toFixed(2);
+						greed_2.value = greed_1.value;
+						prof_2.value = Number(win_2_bed.value - bet_1.value - bet_2_bed.value).toFixed(2);	
+					}						
+				}, 
+				100);
+			},
+		);
+	})
+</script>
+	
+

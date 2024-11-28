@@ -1,0 +1,198 @@
+<style type="text/css"> 
+	.log { border-collapse: separate; border-spacing: 2px 1px; }
+	.log th { text-align: center; font-weight: bold; padding: 0px 10px 0px 10px; margin: auto;  border-radius: 5px;}
+	tbody tr:nth-child(even){ background: transparent; }
+	tbody tr:nth-child(odd){ background: rgb(202, 235, 245);}
+	.text_a { font-family: Calibri; font-size: 18px; font-weight: 400; line-height: 20px; letter-spacing: 0em; }
+	.div_for_pagi {
+		width: 120%;
+		height: 20px;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		margin-top: 35px;
+	}
+	form {
+	position: relative;
+	width: 240px;
+	margin: 0 auto;
+	border-radius: 5px;
+	}
+	.d1 {background: #A3D0C3;  border-radius: 10px; height: 37px;}
+	.d1 input {
+	width: 100%;
+	height: 37px;
+	padding-left: 10px;
+	border: 2px solid #7BA7AB;
+	border-radius: 5px;
+	outline: none;
+	font-size: 14px;
+	background: #F9F0DA;
+	color: #9E9C9C;
+	border-radius: 5px;
+	}
+	.d1 button {
+		position: absolute;
+		top: -20;
+		right: 0px;
+		width: 37px;
+		height: 37px;
+		background:#7BA7AB;
+		border: 2px solid #7BA7AB;
+		border-radius: 0 5px 5px 0;
+		cursor: pointer;
+	}
+	.d1 button::before {
+		content: "\F50D";
+		font-family: FontAwesome;
+		font-size: 16px;
+		color: #F9F0DA;
+	}
+</style>
+
+{% extends "base.html" %}
+{% load static %}
+{% block title %} Учетные единицы {% endblock %}
+
+{% block header %}
+
+	<nav class="navbar navbar-expand-md" style="background: transparent; width: 120%; height: 50px;">
+		<ul class="navbar-nav mr-auto">
+			<a style="color: black;">Учетные единицы</a>
+		</ul>
+		
+		<ul style="height: 45px;" class="navbar-nav ml-auto">
+			<div class="d1">
+				<form action="{% url 'units_search' %}" method="GET">
+					<input type="text"  placeholder="Поиск..." name="q">
+					<button type="submit">
+						
+					</button>
+					
+				</form>
+			</div>	
+			<a class="btn sib" style="width: 100px; height: 33px; text-align:center; border: 2px solid #A3D0C3; background:#7BA7AB; font-family: FontAwesome;
+			font-size: 16px;" href="{% url 'main' %}">очистить</a>		
+		</ul>
+	</nav>
+	 
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_storage.html' %}
+{% endblock %}
+{% block content %}
+
+<div style="width: calc(100vw - 350px); height: 820px; overflow-y: auto;">
+
+
+<table class="log" border="0" style="width: 1315px;">
+	<thead>
+		<tr style="height: 30px; position: sticky; top: 0; background: #E6E6E6; z-index: 100;">
+			<th style="padding: 0px;"><a><img style="height: 25px;" src={% static "star.png" %}></a></th>
+			<th>№</th>
+			<th>Наименование</th>
+			<th>Категория</th>
+			<th>Производ.</th>
+			<th>Обозначение</th>
+			<th>Количество</th>
+			<th>Стенд</th>
+			<th>Склад</th>
+			<th>Кор.</th>
+			<th>Комментарий</th>
+			
+			<th>☰</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for unit in page %}
+			<tr>
+				<th style="background: #f7f7f7; padding: 0px; margin: 0px;">
+				{% if unit.id in favorit_units_ids %}
+				<div style="width: 100%; height: 100px auto; padding: auto;">
+					<a style="padding: 2px;" href="{% url 'unit_like' unit.id %}">
+						<img style="height: 20px;" src={% static "green_star.png" %}>
+					</a>
+				</div>
+				{% else %}
+					<div style="width: 100%; height: 100px auto;">
+						<a style="padding: 2px;" href="{% url 'unit_like' unit.id %}">
+							<img style="height: 25px;" src={% static "star.png" %}>
+						</a>
+						</div>
+				{% endif %}
+				</th>
+				{% if unit.acctual %}
+					<th><a class="text_a" style="font-weight: bold; color: green;">{{ unit.number }}</a></th>
+				{% elif unit.acctual == 0%} 
+					<th><a class="text_a" style="font-weight: bold; color: red;">{{ unit.number }}</a></th>
+				{% else%} 	
+					<th><a class="text_a" >{{ unit.number }}</a></th>
+				{% endif %}
+				
+				<th style="text-align: right;"><a class="text_a" href="{% url 'unit_ths' unit.id %}">{{ unit.name }}</a></th>
+				<th style="text-align: center;"><a class="text_a"  href="{% url 'units_by_ctgry' unit.ctgry_id %}">{{ unit.ctgry }}</a></th>
+				<th style="text-align: center;"><a class="text_a"  href="{% url 'units_by_creator' unit.creator_id %}">{{ unit.creator }}</a></th>
+
+				<th style="text-align: center;"><a class="text_a">{{ unit.code }}</a></th>
+				<th style="text-align: center;"><a class="text_a">{{ unit.num }} {{ unit.si }}</a></th>
+				<th style=" text-align: center;"><a class="text_a">{{ unit.stend }}</a></th>
+				<th style="text-align: center;"><a class="text_a"  href="{% url 'units_by_place' unit.place_id %}">{{ unit.place }}</a></th>
+				<th style="text-align: center;"><a class="text_a">{{ unit.box }}</a></th>
+				
+				<th style="text-align: center;"><a class="text_a">{{ unit.comment }}</a></th>
+				
+
+				<th style="text-align: center;">
+					<div class="dropdown">
+						<div class="btn-sm btn-outline-secondary" style="height: 30px;" onmouseover='posForDrop(this)'>☰</div>
+						<div class="dropdown-content" style="min-width: 100px; right: -100px;">
+							{% if user.username in storage_rights %}
+								<a class="btn btn-sm" style="width: 100px;" href="{% url 'unit_edit' unit.id %}" role="button">
+									Править
+								</a>
+								<a class="btn btn-sm" style="width: 100px;" href="{% url 'event_new' unit.id %}" role="button">
+									Добавить<br>событие
+								</a>
+								
+								<a class="btn btn-sm" style="width: 100px;" href="{% url 'storage_where' unit.place %}" role="button">
+									Показать<br>на карте
+								</a>
+								<a class="btn btn-sm" id="{{unit.id}}" style="width: 100px;" href="#" onclick="unit_del(this)" role="button">
+									Удалить
+								</a>
+							{% endif %}
+						</div>
+					</div>
+				</th>
+				
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+</div>
+<div class="div_for_pagi">{% include "includes/paginator.html" %}</div>
+<script>
+	function posForDrop(obj){
+		obj.addEventListener('mousemove', function (event) {
+			let dis = Math.round(40 + event.clientY / -6).toString();
+			obj.parentElement.childNodes[3].style.top = dis + 'px';
+			
+		})
+
+		
+	}
+	function unit_del(obj) {
+		var result = confirm('Подтвердите удаление записи о блоке')
+		let id = obj.id
+		let url = "{% url 'unit_delete' 99999999 %}";
+		let arrayFromUrl = url.split('/');
+		arrayFromUrl[3] = id;
+		let new_url = arrayFromUrl.join("/");
+		if (result) {
+			location.href=new_url;
+		}
+	}
+</script>
+		
+{% endblock %}

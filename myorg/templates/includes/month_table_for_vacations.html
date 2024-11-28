@@ -1,0 +1,144 @@
+<style>
+	.month_in_year_table {
+	border-collapse: separate;
+	border-spacing: 2px 2px;
+	}
+	.day_in_week {
+	width:26;
+	height: 25;
+	border: 1px solid black;
+	background: linear-gradient(to bottom, #c48f65 0%, #E8E8E8 101%);
+	}
+	.day_over {
+	width:26;
+	height: 36;
+	border: 0px solid black;
+	background: transparent;
+	text-align: center;
+	border: 1px solid black;
+	}
+	
+</style>
+
+{% load user_filters %}
+<table class="month_in_year_table" border="0">
+	<tbody>
+		<tr>
+		  <th colspan="7" width="360"style="background: transparent;">
+			<a class="month"
+				onmouseover='showAll(this)'
+				onmouseout='dontShowAll(this)'
+				style="color: rgb(74, 177, 236); cursor: pointer;">
+				{{key}}
+			</a>
+		  </th>
+		</tr>
+		<tr>
+		  <th class="day_in_week"><a>Пн</a></th>
+		  <th class="day_in_week"><a>Вт</a></th>
+		  <th class="day_in_week"><a>Ср</a></th>
+		  <th class="day_in_week"><a>Чт</a></th>
+		  <th class="day_in_week"><a>Пт</a></th>
+		  <th class="day_in_week"><a>Сб</a></th>
+		  <th class="day_in_week"><a>Вс</a></th>
+		</tr>
+		{% for val in value.values %}
+			<tr>
+				{% for el in val %}
+					{% if el != '' %}
+					<th class="day_over" style="vertical-align: top;">
+						<div style="background: white; border-radius: 50%; padding: 0 auto; margin: 0 auto;">
+							<a style="padding: 0 auto; margin: 0 auto; cursor: pointer;" 
+							onmouseover='show(this)' onmouseout='dontShow(this)' class="{{key|month_trim}}">{{el}}</a>
+						</div>
+						<div style="float: left;">
+						{% for kk, vv in calendar.items %}
+							{% if key|year_month:year|day_vacation:el in vv %}
+								<div class="dots {{kk}}"
+								style="float: left; width: 7px; height: 7px; border: 0px solid black; margin: 1px; background-color: white; border-radius: 50%;"></div>
+							{% endif %}
+						{% endfor %}
+						</div>		
+					</th>	
+					{% else %}	
+						<th width="25" style="background: transparent; border: 0px solid black;">
+							
+						</th>
+					{% endif %}
+					
+				{% endfor %}
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+<script>
+	function showAll(obj) {
+		let divs = document.getElementsByClassName('dots')
+		for (let div of divs) {
+			if (div.parentElement.parentElement.firstElementChild.firstElementChild.className == obj.textContent.trim().slice(0,3)) {
+				div.style.background = div.classList[1];
+			}
+		}
+		
+	}
+	function dontShowAll(obj) {
+		let divs = document.getElementsByClassName('dots')
+		for (let div of divs) {
+			div.style.background = 'white';
+		}
+		
+	}
+	function show(obj) {
+		let lols = document.getElementsByTagName('a');
+		obj.parentElement.style.background = 'linear-gradient(to top, rgb(164, 214, 243) 0%, rgb(0, 214, 120) 101%)';
+		let ids = []
+		for (let lol of lols) {
+			if (lol.textContent.trim().slice(3, 6) == obj.className) {
+				ids.push(lol.className)                       
+			}
+		}
+		for (let id of ids) {
+			let days = document.getElementsByClassName(id);
+			let dayStart = days[0].textContent.trim().slice(0, 2);
+            let monthStart = days[0].textContent.trim().slice(3, 6);
+            let dayEnd = days[1].textContent.trim().slice(0, 2);
+            let monthEnd = days[1].textContent.trim().slice(3, 6);
+			if (monthStart == monthEnd) {
+				if (Number(obj.textContent) >= Number(dayStart) & Number(obj.textContent) <= Number(dayEnd)) {
+					for (let d of days) {
+						d.style.color = 'red';
+					}
+				}
+			} else {
+				if ((Number(obj.textContent) >= Number(dayStart) & monthStart == obj.className ) | (Number(obj.textContent) <= Number(dayEnd) & obj.className == monthEnd )) {
+					for (let d of days) { d.style.color = 'red'; }
+				}
+			}
+		}
+	}
+	function dontShow(obj) {
+		let lols = document.getElementsByTagName('a');
+		obj.parentElement.style.background = 'white';
+		let ids = []
+		for (let lol of lols) {
+			if (lol.textContent.trim().slice(3, 6) == obj.className) { ids.push(lol.className) }
+		}
+		for (let id of ids) {
+			let days = document.getElementsByClassName(id);
+			let dayStart = days[0].textContent.trim().slice(0, 2);
+            let monthStart = days[0].textContent.trim().slice(3, 6);
+            let dayEnd = days[1].textContent.trim().slice(0, 2);
+            let monthEnd = days[1].textContent.trim().slice(3, 6);
+			if (monthStart == monthEnd) {
+				if (Number(obj.textContent) >= Number(dayStart) & Number(obj.textContent) <= Number(dayEnd)) {
+					for (let d of days) { d.style.color = 'black'; }
+				}
+			} else {
+				if ((Number(obj.textContent) >= Number(dayStart) & monthStart == obj.className ) | (Number(obj.textContent) <= Number(dayEnd) & obj.className == monthEnd )) {
+					for (let d of days) { d.style.color = 'black'; }
+				}
+			}
+		}
+	}
+</script>

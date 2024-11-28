@@ -1,0 +1,161 @@
+<style type="text/css">
+
+	.th-center, .th-left-b {
+		font-size: 20;
+		text-align: center;
+		padding:10px;
+		background:rgb(164, 214, 243);
+	}
+	.th-left-b {
+		font-size: 16;
+		text-align: left;
+	}
+    .th-right {
+		font-size: 20;
+		text-align: right;
+		padding:10px;
+		background:rgb(164, 214, 243);
+    }
+	.th-left {
+		font-size: 18;
+		text-align: left;
+		padding:10px;
+		background:rgb(554, 214, 243);
+    }
+	.task {
+		border-collapse: separate;
+		border-spacing: 5px 5px;
+	}
+	a {
+	font-size: 18;
+	}
+</style>
+
+
+{% extends "base.html" %}
+{% load cache %}
+{% block title %} Задача № {{ task.id }} {% endblock %}
+{% block header %} Задача № {{ task.id }} {% endblock %}
+{% block aside %}
+    {% include 'includes/aside_tasks.html' %}
+{% endblock %}
+{% load thumbnail %}
+{% load user_filters %}
+{% block content %}
+    <div class="row" style="width: 120%;">
+		<div class="col-md-4">
+			<table class="task" border="0">
+				<tbody>
+					<tr>
+						<th class="th-right">От кого</th>
+						<th class="th-left">{{ task.master }}</th>
+					</tr>
+					<tr>
+						<th class="th-right">Исполнитель</th>
+						<th class="th-left">{{ task.slave }}</th>
+					</tr>
+					<tr>
+						<th class="th-right">Статус</th>
+						<th class="th-left">{{ task.state }}</th>
+					</tr>
+					<tr>
+						<th class="th-right">%</th>
+						<th class="th-left">{{ task.persent }}</th>
+					</tr>
+					<tr>
+						<th class="th-right">Дата начала</th>
+						<th class="th-left">{{ task.day_start|date:"d M Y" }}</th>
+					</tr>
+					<tr>
+						<th class="th-right">Дата завершения</th>
+						<th class="th-left">{{ task.day_end|date:"d M Y" }}</th>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-md-8">
+			<table class="task" border="0" width='900'style="border-spacing: 5px 5px;">
+				<tbody>
+					<tr>
+						<th class="th-center">Задача</th>
+						<th class="th-center">Результат</th>
+					</tr>
+					<tr>
+						<th class="th-left">{{ task.text }}</th>
+						<th class="th-left">{{ task.result }}</th>
+					</tr>
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
+	{% if include|dict_len > 0 %}
+		<h1>состоит из:</h1>
+		<table class="task" style="width: 120%;">
+			<thead>
+				<tr>
+					<th class="th-left" width="200">От кого</th>
+					<th class="th-left" width="200">Исполнитель</th>
+					<th class="th-left" width="500">Текст задачи</th>
+					<th class="th-left" width="150">Статус</th>
+					<th class="th-left" width="50">%</th>
+					<th class="th-left" width="200">Начало</th>
+					<th class="th-left" width="200">Завершение</th>
+					<th class="th-left" width="500">Результат</th>
+					<th class="th-left" width="50"><div class="btn-sm btn-outline-secondary" style="height: 30px;">☰</div></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for t in include %}
+					<tr>
+						<th class="th-left-b" width="200">{{ t.master }}</th>
+						<th class="th-left-b" width="200">{{ t.slave }}</th>
+						<th class="th-left-b" width="500">
+							<div class="dropdown">
+								<div class="btn-sm btn-outline-transparent">
+								<a style="background: transparent;" href="{% url 'task' t.id %}">{{ t.text|replace }}</a>
+								</div>
+								<div class="dropdown-content">
+									<a style="background: transparent;" href="{% url 'task' t.id %}">{{ t.text }}</a>
+								</div>
+							</div>
+						</th>
+						
+						
+						<th class="th-left-b" width="150">{{ t.state }}</th>
+						<th class="th-left-b" width="50">{{ t.persent }}</th>
+						<th class="th-left-b" width="200">{{ t.day_start|date:"d M Y" }}</th>
+						<th class="th-left-b" width="200">{{ t.day_end|date:"d M Y" }}</th>
+						<th class="th-left-b" width="500">
+							<div class="dropdown">
+								<div class="btn-sm btn-outline-transparent">
+									<a style="background: transparent;" href="{% url 'task' t.id %}">{{ t.result|replace }}</a>
+								</div>
+								<div class="dropdown-content">
+									<a style="background: transparent;" href="{% url 'task' t.id %}">{{ t.result }}</a>
+								</div>
+							</div>
+						</th>
+						<th class="th-left-b" width="50">
+							<div class="dropdown">
+								<div class="btn-sm btn-outline-secondary" style="height: 30px;">☰</div>
+								<div class="dropdown-content">
+									{% if user.id == t.slave_id %}
+										<a class="btn btn-sm" href="#" role="button">Делегировать</a>
+										<a class="btn btn-sm" href="#" role="button">Начать работу</a>
+										<a class="btn btn-sm" href="#" role="button">Завершить задачу</a>
+									{% elif user.id == t.master_id %}
+										<a class="btn btn-sm" href="#" role="button">Переназначить</a>
+										<a class="btn btn-sm" href="#" role="button">Удалить</a>
+										<a class="btn btn-sm" href="#" role="button">Подтвердить</a>
+										<a class="btn btn-sm" href="#" role="button">Отклонить</a>	
+									{% endif %}
+								</div>
+							</div>
+						</th>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
+{% endblock %} 

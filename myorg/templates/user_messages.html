@@ -1,0 +1,138 @@
+<style>
+    .mes_one {
+        background: rgb(253, 253, 253); box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+        margin: 4px; padding: 5px; text-align: left; width: 400px; border-radius: 10px; color: black;
+    }
+    .mes_two{
+        background: rgb(199, 243, 149); box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2); margin: 4px; padding: 5px; text-align: right;
+        width: 400px; margin-left: 225px; border-radius: 10px; color: black;
+    }
+    input {
+        outline: none; border: none;
+    }   
+</style>
+
+{% extends "base.html" %}
+{% load cache %}
+{% load user_filters %}
+{% block title %}Отпуска{% endblock %}
+{% block header %}
+<div style="display: flex; flex-direction: row; justify-content: left; align-items: center; width: 130%;">
+    <a style="color: black;">---> {{user_two.get_full_name}}</a>
+</div>
+    
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_messanger.html' %}
+{% endblock %}
+{% load static %}
+
+{% block content %}
+<div style="background: black; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; justify-content: left; align-items: center; padding: 20px; width: 690px; border-radius: 35px;">
+    <div style="background: white; display: flex; flex-direction: column; justify-content: left; align-items: center; width: 655px; border-radius: 20px;">
+        <div style="display: flex; flex-direction: row; justify-content: left; align-items: center; height: 40px;">
+            <a style="color: black;">{{user_two.get_full_name}}</a>
+        </div>
+        <div class="column messages" style="width: 650px; margin-bottom: 2px; height: calc(100vh - 300px); overflow-y: scroll; overflow-x: hidden;">    
+            {% for mes in messages %}
+                {% if mes.witch_write_id != request.user.id %}
+                    <div class="mes_one">{{mes.text}}</div> 
+                {% else %}
+                    <div class="mes_two">{{mes.text}}</div>
+                {% endif %} 
+            {% endfor %}   
+        </div>
+        <form method='post' enctype="multipart/form-data" style="background: transparent; margin-top: 2px; width: 550px;">
+            {% csrf_token %}
+            <div style="display: flex; flex-direction: row; justify-content: left; align-items: center;">
+                {% for field in form %}
+                    <div style="width: 550px;"> {{ field|addclass:"form-control" }}</div>
+                {% endfor %}
+                <button type="submit" class="btn sib submit"
+                style="width: 30px; height: 30px; margin-left: 10px; display: none; border-radius: 50%; color: white; background: rgb(99, 193, 255);">></button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="lol" style="background: rgb(217, 241, 181); text-align: right; width: 600px; border-radius: 10px; margin-left: 300px; display: none;"></div>
+<script type="text/javascript">
+
+
+    let textarea = document.getElementsByTagName("textarea")[0]
+    textarea.focus();
+    function SendHttpAsyncRequest(Request)
+        {
+        var req = null;
+        if (window.XMLHttpRequest) { req = new XMLHttpRequest(); }
+        else if (window.ActiveXObject) { req = new ActiveXObject("Microsoft.XMLHTTP"); }
+        if (req) {
+            req.open('GET', Request, true);
+            req.timeout = 2000;
+            req.onreadystatechange = function (e) {
+                if (req.readyState == 4)
+                    {
+                    if (req.status == 200) { 
+                        let messages =document.getElementsByClassName("messages")[0]
+                        let lol = document.getElementsByClassName("lol")[0];
+                        let text = req.responseText.split("--->")[1].split("form")[0]
+                        let mes_one_all = [];
+                        for (let i = 0; i < document.getElementsByClassName("mes_one").length; i++) {
+                            mes_one_all.push(document.getElementsByClassName("mes_one")[i].textContent);
+                        }
+                        let mes_two_all = [];
+                        for (let i = 0; i < document.getElementsByClassName("mes_two").length; i++) {
+                            mes_two_all.push(document.getElementsByClassName("mes_two")[i].textContent);
+                        }
+                        
+                        lol.textContent = text;
+
+                        for (let i = 1; i < text.split('<div class="mes_').length; i++) {
+                            var element = document.createElement("div");
+                            let one_or_two = text.split('div class="mes_')[i].substring(0,3);
+
+                            new_text = text.split('div class="mes_')[i].split('">')[1].split("</")[0];
+                            element.style.background = "rgb(209, 209, 238)";
+                            
+
+                            if (one_or_two == "one" & mes_one_all.indexOf(new_text) == -1) {
+                                mes_one_all.splice(mes_one_all.indexOf(new_text))
+                                element.classList.add("mes_one");
+                                element.textContent = new_text;
+                                
+                                messages.appendChild(element);
+                                messages.scrollTop = messages.scrollHeight;
+                            } else if (one_or_two == "one" & mes_one_all.indexOf(new_text) != -1) {
+                                mes_one_all.splice(mes_one_all.indexOf(new_text), 1);
+                            }
+                        }                        
+                    }                   
+                    }
+                };
+            req.onerror = function (e) { StatusParse(null); }
+            req.ontimeout = function (e) { StatusParse(null); }
+            req.send();
+            }
+        }
+    var refreshIntervalId = setInterval(function(){SendHttpAsyncRequest(window.location.href)}, 2000);
+    let messages = document.getElementsByClassName("messages")[0];
+    messages.scrollTop = messages.scrollHeight;
+    setInterval(function(){clearInterval(refreshIntervalId)}, 600000);
+    
+    let btn = document.getElementsByClassName("submit")[0];
+    textarea.addEventListener("keypress", function(event) {
+        if (event.key === "Enter"){
+            event.preventDefault();
+            btn.click();
+
+        }
+        if (textarea.value != '') {
+            textarea.style.width = '510px';
+            btn.style.display = 'flex';
+        } else {
+            textarea.style.width = '550px';
+            btn.style.display = 'none';
+        }
+    })
+</script>
+
+{% endblock %} 

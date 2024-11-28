@@ -1,0 +1,59 @@
+{% load user_filters %}
+
+<tr style="color: black;">
+	{% for value in times|time_to_range %}
+		{% with request.get_full_path|url_to_stand_id as stend_id and value|time_now_for_head as now and key|day_to_day:day as today %}
+			{% with value|double_plus_one as start_id and key|day_from_week as day and 'post_new_one' as ref %}
+				{%if stend_id != None %}
+					<th class="{% if now and today %} two_right_new {% else %} new_two_right {% endif %}"
+					style="{% if now and today %} background: #808080; {% else %} background: {{value|time_to_range_new}}; {% endif %}"
+					onclick="document.location='{% url ref stend_id start_id day %}'">{{value}}</th>
+					<th class="{% if now and today %} two_left_new {% else %} new_two_left {% endif %}"
+					style="{% if now and today %} background: #808080; {% else %} background: {{value|time_to_range_new}}; {% endif %}"
+					onclick="document.location='{% url ref stend_id start_id day %}'"></th>
+				{%else%}
+					<th class="{% if now and today %} two_right_new {% else %} new_one_right {% endif %}"
+					style="{% if now and today %} background: #808080; {% else %} background: {{value|time_to_range_new}}; {% endif %}"
+					onclick="document.location='{% url ref 100 start_id day %}'">{{value}}</th>
+					<th class="{% if now and today %} two_left_new {% else %} new_one_left {% endif %}"
+					style="{% if now and today %} background: #808080; {% else %} background: {{value|time_to_range_new}}; {% endif %}"
+					onclick="document.location='{% url ref 100 start_id day %}'"></th>
+				{%endif%}
+			{% endwith %}
+		{% endwith %}
+	{% endfor %}
+</tr>
+<style>
+	.new_one_right, .new_two_right, .two_right_new {
+		border-radius: 0px 0px 0px 10px;
+
+		border-right: 0px;
+		width:22px;
+		text-align:center;
+		background:#E6E6E6;
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		color:black;
+		cursor: pointer;
+	}
+	.new_one_left, .new_two_left, .two_left_new {
+		border-radius: 0px 0px 10px 0px;
+		border-left: 0px;
+		width:22px;
+		text-align:center;
+		background:#E6E6E6;
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		color:black;
+		cursor: pointer;
+	}
+	.new_two_right, .new_two_left {
+		background:#CCCCCC;
+	}
+	.two_right_new { background:#808080; }
+	.two_left_new { background:#808080; }
+</style>

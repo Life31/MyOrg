@@ -1,0 +1,97 @@
+<style>
+	.form_radio_btn:hover, .show:hover {
+		transition: 0.4s;
+		transform: scale(110%);
+	}
+	.form_radio_btn {
+		height: 36px;
+	}
+	
+	.lbl {
+		display: inline-block;
+		cursor: pointer;
+		padding: 0px 15px;
+		line-height: 34px;
+		border: 1px solid black;
+		border-radius: 6px;
+		user-select: none;
+		background: #6B5B95;
+		font-weight: bold;
+		color: white;
+	}
+	.show {
+		margin-left: 10px;
+		width: 240px;
+		background: #6B5B95;
+		padding: 0px 15px;
+		line-height: 34px;
+		border: 1px solid black;
+		border-radius: 6px;
+		height: 36px;
+		font-weight: bold;
+		color: white;
+	}
+</style>
+{% extends "base.html" %}
+{% load cache %}
+{% load user_filters %}
+{% block header %}
+		<a style="color: rgb(74, 177, 236); font-weight: bold; text-align: left;">Заявки на {{stend}}</a>
+{% endblock %}
+{% load thumbnail %}
+{% block aside %}
+    {% include 'includes/aside.html' %}
+{% endblock %}
+{% block content %}
+	{% for key, value in data_check.items %}
+		<table border="1" width=120%> 
+			<tr><strong class="d-block text-black text-left"><a class='key'>{{key}}</a></strong></tr> 				
+		</table>
+	{% endfor %}  
+	<script>
+		data = JSON.parse("{{json_data|escapejs}}");
+		for (var post of data) {alert(post.text)};
+		let trs = document.getElementsByClassName('key');
+
+		/*for (let r of rad) { r.addEventListener('change', showSelected) }
+
+		function showSelected(e) {
+			if (this.checked) {
+				for (let lbl of lbls) { if (lbl.classList.contains(this.value)) {lbl.style.color = 'red'; } else { lbl.style.color = 'white'; } }
+				if (this.value == 'MDU') {
+					for (let tr of trs) {
+						if (tr.className == 'text-left'){
+							for (let ch of tr.childNodes) {
+								if (ch.textContent.includes(this.value)) {
+									tr.style.display = 'table-row';
+									break;
+								} else { tr.style.display = 'none'; }
+							}
+						}
+					}
+				}
+				else if (this.value == '_') {
+					for (let tr of trs) {
+						if (tr.className == 'text-left'){
+							tr.style.display = 'table-row';
+						}
+					}
+				}
+				else {
+					for (let tr of trs) {
+						if (tr.className == 'text-left'){
+							for (let ch of tr.childNodes) {
+								if (ch.textContent.includes('CPIOM' + this.value)) {
+									tr.style.display = 'table-row';
+									break;
+								} else { tr.style.display = 'none'; }
+							}
+						}
+					}
+				}
+			}
+		}*/
+		
+		
+	</script>
+{% endblock %} 

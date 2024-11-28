@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load cache %}
+{% block title %}Стенды{% endblock %}
+{% block header %}Стенды{% endblock %}
+{% load thumbnail %}
+{% block content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+	
+    <div class="container">
+		<div class="card bg-secondary mb-2 mt-2 shadow-sm">
+			<div class="container mb-1 mt-1">
+				<div class="row">
+					<div class="col-md-2">
+						<strong class="d-block text-gray-dark">Стенд</strong>
+					</div>
+					<div class="col-md-3">
+						<strong class="d-block text-gray-dark">Описание</strong>
+					</div>
+					<div class="col-md-2">
+						<strong class="d-block text-gray-dark">Цвет</strong>
+					</div>
+				</div>
+			</div>
+		</div> 
+        {% for group in page %}
+			{% if group.title == "SIB"%}
+				<div class="card mb-1 mt-1 shadow-sm">
+					<div class="container mb-1 mt-1">
+						<div class="row">
+							<div class="col-md-2">
+								<a name="group_title" href="{% url 'group' group.slug %}">
+									{{ group.title }}
+								</a>
+							</div>
+							<div class="col-md-3">
+								<a name="group_description" href="{% url 'group' group.slug %}">
+									{{ group.description }}
+								</a>
+							</div>
+							<div class="col-md-2 bg-success">
+
+							</div>
+						</div>
+					</div>
+				</div>
+			{% elif group.title == "ISIB" %}
+				<div class="card mb-1 mt-1 shadow-sm">
+					<div class="container mb-1 mt-1">
+						<div class="row">
+							<div class="col-md-2">
+								<a name="group_title" href="{% url 'group' group.slug %}">
+									{{ group.title }}
+								</a>
+							</div>
+							<div class="col-md-3">
+								<a name="group_description" href="{% url 'group' group.slug %}">
+									{{ group.description }}
+								</a>
+							</div>
+							<div class="col-md-2 bg-danger">
+
+							</div>
+						</div>
+					</div>
+				</div>
+			{% elif group.title == "ACIB" %}
+				<div class="card mb-1 mt-1 shadow-sm">
+					<div class="container mb-1 mt-1">
+						<div class="row">
+							<div class="col-md-2">
+								<a name="group_title" href="{% url 'group' group.slug %}">
+									{{ group.title }}
+								</a>
+							</div>
+							<div class="col-md-3">
+								<a name="group_description" href="{% url 'group' group.slug %}">
+									{{ group.description }}
+								</a>
+							</div>
+							<div class="col-md-2 bg-primary">
+
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endif%}
+			
+        {% endfor %}
+		{% include "includes/paginator.html" %}
+    </div>
+    
+{% endblock %} 

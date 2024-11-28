@@ -1,0 +1,30 @@
+<style>
+	.small_circle {background: #00A591; width: 7px; height: 7px; border-radius: 50%; display: flex; flex-direction: row; justify-content: center; align-items: center;}
+	.text_in_circle {font-size: 3px; color: black; font-family: Calibri; line-height: 3px; letter-spacing: 0em; text-align: center; padding: auto; margin:auto;}
+</style>
+
+{% load user_filters %}
+{{el.name}}
+<div class="for_balls" style="height: 8px; display: none; flex-direction: row; justify-content: center; align-items: center;">
+	{% if el.1 > 0 %}
+		<div class="small_circle"><div class="text_in_circle">{{el.1}}</div></div>
+	{% endif %}
+	{% if el.3 > 0 %}
+		<div class="small_circle" style=" margin-left: -2px; background: #F2552C;"><div class="text_in_circle">{{el.3}}</div></div>
+	{% endif %}
+	{% if el.2 > 0 %}
+		<div class="small_circle" style=" margin-left: -2px; background: #A1C6FF;"><div class="text_in_circle">{{el.2}}</div></div>
+	{% endif %}
+	{% if el.4 > 0 %}
+		<div class="small_circle" style=" margin-left: -2px; background: #F5DF4C;"><div class="text_in_circle">{{el.4}}</div></div>
+	{% endif %}
+	{% if el.7 > 0 %}
+		<div class="small_circle" style=" margin-left: -2px; background: #FEB614;"><div class="text_in_circle">{{el.7}}</div></div>
+	{% endif %}
+	{% if el.5 > 0 %}
+		<div class="small_circle" style=" margin-left: -2px; background: #6B5B95;"><div class="text_in_circle">{{el.5}}</div></div>
+	{% endif %}
+	{% if el.6 > 0 %}
+		<div class="small_circle" style=" margin-left: -2px; background: #4EE2B8;"><div class="text_in_circle">{{el.6}}</div></div>
+	{% endif %}
+</div>

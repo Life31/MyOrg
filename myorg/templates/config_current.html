@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Текущая конфигурация{% endblock %}
+{% block header %}
+	<a style="color: rgb(74, 177, 236); font-weight: bold; text-align: left;">Текущая конфигурация</a>
+{% endblock %}
+{% load thumbnail %}
+{% load static %}
+{% load user_filters %}
+<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+{% block aside %}
+    {% include 'includes/aside_config.html' %}
+{% endblock %}
+{% block content %}
+	<table class="config_units" border="1" width=120%>
+		<tr>
+			<th style="width: 100px; text-align:center; background:rgb(164, 214, 243); ">Блок</th>
+			<th style="width: 100px; text-align:center; background:rgb(164, 214, 243); ">Эл. конф.</th>
+			<th style="width: 100px; text-align:center; background:rgb(164, 214, 243); ">P/N</th>
+			<th style="width: 100px; text-align:center; background:rgb(164, 214, 243); ">Проч.</th>
+			<th style="width: 200px; text-align:center; background:rgb(164, 214, 243); ">Примечание</th>
+			<th style="width: 50px; background:rgb(164, 214, 243);">Документ</th>
+			<th style="width: 50px; background:rgb(164, 214, 243);">Опции</th>
+		</tr>
+		{% for post in current %}
+			<tr>
+				<th><a style="color: rgb(74, 177, 236); font-weight: bold;">{{ post.unit }}</a></th>
+				<th><a style="color: rgb(74, 177, 236); font-weight: bold;">{{ post.include_name }}</a></th>
+				<th><a style="color: rgb(74, 177, 236); font-weight: bold;">{{ post.part_n }}</a></th>
+				<th><a style="color: rgb(74, 177, 236); font-weight: bold;">{{ post.other_info }}</a></th>
+				<th><a style="color: rgb(74, 177, 236); font-weight: bold;">{{ post.descr }}</a></th>
+				{% if post.doc %}
+					<th><a style="color: rgb(74, 177, 236); font-weight: bold;" href="{% static post.doc.url %}">Акт</a></th>	
+				{% else %}	
+					<th><a style="color: rgb(74, 177, 236); font-weight: bold;" href="#">Без акта</a></th>	
+				{% endif %}
+				
+				<th><div class="dropdown">
+					<div class="btn-sm btn-outline-secondary font-weight-bold" style="height: 30px;">☰</div>
+					<div class="dropdown-content">
+					
+							<a class="btn btn-sm" href="{% url 'config_from_conf_to_change' post.id %}" role="button">Добавить в запрос на изменение</a>
+						{% if user.username in rights %}
+							<a class="btn btn-sm" href="{% url 'post_edit' post.author post.id %}" role="button">Править</a>
+							<a class="btn btn-sm" href="{% url 'post_delete' post.author post.id %}" role="button">Удалить</a>
+							<a class="btn btn-sm" href="{% url 'post_copy' post.author post.id %}" role="button">Шаблон</a>
+							<a class="btn btn-sm" href="{% url 'post_view_change' post.author post.id 2 %}" role="button">Подтвердить</a>	
+							<a class="btn btn-sm" href="{% url 'post_view_change' post.author post.id 3 %}" role="button">Завершить</a>	
+							<a class="btn btn-sm" href="{% url 'post_view_change' post.author post.id 4 %}" role="button">Отклонить</a>
+						{% endif %}
+						
+						{% if user == post.author and user.username not in rights %}
+							{% if post.task_state_id != 3 %}
+								<a class="btn btn-sm" href="{% url 'post_view_change' post.author post.id 3 %}" role="button">Завершить</a>
+							{% endif %}
+							<a class="btn btn-sm" href="{% url 'post_copy' post.author post.id %}" role="button">Шаблон</a>
+							{% if post.task_state_id == 1 or post.task_state_id == 4%}
+								<a class="btn btn-sm" href="{% url 'post_edit' post.author post.id %}" role="button">Править</a>
+								<a class="btn btn-sm" href="{% url 'post_delete' post.author post.id %}" role="button">Удалить</a>
+							{% endif %}
+						{% endif %}										
+					</div>
+				</div></th>			
+			<tr>
+			
+		{% endfor %}
+	</table>		
+{% endblock %} 

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %} Склад {% endblock %}
+{% block header %} <a style="color: black;">Склад</a> {% endblock %}
+{% block aside %}
+    {% include 'includes/aside_storage.html' %}
+{% endblock %}
+{% block content %}
+{% load thumbnail %}
+{% load static %}
+
+<div class="container">
+	<table style="border-collapse: separate; border-spacing: 6px 6px;">
+		<thead>
+			<tr>
+				<th class="transp" width="60" height="60"></th>
+				<th class="color" colspan=2 width="160" height="60" style="background: {{F}}">F</th>
+				<th class="transp" width="60" height="60"></th>
+				<th class="color" colspan=4 width="320" height="60" style="background: {{I}}">I</th>
+				<th class="transp" width="60" height="60"></th>
+				<th class="color" colspan=4 width="320" height="60" style="background: {{K}}">K</th>
+				<th class="transp" width="60" height="60"></th>
+			</tr>
+			<tr>
+				<th class="color" height="140" style="background: {{E}}">E</th>
+				<th class="transp" colspan=2 height="140"></th>
+				<th class="color" height="140" style="background: {{G}}">G</th>
+				<th class="transp" colspan=4 height="140"></th>
+				<th class="color" height="140" style="background: {{J}}">J</th>
+				<th class="transp" colspan=4 height="140"></th>
+				<th class="color" height="140" style="background: {{L}}">L</th>
+			</tr>
+			<tr>
+				<th class="color" height="140" style="background: {{D}}">D</th>
+				<th class="transp" colspan=2 height="140"></th>
+				<th class="color" height="140" style="background: {{H}}">H</th>
+				<th class="transp" colspan=10></th>
+			</tr>
+			<tr>
+				<th class="color" height="140" style="background: {{C}}">C</th>
+				<th class="transp" colspan=7 ></th>
+				<th class="color" colspan=2 width="160" height="140" style="background: {{O}}">O</th>
+				<th class="color" colspan=2 width="160" height="140" style="background: {{N}}">N</th>
+				<th class="color" colspan=2 width="160" height="140" style="background: {{M}}">M</th>
+			</tr>
+			<tr>
+				<th class="color" height="140" style="background: {{B}}">B</th>
+				<th class="transp" colspan=2 ></th>
+				<th class="color" colspan=1 width="60" height="140" style="background: {{Q}}">
+					<a class="nav-link" style="color: black;" href="{% url 'units_by_place' 1099 %}">Q</a>
+				</th>
+				<th class="color" colspan=4 width="320" height="140" style="background: {{P}}">P</th>
+				<th class="transp" colspan=7 height="140"></th>
+			</tr>
+			<tr>
+				<th class="color" height="60" style="background: {{A}}">A</th>
+				<th class="transp" colspan=2>вход</th>
+				<th class="color" colspan=1 width="60" height="60" style="background: {{R}}">R</th>
+				<th class="transp" colspan=10 height="140"></th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+	</table>
+</div> 
+<style type="text/css"> 
+	.transp {
+		font-size: 250%;
+		background: transparent;
+	}
+	.color {
+		font-size: 250%;
+		border-radius: 20px;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);
+		border: 0px solid black;
+		background: linear-gradient(to top, rgb(164, 214, 243) 0%, rgb(164, 245, 210) 101%);
+	}
+</style>
+{% endblock %}

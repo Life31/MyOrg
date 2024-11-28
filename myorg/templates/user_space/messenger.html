@@ -1,0 +1,81 @@
+{% load static %}
+{% load user_filters %}
+{% if user_widgets.mess %}
+<div class="card" id="4" style="display: flex; width: 49px; height: 54px; overflow: hidden;">
+{% else %}<div class="card" id="4" style="display: none;">
+{% endif %}
+	<div class="title" onmouseover="titleonmouseover(this)" onmouseout="titleonmouseout(this)">
+		<div class="off mess widget_place_for_image" {% if user_widgets.mess_open %}name="open"{% else %}name="close"{% endif %}>
+			<img 
+				class="img_for_btn top_left_screen"
+				onclick="closeOpenCard(this)"
+				style="margin: 10px; width: 80%; height: 80%;"
+				title="свернуть / развернуть виджет"
+				src={% static "messenger.png" %}
+			>
+		</div>
+		<div style="width:70%; display: none;">
+			<a style="color: #3fc23f; text-decoration: none; font-size: 24px;"
+				title="Перейти на полную версию"
+				href="#">
+				Мессенджер
+			</a>
+		</div>
+		<div style="width: 10%; display: none; margin-left: 15px;">
+			<a style="display: none;" href="{% url 'user_widget_delete' user.id 'mess' %}">
+				<img style="height: 90%; width: 90%;" title="удалить виджет" src={% static "denay.png" %}>
+			</a>
+		</div>
+	</div>
+	<div class="widget_data">
+		<div style="display: flex; flex-direction: column; background: white; width: 100%; height: 100%; overflow-y: scroll; justify-content: top; margin-top: 2px;">
+			{% for user in user_chats %}
+				{% if user.id != request.user.id %}
+				<div class="dialogue" style="width: 100%; display: flex; flex-direction: row; justify-content: left; align-items: center;">
+					<img class="img_for_btn" style="margin: 4px; width: 40px; height: 40px; border-radius: 50%;" src={% static "user.png" %}>
+					<div style="width: 100%; border-bottom: 1px solid rgb(177, 172, 172);">
+						<div style="text-align: left; font-weight: bold; margin: 0px; display: flex; flex-direction: row;">
+							<div style="width: 80%;"><a style="color: black;" href="{% url 'messages' request.user.id user.id %}">{{user.get_full_name}}
+								{% for k, v in unreaded.items %}
+									{% if user.id == k %}
+									(<span style="color: indianred;">{{v}}</span>)
+									{% endif %}
+								{% endfor %}
+							</a></div>
+							<div style="width: 20%; text-align: right; color: rgb(177, 172, 172); font-weight: lighter; margin-right: 4px;">
+								<a>15:49</a>
+							</div>	
+						</div>
+						<div style="text-align: left; color: rgb(177, 172, 172); margin: 0px;">
+							<a>текст последнего сообщен...</a>
+						</div>	
+					</div>
+				</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		<div id="div_for_new_dialog" state="close" style="position: absolute; display: none; flex-direction: column; justify-content: center; align-items: center;
+		width: 98%; height: 305px; margin: 1px; overflow-y: scroll; left: 4px; top: 52px; border-radius: 8px;">
+			{% for u in users %}
+				<a class="btn widg_f_btn" href="{% url 'messages' request.user.id u.id %}" role="button" style="border-radius: 4px; width: 100%;">{{u.get_full_name}}</a>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="widget_footer">
+		<a class="btn widg_f_btn" style="width: 100%; border-radius: 8px 8px 18px 18px; color:#e28308;" onclick="showDivForNewDialog()" href="#">Добавить диалог</a>
+	</div>	
+</div>
+
+<script>
+	let div_for_new_dialog = document.getElementById("div_for_new_dialog");
+	function showDivForNewDialog() {
+		if (div_for_new_dialog.getAttribute("state") == "close") {
+			div_for_new_dialog.style.display = 'flex';
+			div_for_new_dialog.setAttribute("state", "open");
+		} else {
+			div_for_new_dialog.style.display = 'none';
+			div_for_new_dialog.setAttribute("state", "close");
+		}
+		
+	}
+</script>

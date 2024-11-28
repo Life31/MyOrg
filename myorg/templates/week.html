@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% load user_filters %}
+{% load static %}
+{% block title %}Заявки на неделю{% endblock %}
+{% block header %}
+<div class="head_menu" style="width: 120%;">
+		<div class="in_head_part">
+			<a class="btn btn-sm btn-primary"
+			style="width: 230px; height: 30px; border-radius: 25px; font-family: Calibri;
+			font-size: 18px;
+			font-weight: 400;
+			line-height: 20px;
+			letter-spacing: 0em;"
+			href="{% url 'week' wk|before_week %}">
+			<img style="height: 20px; margin-right: 2px;" src={% static "left.png" %}>
+			Предыдущая неделя
+			</a>
+		</div>
+		<div class="in_head_part">
+			<a style="color: black; font-weight: bold; text-align: left; line-height: 10px;">Заявки на неделю</a>
+		</div>
+		<div class="in_head_part">
+			<a class="btn btn-sm btn-primary"
+			style="width: 230px; height: 30px; border-radius: 25px; font-family: Calibri;
+			font-size: 18px;
+			font-weight: 400;
+			line-height: 20px;
+			letter-spacing: 0em;"
+			href="{% url 'week' wk|next_week %}">
+				Следующая неделя
+				<img style="height: 20px; margin-right: 2px;" src={% static "right.png" %}>
+			</a>
+		</div>
+		<div class="in_head_part" style="margin-left: 20px;">
+			<div class="filtr" id="SIB-2" title="SIB" onclick="filtr(this)">
+				<div class="small_bol_in"></div>
+			</div>
+			<div class="filtr" id="ISIB-" title="ISIB" style="margin-left: 5px; background: #F2552C;" onclick="filtr(this)">
+				<div class="small_bol_in"></div>
+			</div>
+			<div class="filtr" id="ACIB-" title="ACIB" style="margin-left: 5px; background: #A1C6FF;" onclick="filtr(this)">
+				<div class="small_bol_in"></div>
+			</div>
+			<div class="filtr" id="FIB: " title="FIB" style="margin-left: 5px; background: #ECDB54;" onclick="filtr(this)">
+				<div class="small_bol_in"></div>
+			</div>
+			<div class="filtr" id="NUC-2" title="NUC" style="margin-left: 5px; background: #6B5B95;" onclick="filtr(this)">
+				<div class="small_bol_in"></div>
+			</div>
+			<div class="filtr" id="FIB B" title="FIB BM" style="margin-left: 5px; background: #4EE2B8;" onclick="filtr(this)">
+				<div class="small_bol_in"></div>
+			</div>
+			<div class="filtr" id="FVB-2" title="FVB" style="margin-left: 5px; background: #FEB614;" onclick="filtr(this)">
+				<div class="small_bol_in"></div>
+			</div>
+			<!--div class="btn btn-sm btn-primary month_head_btns" id="ALL-2" style="margin-left: 20px; width: 60px;" onclick="show_all(this)">Все</div-->
+			
+			<div class="btn btn-sm btn-primary month_head_btns" id="ALL-2" title="ВСЕ"
+			style="margin-left: 5px; width: 60px; background: transparent; border: 0px;" onclick="show_all(this)">
+				<div class="month_all_bols" style="margin-top: 2px; background: #F2552C;"></div>
+				<div class="month_all_bols" style="margin-left: 7px; margin-top: -7px; background: #A1C6FF;"></div>
+				<div class="month_all_bols" style="margin-left: 14px; margin-top: -15px; background: #ECDB54;"></div>
+				<div class="month_all_bols" style="margin-left: 21px; margin-top: -23px; background: #6B5B95;"></div>
+				<div class="month_all_bols" style="margin-left: 14px; margin-top: -22px; background: #4EE2B8;"></div>
+				<div class="month_all_bols" style="margin-left: 6px; margin-top: -15px; background: #FEB614;"></div>
+				<div class="month_all_bols" style="margin-left: 10px; margin-top: -8px; background: #01A86B;"></div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% load thumbnail %}
+
+{% block content %}
+        {% for key, value in data_check.items %}
+			<table border="1" width=120% style="border: 1px solid #f7f7f7;">
+			
+				{% if key|day_to_day:day %}
+					<tr><strong class="d-block text-black" style="text-align: left; color: #1571FF;">Сегодня {{key}}</tr>
+				{% else %}
+					<tr><strong class="d-block text-black" style="text-align: left; color: black;">{{key}}</strong></tr>
+				{% endif %}
+				{% include "includes/head_for_table.html" with times=24 key=key%}
+				{% for post in value %}
+					 {% include "includes/post_table_item.html" with post=post key=key %}
+				{% endfor %}
+				{% include "includes/foot_for_table.html" with times=24 key=key%}
+			</table>
+		{% endfor %}
+		<style>
+			.week { 
+				border-collapse: separate;
+				border-spacing: 1px 1px;
+				margin:0px;
+				padding: 0px; }
+
+		</style>
+		<script>
+			const req__week = document.getElementsByClassName("text-left");	
+			const filtrs = document.getElementsByClassName("filtr");
+	
+			function creat30(obj) {
+				for (let i = 0; i < filtrs.length; i++) {
+					if(filtrs[i].id != obj.id){
+						filtrs[i].style.width = "20px";
+						filtrs[i].style.height = "20px";
+						filtrs[i].childNodes[1].style.display = "none";
+					}else{
+						filtrs[i].style.width = "30px";
+						filtrs[i].style.height = "30px";
+						filtrs[i].childNodes[1].style.display = "block";
+					};
+				}
+			}
+			function return20() {
+				for (let i = 0; i < filtrs.length; i++) {
+					filtrs[i].style.width = "20px";
+					filtrs[i].style.height = "20px";
+					filtrs[i].childNodes[1].style.display = "none";
+				}
+			}
+			
+			function filtr(obj) {
+				creat30(obj);
+				
+				for (let j = 0; j < req__week.length; j++) {
+					if(req__week[j].textContent.trim().slice(0, 5) != obj.id) {
+						if(req__week[j].textContent.trim().slice(0, 5) == "FIB-2" & obj.id == "FIB: ") {
+						req__week[j].parentElement.parentElement.parentElement.hidden = false;
+						}else{
+							req__week[j].parentElement.parentElement.parentElement.hidden = true;
+						};		
+					}else{
+						req__week[j].parentElement.parentElement.parentElement.hidden = false;
+					};		
+				}
+			}
+	
+			function show_all(obj){
+				if (obj.id == "ALL-2"){
+					for (let j = 0; j < req__week.length; j++) {
+						req__week[j].parentElement.parentElement.parentElement.hidden = false;
+					}
+				}
+				return20();
+			}
+		</script>	
+{% endblock %} 

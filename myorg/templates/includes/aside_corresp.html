@@ -1,0 +1,89 @@
+<style>
+	h4 {
+		color:black;
+		margin-top: 8px;
+		color: #808080;
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 18px;
+		line-height: 22px;
+		text-align: left;
+	}
+	.sib {
+		width: 118px;
+		height: 37px auto;
+		display: flex; flex-direction: row; justify-content: left; align-items: center;
+		margin: 2px;
+		border: 3px solid white;
+		border-radius: 10px;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 22px;
+	}
+	.sib:hover {
+		transition: 0.4s;
+		background: #3b3b3a;
+		border: 3px solid white;
+		color: white;
+	}
+	.btn-group-vertical {
+	margin: 2px auto;
+	}
+</style>
+{% load static %}
+{% load user_filters %}
+{% with request.resolver_match.view_name as view_name %}
+    <aside class="aside" style="margin: 4px; border-radius: 10px;">
+        {% if user.is_authenticated %}			
+			<a class="btn sib" style="width: 240px;" href="{% url 'all_corresp' %}">Вся корреспонденция</a>
+			
+			<h4>Служебные записки</h4>
+			<a class="btn sib" style="width: 240px;" href="#"><div style="magrin-right: 5px; width: 50px; color: #00A591;">
+				<img style="height: 25px; margin-left: 0px; margin-right: 10px;" src={% static "notes_cor.png" %}>
+			</div>Входящие</a>
+			<a class="btn sib" style="width: 240px;" href="#"><div style="magrin-right: 5px; width: 50px; color: #00A591;">
+				<img style="height: 25px; margin-left: 0px; margin-right: 10px;" src={% static "notes_cor.png" %}>
+			</div>Исходящие</a>
+			<a class="btn sib" style="width: 240px;" href="{% url 'corresp_new' 1 %}"><div style="magrin-right: 5px; width: 50px; color: #00A591;">
+				<img style="height: 25px; margin-left: 0px; margin-right: 10px;" src={% static "notes_cor.png" %}>
+			</div>Добавить</a>
+
+			<h4>Письма</h4>
+			<a class="btn sib" style="width: 240px;" href="#"><div style="magrin-right: 5px; width: 50px; color: rgb(74, 177, 236);">
+				<img style="height: 25px; margin-left: 0px; margin-right: 10px;" src={% static "letter.png" %}>
+			</div>Входящие</a>
+			<a class="btn sib" style="width: 240px;" href="#"><div style="magrin-right: 5px; width: 50px; color: rgb(74, 177, 236);">
+				<img style="height: 25px; margin-left: 0px; margin-right: 10px;" src={% static "letter.png" %}>
+			</div>Исходящие</a>
+			<a class="btn sib" style="width: 240px;" href="{% url 'corresp_new' 2 %}"><div style="magrin-right: 5px; width: 50px; color: rgb(74, 177, 236);">
+				<img style="height: 25px; margin-left: 0px; margin-right: 10px;" src={% static "letter.png" %}>
+			</div>Добавить</a>
+
+			<h4>Меморандумы</h4>
+			
+			<a class="btn sib" style="width: 240px;" href="#"><div style="magrin-right: 5px; width: 50px; color: #F2552C;">
+				<img style="height: 25px; margin-left: 0px; margin-right: 10px;" src={% static "memorandum.png" %}>
+			</div>Входящие</a>
+			<a class="btn sib" style="width: 240px;" href="#"><div style="magrin-right: 5px; width: 50px; color: #F2552C;">
+				<img style="height: 25px; margin-left: 0px; margin-right: 10px;" src={% static "memorandum.png" %}>
+			</div>Исходящие</a>
+			<a class="btn sib" style="width: 240px;" href="{% url 'corresp_new' 3 %}"><div style="magrin-right: 5px; width: 50px; color: #F2552C;">
+				<img style="height: 25px; margin-left: 0px; margin-right: 10px;" src={% static "memorandum.png" %}>
+			</div>Добавить</a>
+			<h4>Прочее</h4>
+			<a class="btn sib" style="width: 240px;" href="#"><div style="magrin-right: 5px; width: 50px; color: #F2552C;">
+				<img style="height: 25px; margin-left: 0px; margin-right: 10px;" src={% static "plus.png" %}>
+			</div>Добавить тег</a>
+			<a class="btn sib" style="width: 240px;" href="#"><div style="magrin-right: 5px; width: 50px; color: #F2552C;">
+				<img style="height: 25px; margin-left: 0px; margin-right: 10px;" src={% static "plus.png" %}>
+			</div>Добавить адресата</a>
+        {% endif %}
+    </aside>
+{% endwith %}
+
+
+

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load cache %}
+{% block title %}Вся корреспонденция{% endblock %}
+{% block header %}{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_corresp.html' %}
+{% endblock %}
+{% load thumbnail %}
+{% load user_filters %}
+{% block content %}
+<style>
+	.all_flex {
+		display: flex; flex-direction: row;
+	}
+	.main_text {
+		margin-left: 10px; padding-left: 10px; color: gray; margin-right: 20px; width: 350px; line-height: 40px;
+	}
+	.log { border-collapse: separate; border-spacing: 2px 1px; }
+	.log th { text-align: center; font-weight: bold; padding: 0px 10px 0px 10px; margin: auto;  border-radius: 5px;}
+	tbody tr:nth-child(even){ background: transparent; }
+	tbody tr:nth-child(odd){ background: rgb(202, 235, 245);}
+	.text_a { font-family: Calibri; font-size: 18px; font-weight: 400; line-height: 20px; letter-spacing: 0em; }
+
+	.div_for_pagi {
+		width: 120%;
+		height: 20px;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		margin-top: 35px;
+	}
+</style>
+	<div style="width: calc(100vw - 350px); height: 820px; overflow-y: auto;">
+    <table class="log" border="0">
+      <thead>
+          <tr style="height: 30px; position: sticky; top: 0; background: #E6E6E6; z-index: 100;">
+				<th width="40">Тип</th> 
+				<th width="40">№</th>
+				<th width="70">Вх/Исх</th>
+				<th width="130">Компания</th>
+				<th width="230">От кого</th>
+				<th width="230">Кому</th>
+				<th width="200">Дата</th>
+				<th width="300">Описание</th>
+				<th width="30">☰</th>
+          </tr>
+      </thead>
+       <tbody>
+          	{% for cor in page %} 
+		  	<tr>
+				{% if cor.cor_type_id == 1 %}
+					<th style="border: 0px; background: #00A591;">
+						<div class="text_a">{{ cor.cor_type }}</div>
+        			</th>
+				{% elif cor.cor_type_id == 2 %}
+					<th style="border: 0px; background: rgb(74, 177, 236);">
+						<div class="text_a">{{ cor.cor_type }}</div>
+        			</th>
+				{% else %}
+					<th style="border: 0px; background: #F2552C;">
+						<div class="text_a">Мемо</div> 
+        			</th>
+				{% endif %}
+
+        		<th style="border: 0px;" width="30">
+          			<div class="text_a">{{ cor.number|linebreaksbr }}</div> 
+        		</th>
+        		<th style="border: 0px;">
+					<div class="text_a">{{ cor.in_out }}</div>
+        		</th>
+        		{% if cor.company != None and cor.company != '' %}
+					<th width="30" style="border: 0px;" >
+						<div class="text_a"> {{ cor.company }}</div>
+					</th>
+				{% else %}
+					<th width="30" style="border: 0px;" >
+						<div class="text_a">-</div>
+					</th>
+				{% endif %}
+				{% if cor.from_who != None %}
+					<th width="30" style="border: 0px;" >
+						<div class="text_a"> {{ cor.from_who }}</div>
+					</th>
+				{% else %}
+					<th width="30" style="border: 0px;" >
+						<div class="text_a">-</div>
+					</th>
+				{% endif %}
+				{% if cor.to != None %}
+					<th width="30" style="border: 0px;" >
+						<div class="text_a"> {{ cor.to }}</div>
+					</th>
+				{% else %}
+					<th width="30" style="border: 0px;" >
+						<div class="text_a">-</div>
+					</th>
+				{% endif %}
+					<th width="30" style="border: 0px;" >
+						<div class="text_a"> {{ cor.day|day_to_date }}</div>
+					</th>
+					<th width="30" style="border: 0px;" >
+						<div class="text_a"> {{ cor.comment }}</div>
+					</th>
+
+					<th width="30" style="padding: 0; margin: auto; border: 0px;">
+						<div class="dropdown text_a"> 
+							<div class="btn-sm btn-outline-secondary font-weight-bold" style="height: 30px; font-weight: bold;">☰</div>
+							<div class="dropdown-content">
+							<a class="btn btn-sm" href="{% url 'corresp_edit' cor.id %}" role="button">Править</a>
+							<a class="btn btn-sm" href="{% url 'corresp_delete' cor.id %}" role="button">Удалить</a>
+							</div>
+						</div>
+					</th>
+    		</tr>
+        	{% endfor %}
+      </tbody>
+	</table>
+	</div>
+	<div class="div_for_pagi">{% include "includes/paginator.html" %}</div>
+
+{% endblock %} 

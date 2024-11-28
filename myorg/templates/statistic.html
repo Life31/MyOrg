@@ -1,0 +1,98 @@
+<!-- templates/about/author.html -->
+{% extends "base.html" %}
+{% block title %}Технологии{% endblock %}
+{% block content %}
+{% load user_filters %}
+<div class="row">
+    <div class="col-md-12 mb-3 mt-1" id="content">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="h6 text-muted">
+						<strong class="d-block text-gray-dark">Количество заявок в текущем месяце: {{count}}</strong>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div class="container mb-1 mt-1">
+					<div class="row">
+						<div class="h6 text-muted">
+							Из них
+						</div>
+					</div>
+					<div class="row">
+						<div class="cal" style="width: 33%">
+							<strong class="d-block text-gray-dark">SIB: {{count_sib}}</strong>
+						</div>
+						<div class="cal" style="width: 33%">
+							<strong class="d-block text-gray-dark">ACIB: {{count_acib}}</strong>
+						</div>
+						<div class="cal" style="width: 33%">
+							<strong class="d-block text-gray-dark">ISIB: {{count_isib}}</strong>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+			
+				<div class="container mb-1 mt-1">
+					<div class="row">
+						<div class="h6 text-muted">
+							Дневная загруженность (9 часов = 1,0): 
+						</div>
+					</div>
+					<div class="row">
+						<div class="cal" style="width: 33%">
+							{% for key, value in sib_results.items %}
+								<div class="h6 text-muted">                                                                   
+									{{ key|date:"d.m.Y" }}: {{ value }}
+								</div>
+							{% endfor %}
+						</div>						
+						<div class="cal" style="width: 33%" >
+							{% for key, value in acib_results.items %}
+								<div class="h6 text-muted">                                                                   
+									{{ key|date:"d.m.Y" }}: {{ value }}
+								</div>
+							{% endfor %}
+						</div>						
+						<div class="cal" style="width: 33%" >
+							{% for key, value in isib_results.items %}
+								<div class="h6 text-muted">                                                                   
+									{{ key|date:"d.m.Y" }}: {{ value }}
+								</div>
+							{% endfor %}
+						</div>
+					</div>
+			    </div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div class="container mb-1 mt-1">
+					<div class="row">
+						<div class="h6 text-muted">
+							Среднемесячная дневная загруженность: 
+						</div>
+					</div>
+					<div class="row">
+						<div class="cal" style="width: 33%">
+							<div class="h6 text-muted">SIB: {{ sib_month }}</div>
+						</div>
+						<div class="cal" style="width: 33%">
+							<div class="h6 text-muted">ACIB: {{ acib_month }}</div>
+						</div>
+						<div class="cal" style="width: 33%">
+							<div class="h6 text-muted">ISIB: {{ isib_month }}</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+    </div>
+</div>
+{% endblock %} 

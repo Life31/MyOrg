@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title %}Страница {{ post.block_types }}{% endblock %}
+{% block header %}Страница {{ post.block_types }} {{ post.mfi }} {% endblock %}
+{% block content %}
+{% load user_filters %}
+{% load static %}
+<main role="main" class="container" id="content">
+    <div class="row">
+		<div class="cal" style="width: 45%">
+			<div class="card mb-2 mt-1 shadow-sm">
+				{% load thumbnail %}
+				{% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+					<img class="card-img" src="{{ im.url }}">
+				{% endthumbnail %}
+				<div class="card-body">
+					<nav class="navbar navbar-light" style="background-color: #cdd4d4;">
+						<big class="text">Блок: </big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<big class="text">{{ post.block_types }}</big>
+						</nav>
+					</nav> 
+					<nav class="navbar navbar-light" style="background-color: #e3f4fd;">
+						<big class="text">Номер: </big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<big class="text">{{ post.mfi }}</big>
+						</nav>
+					</nav> 
+					<nav class="navbar navbar-light" style="background-color: #cdd4d4;">
+						<big class="text">Изготовлен:</big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<big class="text">{{ post.mfi_date|date:"d.m.Y" }}</big>
+						</nav>
+					</nav> 	
+					<nav class="navbar navbar-light" style="background-color: #e3f4fd;">
+						<big class="text">Статус:</big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<big class="text"> {{ post.state }}</big>
+						</nav>
+					</nav> 
+					<nav class="navbar navbar-light" style="background-color: #cdd4d4;">
+						<big class="text">Находится:</big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<big class="text">{{ post.base }}</big>
+						</nav>
+					</nav>
+					<nav class="navbar navbar-light" style="background-color: #e3f4fd;">
+						<big class="text">Версия:</big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<big class="text">{{ post.version }}</big>
+						</nav>
+					</nav>
+					{% if post.pasport.url != None %}
+					<nav class="navbar navbar-light" style="background-color: #cdd4d4;">
+						<big class="text">Паспорт:</big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<a class="card-link muted" href="{% static post.pasport.url %}">
+								<strong class="d-block text-gray-dark">{{ post.pasport.name|file_name }}</strong>
+							</a>
+						</nav>
+					</nav>
+					{% else %}
+					<nav class="navbar navbar-light" style="background-color: #cdd4d4;">
+						<big class="text">Паспорт:</big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<big class="text">{{ post.pasport }}</big>
+						</nav>
+					</nav>
+					{% endif %}
+					{% if post.protocol.url != None %}
+					<nav class="navbar navbar-light" style="background-color: #e3f4fd;">
+						<big class="text">Протокол:</big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<a class="card-link muted" href="{% static post.protocol.url %}">
+								<strong class="d-block text-gray-dark">{{ post.protocol.name|file_name }}</strong>
+							</a>
+						</nav>
+					</nav>
+					{% else %}
+					<nav class="navbar navbar-light" style="background-color: #e3f4fd;">
+						<big class="text">Протокол:</big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<big class="text">{{ post.protocol }}</big>
+						</nav>
+					</nav>
+					{% endif %}
+					
+					{% if post.notice.url != None %}
+					<nav class="navbar navbar-light" style="background-color: #cdd4d4;">
+						<big class="text">Извещение:</big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<a class="card-link muted" href="{% static post.notice.url %}">
+								<strong class="d-block text-gray-dark">{{ post.notice.name|file_name }}</strong>
+							</a>
+						</nav>
+					</nav>
+					{% else %}
+						<nav class="navbar navbar-light" style="background-color: #cdd4d4;">
+							<big class="text">Извещение:</big>
+							<nav class="my-2 my-md-0 mr-md-3">
+								<big class="text">{{ post.notice }}</big>
+							</nav>
+						</nav>
+					{% endif %}
+					{% if post.order_file.url != None %}
+						<nav class="navbar navbar-light" style="background-color: #e3f4fd;">
+							<big class="text">Заказ:</big>							
+							<nav class="my-2 my-md-0 mr-md-3">
+								<a class="card-link muted" href="{% static post.order_file.url %}">
+									<strong class="d-block text-gray-dark">{{ post.order_file.name|file_name }}</strong>
+								</a>
+							</nav>
+						</nav>	
+					{% else %}
+						<nav class="navbar navbar-light" style="background-color: #e3f4fd;">
+							<big class="text">Заказ:</big>
+							<nav class="my-2 my-md-0 mr-md-3">
+								<big class="text">{{ post.order }}</big>
+							</nav>
+						</nav>
+					{% endif %}
+					
+					<nav class="navbar navbar-light" style="background-color: #e3f4fd;">
+						<big class="text">Входит в состав:</big>
+						{% if post.is_in != None %}
+							
+								<a class="card-link muted" href="{% url 'mfi' post.is_in.id %}">
+									<strong class="d-block text-gray-dark">{{ post.is_in }}</strong>
+								</a>
+							</nav>
+						{% else %}	
+							<nav class="my-2 my-md-0 mr-md-3">
+								<big class="text">-</big>
+							</nav>
+						{% endif %}
+					</nav>
+					<nav class="navbar navbar-light" style="background-color: #cdd4d4;">
+						<big class="text">Состоит из:</big>
+					</nav>
+					{% if post.in_number != "" and post.in_number != None %}
+						<div class="container mb-1 mt-1">
+							<div class="row  mb-1 mt-1" style="background-color: #e3f4fd;">
+								<div class="cal" style="width: 25%">
+								</div>
+								<div class="cal" style="width: 30%">
+									<big class="text">{{ post.in_number }}</big>
+								</div>
+							</div>
+						</div>
+					{% else %}
+						{% for d in datac %}
+							<div class="container mb-1 mt-1">
+								<div class="row  mb-1 mt-1" style="background-color: #e3f4fd;">
+									<div class="cal" style="width: 25%">
+									</div>
+									<div class="cal" style="width: 15%">
+										<big class="text">{{ d.block_types }} </big>
+									</div>
+									<div class="cal" style="width: 30%">									
+										<a class="card-link muted" href="{% url 'mfi' d.id %}">
+											<strong class="d-block text-gray-dark">{{ d.mfi }}</strong>
+										</a>									
+									</div>
+									<div class="cal" style="width: 30%">
+										<big class="text"> {{ d.mfi_date|date:"d.m.Y" }} </big>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					{% endif %}
+					<nav class="navbar navbar-light" style="background-color: #cdd4d4;">
+						<big class="text">Комментарий:</big>
+						<nav class="my-2 my-md-0 mr-md-3">
+							<big class="text">{{ post.description }}</big>
+						</nav>
+					</nav>
+					
+				</div>
+				<div class="d-flex justify-content-between align-items-center">
+					<div class="btn-group">
+						{% if user.username in pro_rights %}
+							<a class="btn btn-sm text-muted" href="{% url 'mfi_edit' post.id %}" role="button">
+								Править
+							</a>
+							<a class="btn btn-sm text-muted" href="{% url 'mfi_delete' post.id %}" role="button">
+								Удалить
+							</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="cal" style="width: 55%">
+			<div class="card mb-2 mt-1 shadow-sm">
+				<div class="card-body">
+					<div class="container mb-1 mt-1">
+						<div class="row">
+							<div class="cal" style="width: 20%">
+								<strong class="d-block text-gray-dark">Дата</strong>
+							</div>
+							<div class="cal" style="width: 30%">
+								<strong class="d-block text-gray-dark">Событие</strong>
+							</div>
+							<div class="cal" style="width: 50%">
+								<strong class="d-block text-gray-dark">Номер</strong>
+							</div>
+						</div>
+					</div>
+					{% for d in data %}
+						<div class="row  mb-1 mt-1" style="background-color: #e3f4fd;">
+							<div class="cal" style="width: 20%">
+								<big class="text">{{ d.date|date:"d.m.Y" }} </big>
+							</div>
+							<div class="cal" style="width: 35%">
+								<big class="text">{{ d.dev_type }} </big>
+							</div>
+							{% if d.doc.url != None %}
+								{% load static %}
+								<div class="cal" style="width: 45%">
+									<a class="card-link muted" href="{% static d.doc.url %}">
+										<strong class="d-block text-gray-dark">{{ d.number }}</strong>
+									</a>
+								</div>
+							{% else %}
+								<div class="cal" style="width: 45%">
+									<big class="text"> {{ d.number }} </big>
+								</div>
+							{% endif %}
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>	
+    </div>
+</main>
+{% endblock %}

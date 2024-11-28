@@ -1,0 +1,67 @@
+<style type="text/css"> 
+    .log {
+		border-collapse: separate;
+		border-spacing: 1px 1px;
+		margin:0px;
+		padding: 0px;
+    }
+    .log th {
+		text-align: center;
+		font-weight: bold;
+		padding: 0px 10px 0px 10px;
+		margin: auto;
+		border-radius: 5px;
+    }
+
+    tbody tr:nth-child(odd){
+        background-color: rgb(202, 235, 245);
+    }
+    tbody tr:nth-child(even){
+        background-color: transparent;
+    }
+
+</style>
+{% extends "base.html" %}
+{% block title %}Перечень блоков{% endblock %}
+{% block header %}<div class="head_menu"><a style="color: black; font-weight: bold; text-align: left;">Перечень блоков</a></div>{% endblock %}
+{% load static %}
+{% load user_filters %}
+{% block aside %}{% include 'includes/aside_config.html' %}{% endblock %}
+{% block content %}			
+	<table class="log" border="0" style="width:120%;">
+		<thead>
+			<tr>
+				<th style="text-align:center;"><div style="margin: 5px; border-radius: 5px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">Блок</div></th>
+				<th style="text-align:center;"><div style="margin: 5px; border-radius: 5px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">Позиция</div></th>
+				<th style="text-align:center;"><div style="margin: 5px; border-radius: 5px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">Производитель</div></th>
+				<th style="text-align:center;"><div style="margin: 5px; border-radius: 5px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">P/N</div></th>
+				<th style="text-align:center;"><div style="margin: 5px; border-radius: 5px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">S/N</div></th>
+				<th style="text-align:center;"><div style="margin: 5px; border-radius: 5px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">Описание</div></th>
+				<th style="width: 40px; text-align:center;"><div style="margin: 5px; border-radius: 5px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">☰</div></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for unit in units %}
+				<tr>
+					<th style="text-align:center;"><a style="font-weight: bold;">{{ unit.unit_type }}</a></th>
+					<th style="text-align:center;"><a style="font-weight: bold;">-</a></th>
+					<th style="text-align:center;"><a style="font-weight: bold;">{{ unit.creator }}</a></th>
+					<th style="text-align:center;"><a style="font-weight: bold;">{{ unit.serial_n }}</a></th>
+					<th style="text-align:center;"><a style="font-weight: bold;">{{ unit.part_n }}</a></th>
+
+					<th style="text-align:center;"><a style="font-weight: bold;">{% if unit.descr is not None %}{{ unit.descr }}{% endif %}</a></th>
+					<th style="width: 40px; text-align:center;">
+						<div class="dropdown">
+							<div class="btn-sm btn-outline-secondary font-weight-bold" style="height: 30px;">☰</div>
+							<div class="dropdown-content" style="right: -65px;">
+								<a class="btn btn-sm" href="{% url 'config_new_parametr' unit.id %}" role="button">добавить параметр</a>
+								<a class="btn btn-sm" href="#" role="button">править</a>
+								<a class="btn btn-sm" href="{% url 'config_re_unit' unit.id %}" role="button">удалить</a>
+							</div>
+						</div>
+					</th>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %} 

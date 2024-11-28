@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load cache %}
+{% block title %}Обьекты контроля{% endblock %}
+{% block header %}Обьекты контроля{% endblock %}
+{% load thumbnail %}
+{% block content %}
+<div class="container" id="content">
+	<div class="row">
+		<div class="col-md-3 mb-3 mt-1">
+			<div class="card-body">
+				Очереди:
+				<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'sadec_groups'%}">все объекты</a>
+				<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'sadec_groups_step' 0 %}">общие вопросы</a>
+				<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'sadec_groups_step' 1 %}">очередь 1</a>
+				<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'sadec_groups_step' 2 %}">очередь 2</a>
+				<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'sadec_groups_step' 3 %}">очередь 3</a>
+			</div>
+		</div>
+		<div class="col-md-9">
+		  	<div class="container">
+				<div class="container">
+					<div class="card bg-secondary mb-2 mt-2 shadow-sm">
+						<div class="container mb-1 mt-1">
+							<div class="row">
+								<div class="col-md-2">
+									<strong class="d-block text-gray-dark">ОК</strong>
+								</div>
+								<div class="col-md-3">
+									<strong class="d-block text-gray-dark">Разработчик ОК</strong>
+								</div>
+								<div class="col-md-2">
+									<strong class="d-block text-gray-dark">Номер TU</strong>
+								</div>
+								<div class="col-md-2">
+									<strong class="d-block text-gray-dark">Очередь</strong>
+								</div>
+								<div class="col-md-2">
+									<strong class="d-block text-gray-dark">Разработчик АИ</strong>
+								</div>
+							</div>
+						</div>
+					</div> 
+					{% for group in page %}
+						<div class="card {{ color }} mb-1 mt-1 shadow-sm">
+
+							<div class="container mb-1 mt-1">
+								<div class="row">
+									<div class="col-md-2">
+										<a name="group_title" href="{% url 'sadec_group' group.slug %}">
+											{{ group.title }}
+										</a>
+									</div>
+									<div class="col-md-3">
+										<a name="group_description" href="{% url 'sadec_groups_creator_ok' group.descrip_slug %}">
+											{{ group.description }}
+										</a>
+									</div>
+									<div class="col-md-2">
+										<a name="group_tu" href="{% url 'sadec_groups_tu' group.tu %}">
+											{{ group.tu }}
+										</a>
+									</div>
+									<div class="col-md-2">
+										<a name="group_step" href="{% url 'sadec_groups_step' group.step %}">
+											{{ group.step }}
+										</a>
+									</div>
+									<div class="col-md-2">
+										<a name="group_creat_ai" href="{% url 'sadec_groups_creator_ai' group.creat %}">
+											{{ group.creat }}
+										</a>
+									</div>
+								</div>
+							</div>
+						</div> 
+					{% endfor %}
+					{% include "includes/paginator.html" %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %} 

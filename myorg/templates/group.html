@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Заявки {{ group.title }}{% endblock %}
+{% block header %}<a style="color: black; font-weight: bold; text-align: left;">Заявки стенда</a>{% endblock %}
+{% load thumbnail %}
+{% load user_filters %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+{% block content %}
+	<div style="display: flex; flex-direction: row; width: 120%; margin-top: 30px;">
+		<div>
+			{% include 'includes/group_card.html' %}
+		</div>
+		<div style="margin-top: -35px;">
+			<div style="margin: 5px;">
+				<table>
+					<tr>
+						<th style="width: 270px;">Заявка</th>
+						<th style="width: 200px;">Дата</th>
+						<th style="width: 250px;">Статус</th>
+						<th style="width: 280px;">Заявитель</th>
+						<th style="width: 40px;"></th>
+					</tr>
+				</table>
+			</div>
+			{% for post in page %}
+				{% include "includes/post_item_for_group.html" with post=post %}
+			{% endfor %}	
+			<div style=" display: flex; flex-direction: row; justify-content: center; align-items: center;">{% include "includes/paginator.html" %}</div>
+		</div>		
+	</div>
+	
+{% endblock %}

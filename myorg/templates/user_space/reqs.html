@@ -1,0 +1,201 @@
+{% load static %}
+{% load user_filters %}
+{% if user_widgets.reqs %}
+<div class="card" id="7" style="display: flex; width: 49px; height: 54px; overflow: hidden;">
+{% else %}<div class="card" id="7" style="display: none;">
+{% endif %}
+	<div class="title" onmouseover="titleonmouseover(this)" onmouseout="titleonmouseout(this)">
+		<div class="off reqs widget_place_for_image" {% if user_widgets.reqs_open %}name="open"{% else %}name="close"{% endif %}>
+			<img 
+				class="img_for_btn top_left_screen"
+				onclick="closeOpenCard(this)"
+				style="margin: 10px; width: 80%; height: 80%;"
+				title="свернуть / развернуть виджет"
+				src={% static "reqs.png" %}
+			>
+		</div>
+		<div style="width:70%; display: none;">
+			<a style="color: rgb(102, 168, 243); text-decoration: none; font-size: 24px;"
+				title="Перейти на полную версию"
+				href="{% url 'profile' user.username %}">
+				Стенды
+			</a>
+		</div>
+		<div style="width: 10%; display: none; margin-left: 15px;">
+			<a style="display: none;" href="{% url 'user_widget_delete' user.id 'reqs' %}">
+				<img style="height: 90%; width: 90%;" title="удалить виджет" src={% static "denay.png" %}>
+			</a>
+		</div>
+	</div>
+	<div class="widget_data">
+		<div class="task part">Последние заявки</div>
+		<div style="display: flex; flex-direction: column; justify-content: top; align-items: center; width: 100%; height: 90%; overflow-y: scroll;">
+			
+			{% for post in posts %}
+			<div style="display: flex; flex-direction: row; justify-content: left; align-items: center; width: 95%;">
+				
+				<div class="task" style="width: 75%; height: 32px; border-radius: 10px 1px 1px 10px;" title="{{post.purpose}}---{{post.day|date:"d.m.Y"}}">
+					{% if post.group_id == 1 %}
+					<div class="circle" title="SIB"></div>
+					{% elif post.group_id == 2 %}
+					<div style="background: rgb(74, 177, 236);" title="ACIB" class="circle"></div>
+					{% elif post.group_id == 3 %}
+					<div style="background: #F2552C;" title="ISIB" class="circle"></div>
+					{% elif post.group_id == 4 %}
+					<div style="background: #F5DF4C;" title="FIB" class="circle"></div>
+					{% elif post.group_id == 5 %}
+					<div style="background: #6B5B95;" title="NUC" class="circle"></div>
+					{% elif post.group_id == 6 %}
+					<div style="background: #79c753;" title="FIB BM" class="circle"></div>
+					{% elif post.group_id == 7 %}
+					<div style="background: #e28308;" title="FVB" class="circle"></div>
+					{% endif %}
+					<a style="color: black; text-decoration: none;" href="{% url 'post' post.author.username post.id %}">
+						{{ post.text|linebreaksbr }}
+					</a>
+				</div>
+				<div class="task" style="width: 25%; height: 32px; border-radius: 1px 10px 10px 1px;">
+					<div style="width: 50%; margin: 1px auto;">
+						<div style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+							{% if post.task_state_id == 1 %}
+								<img style="height: 20px;" title="Не подтверждена" src={% static "new.png" %}>
+							{% elif post.task_state_id == 2 %}
+								<img style="height: 25px;" title="Подтверждена" src={% static "ok.png" %}>
+							{% elif post.task_state_id == 3 %}
+								<img style="height: 25px;" title="Завершена" src={% static "ok_over.png" %}>	
+							{% elif post.task_state_id == 4 %}
+								<img style="height: 20px;" title="Отклонена" src={% static "denay_req.png" %}>
+							{% endif %}
+						</div>
+					</div>
+					<div style="width: 50%; margin: 1px auto; padding: auto;">
+						<div style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+							<a href="{% url 'post_copy' post.author post.id %}">
+								<img style="height: 22px; margin-bottom: 15px;" title="Как шаблон" src={% static "copy.png" %}>
+							</a>
+						</div>
+					</div>
+				</div>
+				
+				
+				
+			</div>
+			{% endfor %}
+	
+		</div>
+		<div class="reqs_all_stend" style="display: none; flex-direction: column; justify-content: left; align-items: center; position: absolute; left: 2px; bottom: 35px; width: 49%;">
+			<a class="btn widg_f_btn" style="font-size: large; background: black; color: #01A86B; width: 100%;" href="{% url 'post_new' group_id=1 bm='_'%}">SIB</a>
+			<a class="btn widg_f_btn" style="font-size: large; background: black; color:rgb(74, 177, 236); width: 100%;" href="{% url 'post_new' group_id=2 bm='_'%}">ACIB</a>
+			<a class="btn widg_f_btn" style="font-size: large; background: black; color: #F2552C; width: 100%;" href="#" onclick="showIsibStends()">ISIB</a>
+
+			<a class="btn widg_f_btn" style="font-size: large; background: black; color: #F5DF4C; width: 100%;" href="#" onclick="showFibStends()">FIB</a>
+			<a class="btn widg_f_btn" style="font-size: large; background: black; color: #6B5B95; width: 100%;" href="#" onclick="showNucStends()">NUC</a>
+
+			<a class="btn widg_f_btn" style="font-size: large; background: black; color: #79c753; width: 100%;" href="#" onclick="showFibBmStends()">FIB BM</a>
+			<a class="btn widg_f_btn" style="font-size: large; background: black; color: #e28308; width: 100%;" href="#" onclick="showFvbStends()">FVB</a>
+		</div>
+		<div class="reqs_isib_stend" style="display: none; flex-direction: column; justify-content: left; align-items: center; position: absolute; left: 50%; bottom: 35px; width: 49%;">
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #F2552C; width: 100%;"  href="{% url 'post_new' group_id=3 bm='_'%}">ISIB (Без БМ)</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #F2552C; width: 100%;"  href="{% url 'post_new' group_id=3 bm='БМ1'%}">ISIB (+ БМ1)</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #F2552C; width: 100%;"  href="{% url 'post_new' group_id=3 bm='БМ2'%}">ISIB (+ БМ2)</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #F2552C; width: 100%;"  href="{% url 'post_new' group_id=3 bm='БМ3'%}">ISIB (+ БМ3)</a>
+		</div>
+		<div class="reqs_fib_stend" style="display: none; flex-direction: column; justify-content: left; align-items: center; position: absolute; left: 50%; bottom: 35px; width: 49%;">
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #F5DF4C; width: 100%;" href="{% url 'post_new' group_id=4 bm='(1)'%}">FIB CPIOM 1</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #F5DF4C; width: 100%;" href="{% url 'post_new' group_id=4 bm='(2)'%}">FIB CPIOM 2</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #F5DF4C; width: 100%;" href="{% url 'post_new' group_id=4 bm='(3)'%}">FIB CPIOM 3</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #F5DF4C; width: 100%;" href="{% url 'post_new' group_id=4 bm='(4)'%}">FIB CPIOM 4</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #F5DF4C; width: 100%;" href="{% url 'post_new' group_id=4 bm='(5)'%}">FIB CPIOM 5</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #F5DF4C; width: 100%;" href="{% url 'post_new' group_id=4 bm='(MDU)'%}">FIB MDU</a>
+		</div>
+		<div class="reqs_nuc_stend" style="display: none; flex-direction: column; justify-content: left; align-items: center; position: absolute; left: 50%; bottom: 35px; width: 49%;">
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #6B5B95; width: 100%;" href="{% url 'post_new' group_id=5 bm='(227)'%}">NUC227 (ABSINT)</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #6B5B95; width: 100%;" href="{% url 'post_new' group_id=7 bm='(237)'%}">NUC237</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #6B5B95; width: 100%;" href="{% url 'post_new' group_id=7 bm='(238)'%}">NUC238</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #6B5B95; width: 100%;" href="{% url 'post_new' group_id=7 bm='(239)'%}">NUC239</a>
+		</div>
+		<div class="reqs_fib_bm_stend" style="display: none; flex-direction: column; justify-content: left; align-items: center; position: absolute; left: 50%; bottom: 35px; width: 49%;">
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #79c753; width: 100%;" href="{% url 'post_new' group_id=6 bm='(Linux)'%}">FIB BM Linux</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #79c753; width: 100%;" href="{% url 'post_new' group_id=6 bm='(Windows)'%}">FIB BM Windows</a>
+		</div>
+		<div class="reqs_fvb_stend" style="display: none; flex-direction: column; justify-content: left; align-items: center; position: absolute; left: 50%; bottom: 35px; width: 49%;">
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #e28308; width: 100%;" href="{% url 'post_new' group_id=7 bm='(3)'%}">FVB3</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #e28308; width: 100%;" href="{% url 'post_new' group_id=7 bm='(4)'%}">FVB3</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #e28308; width: 100%;" href="{% url 'post_new' group_id=7 bm='(5)'%}">FVB3</a>
+			<a class="btn widg_f_btn" style="font-size: medium; background: black; color: #e28308; width: 100%;" href="{% url 'post_new' group_id=7 bm='(7)'%}">FVB3</a>
+		</div>
+
+	</div>
+	<div class="widget_footer">
+		<div class="btn widg_f_btn" style="width: 100%; border-radius: 8px 8px 18px 18px;" onclick="showAllStends()">Добавить заявку</div>
+	</div>	
+</div>
+<script>
+	let reqs_all_stend = document.querySelector('.reqs_all_stend');
+	let reqs_fvb_stend = document.querySelector('.reqs_fvb_stend');
+	let reqs_fib_bm_stend = document.querySelector('.reqs_fib_bm_stend');
+	let reqs_fib_stend = document.querySelector('.reqs_fib_stend');
+	let reqs_nuc_stend = document.querySelector('.reqs_nuc_stend');
+	let reqs_isib_stend = document.querySelector('.reqs_isib_stend');
+	
+	function showAllStends() {
+		if ( reqs_all_stend.style.display == 'none') {
+			reqs_all_stend.style.display = 'flex';
+		} else {
+			reqs_all_stend.style.display = 'none';
+
+			closeAllStends();
+		}	
+	}
+
+	function showFvbStends() {		
+		if ( reqs_fvb_stend.style.display == 'none') {
+			closeAllStends();
+			reqs_fvb_stend.style.display = 'flex';
+		} else {
+			reqs_fvb_stend.style.display = 'none';
+		}	
+	}
+	function showFibBmStends() {
+		if ( reqs_fib_bm_stend.style.display == 'none') {
+			closeAllStends();
+			reqs_fib_bm_stend.style.display = 'flex';
+		} else {
+			reqs_fib_bm_stend.style.display = 'none';
+		}	
+	}
+
+	function showFibStends() {
+		if ( reqs_fib_stend.style.display == 'none') {
+			closeAllStends();
+			reqs_fib_stend.style.display = 'flex';
+		} else {
+			reqs_fib_stend.style.display = 'none';
+		}	
+	}
+	function showNucStends() {
+		if ( reqs_nuc_stend.style.display == 'none') {
+			closeAllStends();
+			reqs_nuc_stend.style.display = 'flex';
+		} else {
+			reqs_nuc_stend.style.display = 'none';
+		}	
+	}
+	function showIsibStends() {
+		if ( reqs_isib_stend.style.display == 'none') {
+			closeAllStends();
+			reqs_isib_stend.style.display = 'flex';
+		} else {
+			reqs_isib_stend.style.display = 'none';
+		}	
+	}
+	function closeAllStends() {
+		reqs_fib_bm_stend.style.display = 'none';
+		reqs_fib_stend.style.display = 'none';
+		reqs_nuc_stend.style.display = 'none';
+		reqs_isib_stend.style.display = 'none';
+		reqs_fvb_stend.style.display = 'none';
+	}
+	
+	
+</script>

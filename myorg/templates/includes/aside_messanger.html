@@ -1,0 +1,96 @@
+<style>
+	h4 {
+	color: #808080;
+	font-family: 'Calibri';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 22px;
+	margin: 0px;
+	text-align: left;
+	}
+	.sib, .user{
+		width: 120px;
+		height: 37px;
+		display: flex; flex-direction: row; justify-content: center; align-items: center;
+		margin: 3px;
+		border: 3px solid white;
+		border-radius: 10px;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 22px;
+	}
+	.sib:hover {
+		transition: 0.4s;
+		background: #3b3b3a;
+		border: 3px solid white;
+		color: white;
+		
+	}
+
+	.btn-group-vertical {
+	margin: 2px auto;
+	}
+
+</style>
+{% load static %}
+{% load user_filters %}
+{% with request.resolver_match.view_name as view_name %}
+    <aside class="aside" style="margin: 4px; border-radius: 10px; overflow: visible;">
+		
+		
+        <div class="btn-group-vertical">
+			<h4>Диалоги</h4>
+			{% for user in user_chats %}
+				{% if user.id != request.user.id %}
+					<div style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+						<a class="btn sib" style="width: 244px;" href="{% url 'messages' request.user.id user.id %}">
+							{{user.get_full_name}}
+							{% for k, v in unreaded.items %}
+								{% if user.id == k %}
+									(<span style="color: indianred;">{{v}}</span>)
+								{% endif %}
+							{% endfor %}
+						</a>
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		<h4>Новый диалог</h4>
+        <div class="dropdown" style="display: flex; flex-direction: row; justify-content: center; align-items: center; overflow: visible;">
+			<a class="btn sib" style="width: 244px;">Добавить</a>
+			<div class="dropdown-content">
+				{% for u in users %}
+						<a href="{% url 'messages' request.user.id u.id %}" role="button" style="border-radius: 4px;">{{u.get_full_name}}</a>
+				{% endfor %}
+			</div>
+		</div>	
+        
+        
+		<div class="btn-group-vertical">
+			<h4>Помощь</h4>
+			<div style="display: flex; flex-direction: row;">
+
+				<a class="btn user" style="display: block; text-align: center; width: 244px; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;" href="{% url 'feedbacks' %}">
+					{% if feedbacks_count > 0 %}
+						Предложения(<span style="color: red;">{{feedbacks_count}}</span>)
+					{% else %}
+						Предложения
+					{% endif %}
+				</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				<a style="display: block; text-align: center; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;" class="btn user" href="{% url 'help' %}">Инструкция</a>
+				<a style="display: block; text-align: center; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;" class="btn user" href="{% url 'about:author' %}">Контакты</a>
+			</div>
+			<div style="display: flex; flex-direction: row;">
+				{% if user.username in rights %}
+					<a style="display: block; text-align: center; width: 244px; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;" class="btn user" href="{% url 'rele_isib' %}">Реле(<span style="color: green;">{{count_of_1}}</span>/14)</a>
+				{% endif %}
+			</div>
+		</div>  
+    </aside>
+{% endwith %}

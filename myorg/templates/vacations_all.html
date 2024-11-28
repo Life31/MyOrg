@@ -1,0 +1,241 @@
+<style type="text/css"> 
+
+</style>
+
+{% extends "base.html" %}
+{% load cache %}
+{% load user_filters %}
+{% block title %}Отпуска{% endblock %}
+{% block header %}
+
+{% with request.resolver_match.view_name as view_name %}
+    {% if view_name != 'vacations_start' %}
+        <div style="display: flex; flex-direction: row; justify-content: left; align-items: center; width: 130%;">
+            <a style="color: black;">График отпусков подразделения {{number}}</a>
+            {% with request.get_full_path|url_to_year as year %}
+                {% for y in years %}
+                    {% if y == year %}
+                        <a class="btn sib" style="margin-left: 5px; width: 100px; background: rgb(109, 200, 228);" href="{% url 'vacations' y number %}">{{y}}</a>
+                    {% else %}
+                        <a class="btn sib" style="margin-left: 5px; width: 100px;" href="{% url 'vacations' y number %}">{{y}}</a>
+                    {% endif %}
+                {% endfor %}
+		    {% endwith %}
+        </div>
+    {% endif %}
+{% endwith %}   
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_vacations.html' %}
+{% endblock %}
+{% load thumbnail %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'Chart/Chart.min.css' %}">
+<script src="{% static 'Chart/Chart.min.js' %}"></script>
+<div class="row" style="width: 130%;"> 
+        <div>
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Январь' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Февраль' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Март' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Апрель' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Май' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Июнь' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Июль' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Август' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Сентябрь' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Октябрь' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Ноябрь' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+            {% for key, value in vacations_by_month_by_users.items %}
+                {% if key == 'Декабрь' %}
+                    {% include "vacations_all_include.html" with key=key value=value %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <script>
+            let data = JSON.parse("{{json_data|escapejs}}");
+            let months_to_numbers = JSON.parse("{{months_to_numbers|escapejs}}");
+            
+            function showUser(obj){
+                let vac_u = document.getElementsByClassName("vac_u")
+                for (let i = 0; i < vac_u.length; i++) {
+                    if(vac_u[i].childNodes[2].textContent.trim() != obj.childNodes[2].textContent.trim()){
+                        vac_u[i].style.background = "white";
+                    }else{
+                        vac_u[i].style.background = "rgb(109, 200, 228)";
+                    };
+			    }
+                let vacs = document.getElementsByClassName("user_vac")
+                for (let i = 0; i < vacs.length; i++) {
+                    if(vacs[i].textContent != obj.childNodes[2].textContent.trim()){
+                        vacs[i].parentElement.style.display = "none";
+                    }else{
+                        vacs[i].parentElement.style.display = "flex";
+                    };
+			    }
+            }
+            function showUserFromDrop(obj){
+                let vac_u = document.getElementsByClassName("vac_u")
+                for (let i = 0; i < vac_u.length; i++) {
+                    if(vac_u[i].childNodes[2].textContent.trim() != obj.textContent.trim()){
+                        vac_u[i].style.background = "white";
+                    }else{
+                        vac_u[i].style.background = "rgb(109, 200, 228)";
+                    };
+			    }
+                let vacs = document.getElementsByClassName("user_vac")
+                for (let i = 0; i < vacs.length; i++) {
+                    if(vacs[i].textContent != obj.textContent.trim()){
+                        vacs[i].parentElement.style.display = "none";
+                    }else{
+                        vacs[i].parentElement.style.display = "flex";
+                    };
+			    }
+            }
+            function showAll(obj){
+                let vac_u = document.getElementsByClassName("vac_u")
+                for (let i = 0; i < vac_u.length; i++) {
+                    if(vac_u[i].textContent != obj.textContent){
+                        vac_u[i].style.background = "white";
+                    }else{
+                        vac_u[i].style.background = "rgb(109, 200, 228)";
+                    };
+			    }
+                let vacs = document.getElementsByClassName("user_vac")
+                for (let i = 0; i < vacs.length; i++) {
+                    vacs[i].parentElement.style.display = "flex";
+			    }
+            }
+            function posForDrop(obj){
+                obj.addEventListener('mousemove', function (event) {
+                    let dis = Math.round(40 + event.clientY / -8).toString();
+                    obj.parentElement.childNodes[3].style.top = dis + 'px';
+                })
+	        }
+
+            let months = document.getElementsByClassName("v_a_i_body_for_key")
+            for (let i = 0; i < months.length; i++){
+                months[i].addEventListener(
+                "mouseover",
+                (event) => {                  
+                    setTimeout(function() {
+                        months[i].parentElement.childNodes[3].childNodes[1].style.display='flex';
+                    }, 
+                    300);
+                },
+                false,
+                );
+            }
+            let months_bodys = document.getElementsByClassName('v_a_i_full');
+            for (let i = 0; i < months_bodys.length; i++){
+                months_bodys[i].addEventListener(
+                "mouseover",
+                (event) => {                  
+                    setTimeout(function() {
+                        months_bodys[i].childNodes[3].childNodes[1].style.display='flex';
+                    }, 
+                    300);
+                },
+                false,
+                );
+            }
+            let vacDays = document.getElementsByClassName('number');
+
+            for (let i = 0; i < vacDays.length; i++){
+                //alert(vacDays[i].id);
+                for(const [key, value] of Object.entries(months_to_numbers)){
+                    //alert(key + value)
+                    if (vacDays[i].id.toString().includes(key)) {
+                        
+                        let date = vacDays[i].id.toString().replaceAll(key, value).replaceAll(' ', '').substring(0, 8);
+                        let user;
+                        //alert(Number(date.substring(7)));
+                        if (isNaN(parseInt(date.substring(7), 10))){
+                            date = '0' + date.substring(0, 7);
+                            date = date.substring(4, 8) + date.substring(2, 4) + date.substring(0, 2);
+                            user = vacDays[i].id.toString().replaceAll(key, value).substring(13);
+                        }else {
+                            date = date.substring(4, 8) + date.substring(2, 4) + date.substring(0, 2);
+                            user = vacDays[i].id.toString().replaceAll(key, value).substring(14);
+                        }
+                        
+
+                        //alert((user + '_False'))
+                        //alert(data[date])
+                        if (data[date].includes(user + '_False')) {
+                            vacDays[i].style.color = 'gray';
+                            vacDays[i].parentElement.childNodes[3].childNodes[5].style.display = 'none';
+                            vacDays[i].parentElement.childNodes[3].childNodes[7].style.display = 'none';
+                            vacDays[i].parentElement.childNodes[3].childNodes[9].style.display = 'none';
+                        } else{
+                            vacDays[i].parentElement.childNodes[3].childNodes[11].style.display = 'none';
+                        }
+                    }
+                   
+
+                }
+            }
+            let key_months = document.getElementsByClassName("v_a_i_body_for_key");
+            for (let i = 0; i < key_months.length; i++){
+                key_months[i].addEventListener(
+                        "click",
+                        (event) => {                
+                            setTimeout(function() {
+                                key_months[i].parentElement.style.display='none';
+                            }, 
+                            100);
+                        },
+                        false,
+                        );
+                    }
+            
+            
+            
+        </script>
+</div>
+{% endblock %} 

@@ -1,0 +1,183 @@
+<style>
+	h4 {
+	color: #808080;
+	font-family: 'Calibri';
+	font-style: normal;
+	font-weight: 700;
+	font-size: 18px;
+	line-height: 22px;
+	margin: 2px;
+	text-align: left;
+	}
+	.sib, .user{
+		width: 244px;
+		height: 37px;
+		display: flex; flex-direction: row; justify-content: left; align-items: center;
+		margin: 3px;
+		border: 3px solid white;
+		border-radius: 10px;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 22px;
+	}
+	.sib:hover {
+		transition: 0.4s;
+		background: #3b3b3a;
+		border: 3px solid white;
+		color: white;
+		
+	}
+
+	.btn-group-vertical {
+	margin: 2px auto;
+	}
+
+	.div_for_btn {
+		display: flex; flex-direction: row; justify-content: center; align-items: center;
+	}
+	.img_for_btn {
+		height: 25px; margin-right: 25px;
+	}
+
+</style>
+{% load static %}
+{% load user_filters %}
+{% with request.resolver_match.view_name as view_name %}
+    <aside class="aside" style="margin: 4px; border-radius: 10px; padding: 0px;">
+		
+		
+        <div class="btn-group-vertical">
+			<h4>Мои разделы</h4>
+			{% if user_info.reqs_access %}
+				<div class="div_for_btn">
+					<a class="btn sib" onclick="show_load(this)" href="{% url 'day' day|cur_day %}" ><img class="img_for_btn" src={% static "reqs.png" %}>ЗАЯВКИ НА СТЕНДЫ</a>
+				</div>
+			{% endif %}
+			{% if user_info.conf_access %}
+				<div class="div_for_btn">
+					<a class="btn sib" onclick="show_load(this)" href="{% url 'current' %}"><img class="img_for_btn" src={% static "config.png" %}>КОНФИГУРАЦИЯ SIB</a>
+				</div>
+			{% endif %}
+			<!----><div class="div_for_btn">
+				<a class="btn sib" onclick="show_load(this)" href="{% url 'task_all' user_start_bord_id %}">
+					<img class="img_for_btn" src={% static "trello.png" %}>
+					ЗАДАЧИ (<span style="color: indianred;">2</span>)
+				</a>
+			</div><!---->
+			{% if user_info.corr_access %}
+				<div class="div_for_btn">
+					<a class="btn sib" onclick="show_load(this)" href="{% url 'all_corresp' %}"><img class="img_for_btn" src={% static "corresp.png" %}>КОРРЕСПОНДЕНЦИЯ</a>
+				</div>
+			{% endif %}
+			{% if user_info.stor_access %}
+				<div class="div_for_btn">
+					<a class="btn sib" onclick="show_load(this)" href="{% url 'storage' %}"><img class="img_for_btn" src={% static "storage.png" %}>СКЛАД</a>
+				</div>
+			{% endif %}
+			<!----><div class="div_for_btn">
+				<a class="btn sib" onclick="show_load(this)" href="{% url 'storage' %}"><img class="img_for_btn" src={% static "storage.png" %}>СКЛАД 305</a>
+			</div><!---->
+			
+			{% if user_info.pass_access %}
+				<div class="div_for_btn">
+					<a class="btn sib" onclick="show_load(this)" href="{% url 'all_passes' %}"><img class="img_for_btn" src={% static "passes.png" %}>ПРОПУСКА</a>
+				</div>
+			{% endif %}
+			<!----><div class="div_for_btn">
+				<a class="btn sib" onclick="show_load(this)" href="{% url 'blocks_all' %}"><img class="img_for_btn" src={% static "pro.png" %}>ПРОИЗВОДСТВО</a>
+			</div><!---->
+			
+			{% if user_info.vacs_access%}
+				<div class="div_for_btn">
+					<a class="btn sib" onclick="show_load(this)" href="{% url 'vacations_start' %}"><img class="img_for_btn" src={% static "vacation.png" %}>ОТПУСК</a>
+				</div>
+			{% endif %}
+			<h4>Общие</h4>
+			<!----><div class="div_for_btn">
+				<a class="btn sib" onclick="show_load(this)" href="#"><img class="img_for_btn" src={% static "news.png" %}>НОВОСТИ (<span style="color: indianred;">1</span>)</a>
+			</div>
+			<div class="div_for_btn">
+				<a class="btn sib" onclick="show_load(this)" href="{% url 'show_test' %}"><img class="img_for_btn" src={% static "tests.png" %}>ТЕСТЫ | ОПРОСЫ (<span style="color: indianred;">1</span>)</a>
+			</div>
+			<div class="div_for_btn">
+				<a class="btn sib" onclick="show_load(this)" href="#"><img class="img_for_btn" src={% static "messenger.png" %}>МЕССЕНДЖЕР (<span style="color: indianred;">4</span>)</a>
+			</div>
+			
+			<div class="div_for_btn">
+				<a class="btn sib" onclick="show_load(this)" href="#"><img class="img_for_btn" src={% static "bibl.png" %}>БИБЛИОТЕКА</a>
+			</div><!---->
+			<div class="div_for_btn">
+				<a class="btn sib" onclick="show_load(this)" href="http://virtual2019:8080/"><img class="img_for_btn" src={% static "electricity.png" %}>SERVICEDESK</a>
+			</div>
+			<div class="div_for_btn">
+				<a class="btn sib" onclick="show_load(this)" href="http://virtual2024.oak.cc/"><img class="img_for_btn" src={% static "electricity.png" %}>ICD DB</a>
+			</div>
+			<div class="div_for_btn">
+				<a class="btn sib" onclick="show_load(this)" href="http://virtual2010.oak.cc/"><img class="img_for_btn" src={% static "electricity.png" %}>САРКС</a>
+			</div>
+			<div class="div_for_btn">
+				<a class="btn sib" onclick="show_load(this)" href="https://yakovlev.ru/"><img class="img_for_btn" src={% static "electricity.png" %}>ПАО ЯКОВЛЕВ</a>
+			</div>
+
+			
+			
+			<h4>Помощь</h4>
+			<div class="div_for_btn">
+
+				<a class="btn sib" style="width: 244px; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;"
+				onclick="show_load(this)" href="{% url 'feedbacks' %}">
+					{% if feedbacks_count > 0 %}
+					<img class="img_for_btn" src={% static "feedback.png" %}>ПРЕДЛОЖЕНИЯ(<span style="color: red;">{{feedbacks_count}}</span>)
+					{% else %}
+					<img class="img_for_btn" src={% static "feedback.png" %}>ПРЕДЛОЖЕНИЯ
+					{% endif %}
+				</a>
+			</div>
+			<div class="div_for_btn">
+				<a class="btn sib" style="text-align: center; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;"
+				onclick="show_load(this)" href="{% url 'help' %}">
+					<img class="img_for_btn" src={% static "instruct.png" %}>ИНСТРУКЦИЯ
+				</a>
+			</div>
+			<div class="div_for_btn">
+				<a class="btn sib" style="text-align: center; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;"
+				onclick="show_load(this)" href="{% url 'about:author' %}">
+					<img class="img_for_btn" src={% static "contact.png" %}>КОНТАКТЫ
+				</a>
+			</div>
+			<h4>Служебные</h4>
+			<div class="div_for_btn">
+				<a class="btn sib" style="text-align: center; width: 244px; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;"
+				onclick="show_load(this)" href="{% url 'users' %}"><img class="img_for_btn" src={% static "user.png" %}>ПОЛЬЗОВАТЕЛИ</a>
+			</div>
+			<div class="div_for_btn">
+				<a class="btn sib" style="text-align: center; width: 244px; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;"
+				onclick="show_load(this)" href="{% url 'rele_isib' %}">
+					<img class="img_for_btn" src={% static "electricity.png" %}>
+					РЕЛЕ (<span style="color: green;">{{count_of_1}}</span>/14)
+				</a>
+			</div>
+			<div class="div_for_btn">
+				<a class="btn sib" 
+				style="width: 183px; text-align: center; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 18px;" 
+				onclick="show_load(this)" href="{% url 'backup_base' %}">
+					<img class="img_for_btn" src={% static "instruct.png" %}>БЭКАП БАЗЫ
+				</a>
+				<a class="btn sib"
+				style="width: 55px;  text-align: center; color: #808080; font-family: 'Calibri'; font-style: normal; font-weight: 400; font-size: 12px;"
+				onclick="show_load(this)" href="{% static 'db.sqlite3' %}">
+					<img class="img_for_btn" src={% static "download.png" %}>
+				</a>
+			</div>
+			
+		</div> 
+		<script>
+			function show_load(obj){
+				obj.innerHTML = `<img class="img_for_btn" src="/static/load.gif">${obj.innerText}`;
+			}
+		</script> 
+    </aside>
+{% endwith %}

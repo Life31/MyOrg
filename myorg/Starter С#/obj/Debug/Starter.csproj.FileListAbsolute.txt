@@ -1,0 +1,30 @@
+C:\Users\whatz\Desktop\exp\Starter\obj\Debug\Starter.csprojAssemblyReference.cache
+C:\Users\whatz\Desktop\exp\Starter\obj\Debug\Starter.Form1.resources
+C:\Users\whatz\Desktop\exp\Starter\obj\Debug\Starter.Properties.Resources.resources
+C:\Users\whatz\Desktop\exp\Starter\obj\Debug\Starter.csproj.GenerateResource.cache
+C:\Users\whatz\Desktop\exp\Starter\obj\Debug\Starter.csproj.CoreCompileInputs.cache
+C:\Users\whatz\Desktop\exp\Starter\bin\Debug\Starter.exe.config
+C:\Users\whatz\Desktop\exp\Starter\bin\Debug\Starter.exe
+C:\Users\whatz\Desktop\exp\Starter\bin\Debug\Starter.pdb
+C:\Users\whatz\Desktop\exp\Starter\obj\Debug\Starter.exe
+C:\Users\whatz\Desktop\exp\Starter\obj\Debug\Starter.pdb
+F:\Моя папка\exp\Starter\bin\Debug\Starter.exe.config
+F:\Моя папка\exp\Starter\bin\Debug\Starter.exe
+F:\Моя папка\exp\Starter\bin\Debug\Starter.pdb
+F:\Моя папка\exp\Starter\obj\Debug\Starter.csprojAssemblyReference.cache
+F:\Моя папка\exp\Starter\obj\Debug\Starter.Form1.resources
+F:\Моя папка\exp\Starter\obj\Debug\Starter.Properties.Resources.resources
+F:\Моя папка\exp\Starter\obj\Debug\Starter.csproj.GenerateResource.cache
+F:\Моя папка\exp\Starter\obj\Debug\Starter.csproj.CoreCompileInputs.cache
+F:\Моя папка\exp\Starter\obj\Debug\Starter.exe
+F:\Моя папка\exp\Starter\obj\Debug\Starter.pdb
+C:\Dev\Requests\yatube\Starter С#\bin\Debug\Starter.exe.config
+C:\Dev\Requests\yatube\Starter С#\bin\Debug\Starter.exe
+C:\Dev\Requests\yatube\Starter С#\bin\Debug\Starter.pdb
+C:\Dev\Requests\yatube\Starter С#\obj\Debug\Starter.csprojAssemblyReference.cache
+C:\Dev\Requests\yatube\Starter С#\obj\Debug\Starter.Form1.resources
+C:\Dev\Requests\yatube\Starter С#\obj\Debug\Starter.Properties.Resources.resources
+C:\Dev\Requests\yatube\Starter С#\obj\Debug\Starter.csproj.GenerateResource.cache
+C:\Dev\Requests\yatube\Starter С#\obj\Debug\Starter.csproj.CoreCompileInputs.cache
+C:\Dev\Requests\yatube\Starter С#\obj\Debug\Starter.exe
+C:\Dev\Requests\yatube\Starter С#\obj\Debug\Starter.pdb

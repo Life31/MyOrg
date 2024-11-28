@@ -1,0 +1,16 @@
+﻿<!-- Шаблон footer.html -->
+<footer id="footer" class="pt-4 my-md-5 pt-md-5 border-top">
+  <p class="m-0 text-dark text-center ">
+    <a href="{% url 'about:author' %}">Об авторе</a>
+    , 
+    <a href="{% url 'about:tech' %}">Технологии</a>
+	{% if user.username in rights %}
+		,
+	
+		<a href="{% url 'statistic' %}">Статистика</a>
+	{% endif %}
+  </p>
+  <p class="m-0 text-dark text-center ">
+    <span style="color:red">Ресурс регистрации заявок</span> 306 © {% now 'Y' %}, все права защищены. 
+  </p>
+</footer> 

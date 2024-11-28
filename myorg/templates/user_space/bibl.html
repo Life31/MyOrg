@@ -1,0 +1,39 @@
+{% load static %}
+{% load user_filters %}
+{% if user_widgets.bibl %}
+<div class="card" id="1" style="display: flex; width: 49px; height: 54px; overflow: hidden;">
+{% else %}<div class="card" id="1" style="display: none;">
+{% endif %}
+	<div class="title" onmouseover="titleonmouseover(this)" onmouseout="titleonmouseout(this)">
+		<div class="off bibl widget_place_for_image" {% if user_widgets.bibl_open %}name="open"{% else %}name="close"{% endif %}>
+			<img 
+				class="img_for_btn top_left_screen"
+				onclick="closeOpenCard(this)"
+				style="margin: 10px; width: 80%; height: 80%;"
+				title="свернуть / развернуть виджет"
+				src={% static "bibl.png" %}
+			>
+		</div>
+		<div style="width:70%; display: none;">
+			<a style="color: rgb(102, 168, 243); text-decoration: none; font-size: 24px;"
+				title="Перейти на полную версию"
+				href="#">
+				Библиотека
+			</a>
+		</div>
+		<div style="width: 10%; display: none; margin-left: 15px;">
+			<a style="display: none;" href="{% url 'user_widget_delete' user.id 'bibl' %}">
+				<img style="height: 90%; width: 90%;" title="удалить виджет" src={% static "denay.png" %}>
+			</a>
+		</div>
+	</div>
+	<div class="widget_data">
+		<div style="overflow-y: scroll; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; overflow-y: auto;">
+			Раздел в разработке.<br>Перечень всех стандартов организации.<br>Выпущенное КД.
+			<br>Документация ОСТД.<br>Образцы СЗ/писем/меморандумов/презентаций/заявлений на отпуск и прочее прочее.
+		</div>
+	</div>
+	<div class="widget_footer">
+		<a class="btn widg_f_btn" style="width: 100%; border-radius: 8px 8px 18px 18px;" href="#">Кнопки</a>
+	</div>	
+</div>

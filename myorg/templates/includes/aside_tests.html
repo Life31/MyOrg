@@ -1,0 +1,62 @@
+<style type="text/css"> 
+	h4 {
+		color:black;
+		margin-top: 8px;
+		color: #808080;
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 700;
+		font-size: 18px;
+		line-height: 22px;
+		text-align: left;
+	}
+	.sib {
+		width: 118px;
+		height: 37px;
+		display: flex; flex-direction: row; justify-content: center; align-items: center;
+		margin: 2px;
+		border: 3px solid white;
+		border-radius: 10px;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 22px;
+	}
+	.sib:hover {
+		transition: 0.4s;
+		background: #3b3b3a;
+		border: 3px solid white;
+		color: white;
+	}
+	.btn-group-vertical {
+	margin: 2px auto;
+	}
+</style>
+
+{% load static %}
+{% load user_filters %}
+{% with request.resolver_match.view_name as view_name %}
+	<aside class="aside" style="margin: 4px; border-radius: 10px;">
+        {% if user.is_authenticated %}
+		<h4>Назначенные тесты</h4>
+		<a class="btn sib" style="width: 240px;" href="{% url 'test' 1 %}">Тест 1</a>
+		<a class="btn sib" style="width: 240px;" href="{% url 'test' 2 %}">Тест 2</a>
+		<h4>Общие тесты</h4>
+		<a class="btn sib" style="width: 240px;" href="{% url 'test' 1 %}">Тест 1</a>
+		<a class="btn sib" style="width: 240px;" href="{% url 'test' 2 %}">Тест 2</a>
+		<a class="btn sib" style="width: 240px;" href="#">Тест 3</a>
+		<h4>Пройденные тесты</h4>
+		<a class="btn sib" style="width: 240px;" href="#">Тест 3</a>
+		<h4>Инструментарий разработчика</h4>
+		<a class="btn sib" style="width: 240px;" href="#">Добавить тест</a>
+		<a class="btn sib" style="width: 240px;" href="{% url 'redact_test' 2 %}">Редактировать тест</a>
+		<a class="btn sib" style="width: 240px;" href="#">Добавить вопрос</a>
+		
+		{% endif %}
+    </aside>
+{% endwith %}
+
+
+

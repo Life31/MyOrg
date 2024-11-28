@@ -1,0 +1,242 @@
+<style type="text/css"> 
+    .log {
+		margin:0px;
+		padding: 0px;
+    }
+    .log th {
+		text-align: center;
+		width: 200px;
+		font-weight: bold;
+		padding: 0px 10px 0px 10px;
+		margin: auto;
+    }
+
+    .log tbody tr:nth-child(odd){
+        background-color: #E6E6E6;
+    }
+    .log tbody tr:nth-child(even){
+        background-color: transparent;
+    }
+	.lolo tr {
+		background: #E6E6E6;
+	}
+	.lololo tr {
+		background: turquoise;
+	}
+	.big_text, .small_text{
+		font-family: Calibri;
+		font-size: 28px;
+		font-weight: bold;
+		line-height: 20px;
+		letter-spacing: 0em;
+	}
+	.small_text{
+		font-size: 14px;
+	}
+</style>
+{% extends "base.html" %}
+{% block title %}Перечень блоков{% endblock %}
+{% block header %}<div class="head_menu"><a style="color: black; font-weight: bold; text-align: left;">Конфигурация № {{number}}</a></div>{% endblock %}
+{% load static %}
+{% load user_filters %}
+{% block aside %}{% include 'includes/aside_config.html' %}{% endblock %}
+{% block content %}				
+	<div style="width: 120%;">
+		<table border="0" style="border-collapse: separate; border-spacing: 0px 5px;">
+			<tr>
+				<th style="width: 250px; text-align:center; background: transparent;">Блок</th>
+				<th style="width: 250px; text-align:center; background: transparent;">Компонент</th>
+				<th style="width: 250px; text-align:center; background: transparent;">P/N</th>
+				<th style="width: 250px; text-align:center; background: transparent;">Прочая информация</th>
+				<th style="width: 250px; text-align:center; background: transparent;">Примечание</th>
+				<th style="width: 40px; text-align:center; background: transparent;"></th>
+			</tr>
+			{% for unit in units %}
+				{% if unit.id in units_with_conf%}
+				<tr>
+					<th style="width: 250px; text-align:center; border-radius: 15px; background: #E6E6E6; padding: 10px;">
+						<div class="big_text">{{ unit.unit_type|replace_ }}</div>
+						<div class="small_text">{{ unit.creator }}</div>
+						<div class="small_text">S/N {{ unit.serial_n }}</div>
+						<div class="small_text">P/N {{ unit.part_n }}</div>
+							{% for cur in current %}
+								{% if cur.unit_id == unit.id %}
+									{% if cur.parametr == "Монтаж" %}								
+										{% if cur.other_info == "Монтаж" %}
+											<div class="big_text" style="color: turquoise;">{{ cur.other_info }}</div>
+										{% elif cur.other_info == "Демонтаж" %}
+											<div class="big_text" style="color: tomato;">{{ cur.other_info }}</div>
+										{% endif %}
+										<div class="small_text">{{ cur.descr }}</div>
+									{% endif %}
+								{% endif %}
+							{% endfor %}
+					</th>
+					<th colspan="5">
+						<table class="log" border="1">
+							<tbody>
+								{% for cur in current %}
+									{% if cur.unit_id == unit.id %}
+										<tr class="small_text">
+											<th style="width: 247px; text-align:center;"><a style="font-weight: bold;">{{ cur.parametr }}</a></th>
+											{% if cur.parametr != "Монтаж" %}
+												<th style="width: 249px; text-align:center;"><a style="font-weight: bold;">{{ cur.part_n }}</a></th>
+											{% else %}
+												<th style="width: 249px; text-align:center;"><a style="font-weight: bold;">-</a></th>
+											{% endif %}
+											{% if cur.other_info == "Монтаж" %}
+												<th style="width: 247px; text-align:center; background: turquoise;"><a style="font-weight: bold;">{{ cur.other_info }}</a></th>
+											{% elif cur.other_info == "Демонтаж" %}
+												<th style="width: 247px; text-align:center; background: tomato;"><a style="font-weight: bold;">{{ cur.other_info }}</a></th>
+											{% else %}
+												<th style="width: 247px; text-align:center;"><a style="font-weight: bold;">{{ cur.other_info }}</a></th>
+											{% endif %}
+											<th style="width: 249px; text-align:center;"><a style="font-weight: bold;">{{ cur.descr }}</a></th>
+											<th style="width: 37px;">
+												<div class="dropdown">
+													
+													{% if cur.id not in already_change %}
+													<div><a style="font-weight: bold;">☰</a></div>
+													<div class="dropdown-content" style="left: 0px;">
+														{% if cur.doc %}
+														<a class="btn btn-sm"  href="{% static cur.doc.url %}">Посмотреть Акт</a>
+														{% else %}	
+														<a class="btn btn-sm"  href="#">Акт отсутствует</a>
+														{% endif %}
+														<a class="btn btn-sm" href="{% url 'config_new_changes' cur.id %}" role="button">новая конфигурация</a>
+														<a class="btn btn-sm" href="#" role="button">править</a>
+														<a class="btn btn-sm" href="#" role="button">удалить</a>
+													</div>
+													{% else %}
+													<a href="#changes"><img style="height: 10px;" src={% static "plus.png" %}></a>
+													{% endif %}
+												</div>
+											</th>
+										</tr>
+									{% endif %}
+								{% endfor %}
+							</tbody>
+						</table>
+					</th>
+				<tr>
+				{% endif %}
+			{% endfor %}
+		</table>
+		<div style="text-align:left; font-weight: bold; margin-top: 10px;"><a name="changes">Запрос на изменение</a></div>
+		<table class="lolo" border="1">
+			<tr>
+				<th style="width: 250px; text-align:center; background: transparent;">Блок</th>
+				<th style="width: 250px; text-align:center; background: transparent;">Компонент</th>
+				<th style="width: 250px; text-align:center; background: transparent;">P/N</th>
+				<th style="width: 250px; text-align:center; background: transparent;">Прочая информация</th>
+				<th style="width: 250px; text-align:center; background: transparent;">Примечание</th>
+				<th style="width: 40px; text-align:center; background: transparent;"></th>
+			</tr>
+			<tbody>
+				{% for c in changes %}
+					<tr class="small_text">
+						{% if c.id in already_confirm %}
+							<th style="width: 250px; text-align:center;">
+								<div style="margin: 5px; background: turquoise; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">{{ c.unit }}</div>
+							</th>
+						{% else %}
+							<th style="width: 250px; text-align:center;">
+								<div style="margin: 5px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">{{ c.unit }}</div>
+							</th>
+						{% endif %}
+						<th style="width: 247px; text-align:center;">
+							<div style="margin: 5px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">{{ c.parametr }}</div>
+						</th>
+						<th style="width: 249px; text-align:center;">
+							<div style="margin: 5px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">{{ c.part_n }}</div>
+						</th>
+						<th class="c_other_info" style="width: 249px; text-align:center;">
+							<div style="margin: 5px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">{{ c.other_info }}</div>
+						</th>
+						<th style="width: 249px; text-align:center;">
+							<div style="margin: 5px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">{{ c.descr }}</div>
+						</th>
+						<th style="width: 37px; text-align:center;">
+							<div class="dropdown">
+								
+								{% if c.id not in already_confirm %}
+									<div style="margin: 5px;">☰</div>
+									<div class="dropdown-content" style="left: 0px;">
+										{% if c.doc %}
+											<a class="btn btn-sm"  href="{% static c.doc.url %}">Посмотреть Акт</a>
+										{% else %}	
+											<a class="btn btn-sm"  href="#">Акт отсутствует</a>
+										{% endif %}
+										<a class="btn btn-sm" href="{% url 'config_new_changes_confirm' c.id %}" role="button">внести изменения</a>
+										<a class="btn btn-sm" href="{% url 'config_re_change' c.id %}" role="button">отменить</a>
+									</div>
+								{% else %}
+									<img style="height: 10px;" src={% static "plus.png" %}>
+								{% endif %}												
+							</div>
+						</th>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<div style="text-align:left; font-weight: bold; margin-top: 10px;">Подтвержденные изменения</div>
+		<table class="lololo" border="1">
+			<tr>
+				<th style="width: 250px; text-align:center; background: transparent;">Блок</th>
+				<th style="width: 250px; text-align:center; background: transparent;">Компонент</th>
+				<th style="width: 250px; text-align:center; background: transparent;">P/N</th>
+				<th style="width: 250px; text-align:center; background: transparent;">Прочая информация</th>
+				<th style="width: 250px; text-align:center; background: transparent;">Примечание</th>
+				<th style="width: 40px; text-align:center; background: transparent;"></th>
+			</tr>
+			<tbody>
+				{% for c in changes_confirm %}
+					<tr class="small_text">
+						<th style="width: 250px; text-align:center;">
+							<div style="margin: 5px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">{{ c.unit }}</div>
+						</th>
+						<th style="width: 247px; text-align:center;">
+							<div style="margin: 5px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">{{ c.parametr }}</div>
+						</th>
+						<th style="width: 249px; text-align:center;">
+							<div style="margin: 5px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">{{ c.part_n }}</div>
+						</th>
+						<th class="cc_other_info" style="width: 249px; text-align:center;">
+							<div style="margin: 5px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">{{ c.other_info }}</div>
+						</th>
+						<th style="width: 249px; text-align:center;">
+							<div style="margin: 5px; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">{{ c.descr }}</div>
+						</th>
+						<th style="width: 37px; text-align:center;">
+							<div class="dropdown">
+								<div style="margin: 5px;">☰</div>
+								<div class="dropdown-content" style="left: 0px;">
+										{% if c.doc %}
+											<a class="btn btn-sm"  href="{% static c.doc.url %}">Посмотреть Акт</a>
+										{% else %}
+											<a class="btn btn-sm"  href="#">Акт отсутствует</a>
+										{% endif %}
+									<a class="btn btn-sm" href="#" role="button">изменить</a>
+									<a class="btn btn-sm" href="{% url 'config_re_confirm' c.id %}" role="button">отменить</a>
+								</div>
+							</div>
+						</th>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% if changes_confirm|count != 0 %}
+			<a class="btn sib" style="margin: 10px;" href="{% url 'config_new_config' %}"><div>Изменить конфигурацию</div></a>
+		{% endif %}
+	</div>
+	<script>		
+		var c = document.getElementsByClassName('c_other_info')
+		var cc = document.getElementsByClassName('cc_other_info')			
+		for (var step = 0; step <= c.length; step++) {
+			if (c[step].textContent != cc[step].textContent){
+				c[step].style.color = 'red';
+				cc[step].style.color = 'red';
+			}				
+		}  		
+	</script>
+{% endblock %} 

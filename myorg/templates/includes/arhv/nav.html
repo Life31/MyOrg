@@ -1,0 +1,268 @@
+
+{% load static %}
+{% load user_filters %}
+<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+<!-- Библиотека иконок Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<nav class="navbar navbar-expand-lg navbar-black" style="background-color: #e3f4fd;" id="navbar">
+	<div class="container-fluid">
+
+		<input type="checkbox" id="side-checkbox" />
+		<div class="side-panel">
+			<label class="side-button-2" for="side-checkbox">+</label>			
+			<div class="side-title">Меню</div>
+			<ul class="list-group list-group-flush" >       
+				<li class="list-group-item" style="background-color: #48D1CC;">
+					<div class="h6 text-black">
+					
+						{% if user.is_authenticated %}
+							<div class="container">
+								<h5>Пользователь</h5>
+							</div>
+							<a class="btn btn-secondary" href="{% url 'profile' user.username %}" style="width: 215px; border: 1px solid black;">
+								{{ user.username }}
+							</a>		
+						{% endif %}
+
+						<div class="container">
+							<h5>Стенды</h5>
+						</div>
+						
+						<div class="btn-group-vertical">
+							<div class="btn-group">
+								<button type="button" data-toggle="dropdown" class="btn btn-secondary dropdown-toggle" style="width: 215px; border: 1px solid black;">
+									Выберите стенд
+									<span class="caret"></span>
+								</button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="{% url 'group' 'sib' %}" style="width: 215px;"><span>SIB</span></a>
+									<a class="dropdown-item" href="{% url 'group' 'acib' %}"><span>ACIB</span></a>
+									<a class="dropdown-item" href="{% url 'group' 'isib' %}"><span>ISIB</span></a>
+									<a class="dropdown-item" href="{% url 'group' 'fib' %}"><span>FIB</span></a>
+								</div>
+							</div>							
+						</div>		
+						
+						<div class="container">
+							<h5>Календари</h5>
+						</div>
+						
+						<div class="btn-group-vertical">
+							<div class="btn-group">
+								<button type="button" data-toggle="dropdown" class="btn btn-secondary dropdown-toggle" style="width: 215px; border: 1px solid black;">
+									Выберите календарь 
+									<span class="caret"></span>
+								</button>
+								<div class="dropdown-menu">
+										<a class="dropdown-item" href="{% url 'index' %}" style="width: 215px;"><span>Все заявки</span></a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="{% url 'day' day|cur_day %}"><span>На день</span></a>
+										<a class="dropdown-item" href="{% url 'week' wk|cur_week %}"><span>На неделю</span></a>
+										<a class="dropdown-item" href="{% url 'month' month|cur_month %}"><span>На месяц</span></a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="{% url 'stend' group_id=1%}"><span>SIB</span></a>
+										<a class="dropdown-item" href="{% url 'stend' group_id=3%}"><span>ACIB</span></a>
+										<a class="dropdown-item" href="{% url 'stend' group_id=2%}"><span>ISIB</span></a>
+										<a class="dropdown-item" href="{% url 'stend' group_id=4%}"><span>FIB</span></a>
+								</div>
+							</div>							
+						</div>	
+						
+						<div class="container">
+							<h5>Создать заявку</h5>
+						</div>
+
+						<div class="btn-group-vertical">
+							<a class="btn btn-success" href="{% url 'post_new' group_id=1 bm='_'%}" style="width: 215px; border: 1px solid black;">SIB</a>
+							<a class="btn btn-primary" href="{% url 'post_new' group_id=2 bm='_'%}" style="width: 215px; border: 1px solid black;">ACIB</a>
+							<div class="btn-group">
+								<button type="button" data-toggle="dropdown" class="btn btn-danger dropdown-toggle" style="width: 215px; border: 1px solid black;">
+									ISIB
+									<span class="caret"></span>
+								</button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="{% url 'post_new' group_id=3 bm='_'%}" style="width: 215px;">ISIB (Без БМ)</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="{% url 'post_new' group_id=3 bm='(БМ1)'%}">ISIB (+ БМ1)</a>
+									<a class="dropdown-item" href="{% url 'post_new' group_id=3 bm='(БМ2)'%}">ISIB (+ БМ2)</a>
+									<a class="dropdown-item" href="{% url 'post_new' group_id=3 bm='(БМ3)'%}">ISIB (+ БМ3)</a>
+								</div>
+							</div>
+							<div class="btn-group">
+								<button type="button" data-toggle="dropdown" class="btn btn-warning dropdown-toggle" style="width: 215px; border: 1px solid black;">
+									FIB
+									<span class="caret"></span>
+								</button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="{% url 'post_new' group_id=4 bm='(1)'%}" style="width: 215px;">FIB CPIOM 1</a>
+									<a class="dropdown-item" href="{% url 'post_new' group_id=4 bm='(2)'%}">FIB CPIOM 2</a>
+									<a class="dropdown-item" href="{% url 'post_new' group_id=4 bm='(3)'%}">FIB CPIOM 3</a>
+									<a class="dropdown-item" href="{% url 'post_new' group_id=4 bm='(4)'%}">FIB CPIOM 4</a>
+									<a class="dropdown-item" href="{% url 'post_new' group_id=4 bm='(5)'%}">FIB CPIOM 5</a>
+									<a class="dropdown-item" href="{% url 'post_new' group_id=4 bm='(MDU)'%}">FIB MDU</a>
+								</div>
+							</div>
+							
+						</div>
+						
+						<div class="container">
+								<h5>Помощь</h5>
+						</div>
+						
+						<div class="btn-group-vertical">	
+							<div class="btn-group">
+								<a class="btn btn-secondary" href="{% url 'help' %}"style="width: 215px; border: 1px solid black;">
+									Инструкция
+									<span class="caret"></span>
+								</a>
+							</div>
+						</div>										
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="side-button-1-wr">
+			<label class="side-button-1" for="side-checkbox">
+				<div class="side-b side-open">Заявки &#x2630;</div>
+				<div class="side-b side-close">Заявки &#x2630;</div>
+			</label>
+		</div>
+
+	{% if user.username in storage_rights%}
+		<input type="checkbox" id="side-checkbox1" />
+		<div class="side-panel1">
+			<label class="side-button-22" for="side-checkbox1">+</label>       
+			<div class="side-title1">Меню</div>
+
+			<ul class="list-group list-group-flush" >       
+				<li class="list-group-item" style="background-color: #48D1CC;">
+					<div class="h6 text-muted">
+						<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'storage' %}">
+							Карта склада
+						</a>
+						<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'main' %}">
+							Учетные единицы
+						</a>
+						<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'th_all' %}">
+							Накладные
+						</a>
+						<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'unit_new' %}">
+							Добавить уч. единицу
+						</a>
+						<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'th_new' %}">
+							Добавить т. накладную
+						</a> 
+						<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'creator_new' %}">
+							Добавить Производителя
+						</a> 
+						<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'si_new' %}">
+							Добавить ед. измерения
+						</a>
+						<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'ctgry_new' %}">
+							Добавить категорию
+						</a>
+						<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'place_new' %}">
+							Добавить место хранения
+						</a>
+						<a class="btn btn text-black btn-outline-primary btn-block" href="{% url 'stend_new' %}">
+							Добавить стенд
+						</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="side-button-1-wr1">
+			<label class="side-button-11" for="side-checkbox1">
+				<div class="side-b side-open">Склад</div>
+				<div class="side-b side-close">Склад</div>
+			</label>
+		</div>
+	{% endif %}
+	{% if user.username in sadec_rights%}
+		<input type="checkbox" id="side-checkbox2"/>
+		<div class="side-panel2">
+			<label class="side-button-222" for="side-checkbox2">+</label>       
+			<div class="side-title2">Меню</div>
+
+			<ul class="list-group list-group-flush" >       
+				<li class="list-group-item" style="background-color: #48D1CC;">
+					<div class="h6 text-black">
+						<div class="card-body">
+							Пользователь:
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'sadec_profile' user.username %}">{{ user.username }}</a>		
+						</div>
+						<div class="card-body">
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'sadec21' %}">Задачи проекта</a>		
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'sadec_groups' %}">Обьекты контроля</a>		
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'users' %}">Сотрудники</a>		
+						</div>
+						<div class="card-body">
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'sadec_post_new' %}">Добавить задачу</a>		
+						</div>
+						
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="side-button-1-wr2">
+			<label class="side-button-111" for="side-checkbox2">
+				<div class="side-b side-open">САДЭК-21</div>
+				<div class="side-b side-close">САДЭК-21</div>
+			</label>
+		</div>
+	{% endif %}
+	{% if user.username in pro_rights%}
+		<input type="checkbox" id="side-checkbox3"/>
+		<div class="side-panel3">
+			<label class="side-button-2222" for="side-checkbox3">+</label>       
+			<div class="side-title3">Меню</div>
+
+			<ul class="list-group list-group-flush" >       
+				<li class="list-group-item" style="background-color: #48D1CC;">
+					<div class="h6 text-black">
+						<div class="card-body">
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'mfi_all' fltr=0%}">Все блоки</a>
+							<a class="btn btn-sm border-black btn-danger btn-block text-left" href="{% url 'mfi_all' fltr=1%}">Блоки МФИ</a>
+							<a class="btn btn-sm border-black btn-danger btn-block text-left" href="{% url 'mfi_all' fltr=4%}">Блоки ИМ</a>
+							<a class="btn btn-sm border-black btn-secondary btn-block text-left" href="{% url 'mfi_all' fltr=2%}">Блоки ИВС</a>
+							<a class="btn btn-sm border-black btn-secondary btn-block text-left" href="{% url 'mfi_all' fltr=5%}">Блоки МЦВ</a>
+							<a class="btn btn-sm border-black btn-secondary btn-block text-left" href="{% url 'mfi_all' fltr=6%}">Блоки МК</a>
+							<a class="btn btn-sm border-black btn-success btn-block text-left" href="{% url 'mfi_all' fltr=3%}">Блоки БМ</a>
+							<a class="btn btn-sm border-black btn-success btn-block text-left" href="{% url 'mfi_all' fltr=7%}">Блоки АЧ БМ</a>
+						</div>
+						
+						
+						
+						<div class="card-body">
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'mfi_new' %}">Добавить блок</a>
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'developments_new' %}">Добавить событие</a>
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'state_new' %}">Добавить статус блока</a>
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'base_new' %}">Добавить место нахождения блока</a>
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'purpose_new' %}">Добавить назначение блока</a>
+							<a class="btn btn-sm border-black btn-primary btn-block text-left" href="{% url 'version_new' %}">Добавить версию блока</a>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="side-button-1-wr3">
+			<label class="side-button-1111" for="side-checkbox3">
+				<div class="side-b side-open">Производство</div>
+				<div class="side-b side-close">Производство</div>
+			</label>
+		</div>
+	{% endif %}    
+	{% if user.is_authenticated %}
+		<ul class="nav navbar-nav navbar-right">
+		  <li><a  class="p-2 text-dark" href="{% url 'password_change' %}">Изменить пароль</a></li> | 
+		  <li><a  class="p-2 text-dark" href="{% url 'logout' %}">Выйти</a></li>
+		</ul>
+	{% else %}
+		<ul class="nav navbar-nav navbar-right">
+			<li><a class="p-2 text-dark" href="{% url 'login' %}">Войти</a></li> | 
+			<li><a class="p-2 text-dark" href="{% url 'signup' %}">Регистрация</a></li>
+		</ul>
+	{% endif %}
+	</div>
+</nav> 
+

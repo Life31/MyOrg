@@ -1,0 +1,56 @@
+<style>
+    
+    .box {
+        display: flex; flex-direction: row; justify-content: center; align-items: center; width: 40px; margin: 10px; 
+        padding:10px; background: white; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2); 
+        font-weight: bold; cursor: pointer;
+    }
+    .ques {
+        display: flex; flex-direction: row; justify-content: left; align-items: center; width: 1180px; margin: 10px;
+        padding: 10px; background: white; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2); 
+        font-weight: bold; cursor: pointer; 
+    }
+    .ball {
+        background: rgb(165, 167, 166); border-radius: 50%; width: 20px; height: 20px;
+        display: flex; flex-direction: row; justify-content: center; align-items: center;
+    }
+    .ball_in {
+        background: rgb(165, 167, 166); border-radius: 50%; width: 10px; height: 10px;
+    }  
+</style>
+
+{% extends "base.html" %}
+{% load cache %}
+{% load user_filters %}
+{% block title %}Тест{% endblock %}
+{% block header %}
+<div style="display: flex; flex-direction: row; justify-content: left; align-items: center; width: 130%;">
+    <a style="color: black;">Результат теста "{{test_name}}"</a>
+    
+</div>
+    
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_tests.html' %}
+{% endblock %}
+{% load static %}
+
+{% block content %}
+
+<div style="display: flex; flex-direction: column; justify-content: left; align-items: left; margin: 10px; padding:10px;">
+    
+        {% for k, v in results.items %}
+        <div style="display: flex; flex-direction: row; justify-content: left; align-items: left; background: rgb(160, 220, 236); margin: 10px;">
+            <a class="btn sib" style="width: 150px; background: rgb(160, 220, 236); margin-left: 10px;">Попытка {{k}}</a>
+            <a class="btn sib" style="width: 60px; background: rgb(160, 220, 236); margin-left: 10px;">{{v}}/20</a>
+            <a class="btn sib" style="width: 70px; background: rgb(160, 220, 236); margin-left: 10px;">Отчет</a>
+        </div>
+    {% endfor %}
+    <div style="display: flex; flex-direction: row; justify-content: left; align-items: left; margin: 10px;">
+        <a class="btn sib" style="width: 304px; background: rgb(160, 220, 236); margin-left: 10px; color: black;" href="{% url 'test' test_id %}">Пройти снова</a>
+    </div>
+    
+</div>
+
+
+{% endblock %} 

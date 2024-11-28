@@ -1,0 +1,518 @@
+
+{% extends "base.html" %}
+{% block title %}Конфигурация стенда SIB{% endblock %}
+{% block header %}
+	<a style="color: black; font-weight: bold; text-align: left;">Конфигурация стенда SIB</a>
+{% endblock %}
+{% load thumbnail %}
+{% load static %}
+{% load user_filters %}
+
+{% block aside %}
+    {% include 'includes/aside_config.html' %}
+{% endblock %}
+
+
+{% block content %}
+	<style>
+		.rack {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			margin-left: 10px;
+
+			width: 370px;
+			height: 830px;
+			border: 2px solid black;
+			background: #E6E6E6;
+		}
+		.cabin {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			margin-left: 10px;
+			margin-top: 10px;
+
+			width: 1460px;
+			height: 530px;
+			border: 2px solid black;
+			background: #E6E6E6;
+		}
+		.bord, .cabon_bord, .cabon_bord_vert {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			margin: 10px;
+
+			width: 260px;
+			height: 110px;
+			border: 2px solid black;
+			background: white;
+		}
+		.cabon_bord{
+			border: 0px solid black;
+			background: transparent;
+		}
+		.cabon_bord_vert {
+			border: 0px solid black;
+			background: transparent;
+			flex-direction: column;
+			width: 480px;
+			height: 530px;
+		}
+		.mcu1, .mcu1_gor, .mcu2, .mcu3, .mcu4, .mcu2_gor, .du {
+			cursor: pointer;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			margin: 10px;
+
+			width: 24px;
+			height: 96px;
+			
+			background: black;
+		}
+		.du {
+			width: 200px;
+			height: 150px;
+		}
+		.mcu1_gor{
+			width: 96px;
+			height: 24px;
+		}
+		.mcu2 {
+			width: 48px;
+		}
+		.mcu3 {
+			width: 72px;
+		}
+		.mcu4 {
+			width: 96px;
+		}
+		.mcu2_gor {
+			width: 120px;
+			height: 48px;
+		}
+		.text_a {
+			
+			cursor: pointer;
+			font-family: Calibri;
+			font-size: 18px;
+			font-weight: bold;
+			line-height: 20px;
+			letter-spacing: 0em;
+		}
+
+		.demont {
+			border: 2px dashed tomato;
+			background: repeating-linear-gradient(-60deg, transparent 0 16px, tomato 1px 17px);
+			color: black;
+		}
+
+		
+	</style>
+
+	<div style="display: flex; flex-direction: row; align-items: center;">
+		<div class="rack">
+			<a class="text_a" style="color: black; font-weight: bold;">D2</a>
+			<div class="bord">
+				{% if B28_21_AFT_L == 'Монтаж' %}<div class="mcu2" style="margin: 20px; color: turquoise;" onclick="unit_click('B28_21_AFT_L')">
+				{% else %}<div class="mcu2 demont" style="margin: 20px;" onclick="unit_click('B28_21_AFT_L')">
+				{% endif %}<a class="text_a">B28<br>21<br>AFT<br>L</a></div>
+				{% if B28_21_AFT_R == 'Монтаж' %}<div class="mcu2" style="margin: 20px; color: turquoise;" onclick="unit_click('B28_21_AFT_R')">
+				{% else %}<div class="mcu2 demont" style="margin: 20px;" onclick="unit_click('B28_21_AFT_R')">
+				{% endif %}<a class="text_a">B28<br>21<br>AFT<br>R</a></div>
+			</div>
+			<div class="bord">
+				{% if B28_21_FWD_L == 'Монтаж' %}<div class="mcu2" style="margin: 20px; color: turquoise;" onclick="unit_click('B28_21_FWD_L')">
+				{% else %}<div class="mcu2 demont" style="margin: 20px;" onclick="unit_click('B28_21_FWD_L')">
+				{% endif %}<a class="text_a">B28<br>21<br>FWD<br>L</a></div>
+				{% if B28_21_FWD_R == 'Монтаж' %}<div class="mcu2" style="margin: 20px; color: turquoise;" onclick="unit_click('B28_21_FWD_R')">
+				{% else %}<div class="mcu2 demont" style="margin: 20px;" onclick="unit_click('B28_21_FWD_R')">
+				{% endif %}<a class="text_a">B28<br>21<br>FWD<br>R</a></div>
+			</div>
+			<div class="bord"></div>
+			<div class="bord" style="height: 45px;">
+				{% if GCJP_1 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 1px; color: turquoise;" onclick="unit_click('GCJP_1')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 1px;" onclick="unit_click('GCJP_1')">
+				{% endif %}<a class="text_a" style="font-size: 12px;">GCJP 1</a></div>
+				{% if GCJP_2 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 1px; color: turquoise;" onclick="unit_click('GCJP_2')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 1px;" onclick="unit_click('GCJP_2')">
+				{% endif %}<a class="text_a" style="font-size: 12px;">GCJP 2</a></div>
+				{% if GCJP_3 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 1px; color: turquoise;" onclick="unit_click('GCJP_3')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 1px;" onclick="unit_click('GCJP_3')">
+				{% endif %}<a class="text_a" style="font-size: 12px;">GCJP 3</a></div>
+				{% if GCJP_4 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 1px; color: turquoise;" onclick="unit_click('GCJP_4')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 1px;" onclick="unit_click('GCJP_4')">
+				{% endif %}<a class="text_a" style="font-size: 12px;">GCJP 4</a></div>
+				{% if GCJP_5 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 1px; color: turquoise;" onclick="unit_click('GCJP_5')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 1px;" onclick="unit_click('GCJP_5')">
+				{% endif %}<a class="text_a" style="font-size: 12px;">GCJP 5</a></div>
+				{% if GCJP_6 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 1px; color: turquoise;" onclick="unit_click('GCJP_6')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 1px;" onclick="unit_click('GCJP_6')">
+				{% endif %}<a class="text_a" style="font-size: 12px;">GCJP 6</a></div>
+			</div>
+			<div class="bord" style="height: 45px;">
+
+			</div>
+			<div class="bord"></div>
+			<div class="bord"></div>
+		</div>
+		<div class="rack">
+			<a class="text_a" style="color: black; font-weight: bold;">C1</a>
+			<div class="bord">
+				{% if PCU_1 == 'Монтаж' %}<div class="mcu2_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('PCU_1')">
+				{% else %}<div class="mcu2_gor demont" style="margin: 10px;" onclick="unit_click('PCU_1')">
+				{% endif %}<a class="text_a">PCU<br>1</a></div>
+				{% if PCU_2 == 'Монтаж' %}<div class="mcu2_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('PCU_2')">
+				{% else %}<div class="mcu2_gor demont" style="margin: 10px;" onclick="unit_click('PCU_2')">
+				{% endif %}<a class="text_a">PCU<br>2</a></div>
+			</div>
+			<div class="bord">
+				{% if PCU_3 == 'Монтаж' %}<div class="mcu2_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('PCU_3')">
+				{% else %}<div class="mcu2_gor demont" style="margin: 10px;" onclick="unit_click('PCU_3')">
+				{% endif %}<a class="text_a">PCU<br>3</a></div>
+				{% if PCU_4 == 'Монтаж' %}<div class="mcu2_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('PCU_4')">
+				{% else %}<div class="mcu2_gor demont" style="margin: 10px;" onclick="unit_click('PCU_4')">
+				{% endif %}<a class="text_a">PCU<br>4</a></div>
+			</div>
+			<div class="bord">
+				{% if PCU_5 == 'Монтаж' %}<div class="mcu2_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('PCU_5')">
+				{% else %}<div class="mcu2_gor demont" style="margin: 10px;" onclick="unit_click('PCU_5')">
+				{% endif %}<a class="text_a">PCU<br>5</a></div>
+				{% if PCU_6 == 'Монтаж' %}<div class="mcu2_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('PCU_6')">
+				{% else %}<div class="mcu2_gor demont" style="margin: 10px;" onclick="unit_click('PCU_6')">
+				{% endif %}<a class="text_a">PCU<br>6</a></div>
+			</div>
+			<div class="bord">
+				{% if PCU_7 == 'Монтаж' %}<div class="mcu2_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('PCU_7')">
+				{% else %}<div class="mcu2_gor demont" style="margin: 10px;" onclick="unit_click('PCU_7')">
+				{% endif %}<a class="text_a">PCU<br>7</a></div>
+
+				{% if DCC_1 == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;" onclick="unit_click('DCC_1')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" onclick="unit_click('DCC_1')">
+				{% endif %}<a class="text_a">DCC<br>1</a></div>
+
+				{% if DCC_2 == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;" onclick="unit_click('DCC_2')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" onclick="unit_click('DCC_2')">
+				{% endif %}<a class="text_a">DCC<br>2</a></div>
+			</div>
+			<div class="bord" style="height: 45px;">
+				{% if DCU_1 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('DCU_1')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 10px;" onclick="unit_click('DCU_1')">
+				{% endif %}<a class="text_a">DCU 1</a></div>
+				{% if DCU_2 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('DCU_2')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 10px;" onclick="unit_click('DCU_2')">
+				{% endif %}<a class="text_a">DCU 2</a></div>
+				{% if DCU_3 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('DCU_3')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 10px;" onclick="unit_click('DCU_3')">
+				{% endif %}<a class="text_a">DCU 3</a></div>
+			</div>
+			<div class="bord" style="height: 45px;">
+				{% if DCU_4 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('DCU_4')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 10px;" onclick="unit_click('DCU_4')">
+				{% endif %}<a class="text_a">DCU 4</a></div>
+				{% if DCU_5 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('DCU_5')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 10px;" onclick="unit_click('DCU_5')">
+				{% endif %}<a class="text_a">DCU 5</a></div>
+				{% if DCU_6 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('DCU_6')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 10px;" onclick="unit_click('DCU_6')">
+				{% endif %}<a class="text_a">DCU 6</a></div>
+			</div>
+			<div class="bord">
+				{% if WHC_1 == 'Монтаж' %}<div class="mcu2_gor" style="margin: 10px; width: 96px; color: turquoise;" onclick="unit_click('WHC_1')">
+				{% else %}<div class="mcu2_gor demont" style="margin: 10px; width: 96px;" onclick="unit_click('WHC_1')">
+				{% endif %}<a class="text_a">WHC<br>1</a></div>
+				{% if WHC_2 == 'Монтаж' %}<div class="mcu2_gor" style="margin: 10px; width: 96px; color: turquoise;" onclick="unit_click('WHC_2')">
+				{% else %}<div class="mcu2_gor demont" style="margin: 10px; width: 96px;" onclick="unit_click('WHC_2')">
+				{% endif %}<a class="text_a">WHC<br>2</a></div>
+				{% if DCU_7 == 'Монтаж' %}<div class="mcu1_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('DCU_7')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 10px;" onclick="unit_click('DCU_7')">
+				{% endif %}<a class="text_a">DCU 7</a></div>
+			</div>
+		</div>
+		<div class="rack">
+			<a class="text_a" style="color: black; font-weight: bold;">E1</a>
+			<div class="bord">
+				{% if TCAS == 'Монтаж' %}<div class="mcu3" style="margin: 20px; color: turquoise;" onclick="unit_click('TCAS')">
+				{% else %}<div class="mcu3 demont" style="margin: 20px;" onclick="unit_click('TCAS')">
+				{% endif %}<a class="text_a">TCAS</a></div>
+				{% if IMMR_1 == 'Монтаж' %}<div class="mcu3" style="margin: 20px; color: turquoise;" onclick="unit_click('IMMR_1')">
+				{% else %}<div class="mcu3 demont" style="margin: 20px;" onclick="unit_click('IMMR_1')">
+				{% endif %}<a class="text_a">INR<br>1</a></div>
+				{% if IMMR_2 == 'Монтаж' %}<div class="mcu3" style="margin: 20px; color: turquoise;" onclick="unit_click('IMMR_2')">
+				{% else %}<div class="mcu3 demont" style="margin: 20px;" onclick="unit_click('IMMR_2')">
+				{% endif %}<a class="text_a">INR<br>2</a></div>
+			</div>
+			<div class="bord">
+				{% if Вычислитель_БВС_1A == 'Монтаж' %}<div class="mcu2" style="margin: 20px; color: turquoise;" onclick="unit_click('Вычислитель_БВС_1A')">
+				{% else %}<div class="mcu2 demont" style="margin: 20px;" onclick="unit_click('Вычислитель_БВС_1A')">
+				{% endif %}<a class="text_a">БВС<br>1<br>A</a></div>
+				{% if Вычислитель_БВС_1B == 'Монтаж' %}<div class="mcu2" style="margin: 20px; color: turquoise;" onclick="unit_click('Вычислитель_БВС_1B')">
+				{% else %}<div class="mcu2 demont" style="margin: 20px;" onclick="unit_click('Вычислитель_БВС_1B')">
+				{% endif %}<a class="text_a">БВС<br>1<br>В</a></div>
+				{% if Вычислитель_БВС_1C == 'Монтаж' %}<div class="mcu2" style="margin: 20px; color: turquoise;" onclick="unit_click('Вычислитель_БВС_1C')">
+				{% else %}<div class="mcu2 demont" style="margin: 20px;" onclick="unit_click('Вычислитель_БВС_1C')">
+				{% endif %}<a class="text_a">БВС<br>1<br>С</a></div>
+			</div>
+			<div class="bord">
+				{% if Вычислитель_БВС_2A == 'Монтаж' %}<div class="mcu2" style="margin: 20px; color: turquoise;" onclick="unit_click('Вычислитель_БВС_2A')">
+				{% else %}<div class="mcu2 demont" style="margin: 20px;" onclick="unit_click('Вычислитель_БВС_2A')">
+				{% endif %}<a class="text_a">БВС<br>2<br>A</a></div>
+				{% if Вычислитель_БВС_2B == 'Монтаж' %}<div class="mcu2" style="margin: 20px; color: turquoise;" onclick="unit_click('Вычислитель_БВС_2B')">
+				{% else %}<div class="mcu2 demont" style="margin: 20px;" onclick="unit_click('Вычислитель_БВС_2B')">
+				{% endif %}<a class="text_a">БВС<br>2<br>В</a></div>
+				{% if Вычислитель_БВС_2C == 'Монтаж' %}<div class="mcu2" style="margin: 20px; color: turquoise;" onclick="unit_click('Вычислитель_БВС_2C')">
+				{% else %}<div class="mcu2 demont" style="margin: 20px;" onclick="unit_click('Вычислитель_БВС_2C')">
+				{% endif %}<a class="text_a">БВС<br>2<br>С</a></div>
+			</div>
+			<div class="bord">
+				{% if Коммутатор_БВС_1A == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;" onclick="unit_click('Коммутатор_БВС_1A')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" onclick="unit_click('Коммутатор_БВС_1A')">
+				{% endif %}<a class="text_a">SWM<br>1<br>A</a></div>
+				{% if Коммутатор_БВС_1B == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;" onclick="unit_click('Коммутатор_БВС_1B')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" onclick="unit_click('Коммутатор_БВС_1B')">
+				{% endif %}<a class="text_a">SWM<br>1<br>B</a></div>
+				{% if Коммутатор_БВС_2A == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;" onclick="unit_click('Коммутатор_БВС_2A')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" onclick="unit_click('Коммутатор_БВС_2A')">
+				{% endif %}<a class="text_a">SWM<br>2<br>A</a></div>
+				{% if Коммутатор_БВС_2B == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;" onclick="unit_click('Коммутатор_БВС_2B')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" onclick="unit_click('Коммутатор_БВС_2B')">
+				{% endif %}<a class="text_a">SWM<br>2<br>B</a></div>
+			</div>
+			<div class="bord">
+				{% if IRU == 'Монтаж' %}<div class="mcu4" style="margin: 10px; color: turquoise;" onclick="unit_click('IRU')">
+				{% else %}<div class="mcu4 demont" style="margin: 10px;" onclick="unit_click('IRU')">
+				{% endif %}<a class="text_a">IRU</a></div>
+			</div>
+			<div class="bord">
+				{% if ATC_1 == 'Монтаж' %}<div class="mcu3" style="margin: 10px; color: turquoise;" onclick="unit_click('ATC_1')">
+				{% else %}<div class="mcu3 demont" style="margin: 10px;" onclick="unit_click('ATC_1')">
+				{% endif %}<a class="text_a">ATC 1</a></div>
+				{% if ATC_2 == 'Монтаж' %}<div class="mcu3" style="margin: 10px; color: turquoise;" onclick="unit_click('ATC_2')">
+					{% else %}<div class="mcu3 demont" style="margin: 10px;" onclick="unit_click('ATC_2')">
+					{% endif %}<a class="text_a">ATC 2</a></div>
+			</div>
+		</div>
+		<div class="rack">
+			<a class="text_a" style="color: black; font-weight: bold;">D1</a>
+			<div class="bord">
+				{% if MADC == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;"onclick="unit_click('MADC')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" title="Firewall" onclick="unit_click('MADC')">
+				{% endif %}<a class="text_a">MADC</a></div>
+			</div>
+			<div class="bord">
+				{% if FIREWALL_1 == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;"onclick="unit_click('FIREWALL_1')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" title="Firewall" onclick="unit_click('FIREWALL_1')">
+				{% endif %}<a class="text_a">БМ<br>1</a></div>
+				{% if FIREWALL_2 == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;" onclick="unit_click('FIREWALL_2')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" title="Firewall&#013;S/N 365 4345" onclick="unit_click('FIREWALL_2')">
+				{% endif %}<a class="text_a">БМ<br>2</a></div>
+				{% if EGPWS == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;" onclick="unit_click('EGPWS')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" title="Firewall&#013;S/N 365 4345" onclick="unit_click('EGPWS')">
+				{% endif %}<a class="text_a" style="line-height: 1;">E<br>G<br>P<br>W<br>S</a></div>
+			</div>
+			<div class="bord"></div>
+			<div class="bord">
+				{% if STAT_INV_L == 'Монтаж' %}<div class="mcu2_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('STAT_INV_L')">
+				{% else %}<div class="mcu2_gor demont" style="margin: 10px;" onclick="unit_click('STAT_INV_L')">
+				{% endif %}<a class="text_a">STAT INV L</a></div>
+				{% if STAT_INV_R == 'Монтаж' %}<div class="mcu2_gor" style="margin: 10px; color: turquoise;" onclick="unit_click('STAT_INV_R')">
+				{% else %}<div class="mcu2_gor demont" style="margin: 10px;" onclick="unit_click('STAT_INV_R')">
+				{% endif %}<a class="text_a">STAT INV R</a></div>
+			</div>
+			<div class="bord"></div>
+			<div class="bord"></div>
+		</div>
+		<div class="rack">
+			<a class="text_a" style="color: black; font-weight: bold;">A1</a>
+			<div class="bord">
+				<div class="mcu3" style="margin: 10px; background: gray;"><a class="text_a">HF<br>1</a></div>
+				<div class="mcu2" style="margin: 10px; background: gray;"><a class="text_a">ADF<br>1</a></div>
+				{% if CU_L == 'Монтаж' %}<div class="mcu4" style="margin: 10px; color: turquoise;" onclick="unit_click('CU_L')">
+				{% else %}<div class="mcu4 demont" style="margin: 10px;" onclick="unit_click('CU_L')">
+				{% endif %}<a class="text_a">L_CU</a></div>
+			</div>
+			<div class="bord">
+				<div class="mcu3" style="margin: 10px; background: gray;"><a class="text_a">HF<br>2</a></div>
+				<div class="mcu2" style="margin: 10px; background: gray;"><a class="text_a">ADF<br>2</a></div>
+				{% if CU_R == 'Монтаж' %}<div class="mcu4" style="margin: 10px; color: turquoise;" onclick="unit_click('CU_R')">
+				{% else %}<div class="mcu4 demont" style="margin: 10px;" onclick="unit_click('CU_R')">
+				{% endif %}<a class="text_a">R_CU</a></div>
+			</div>
+			<div class="bord">
+			</div>
+			
+			<div class="bord">
+				<div class="mcu3" style="margin: 10px; background: gray;"><a class="text_a">DME<br>1</a></div>
+				<div class="mcu3" style="margin: 10px; background: gray;"><a class="text_a">DME<br>2</a></div>
+				{% if VHF_1 == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;" onclick="unit_click('VHF_1')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" title="Firewall&#013;S/N 365 4345" onclick="unit_click('VHF_1')">
+				{% endif %}<a class="text_a">VHF<br>1</a></div>
+			</div>
+			<div class="bord">
+				{% if CMU == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise; width: 60px;" onclick="unit_click('CMU')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;width: 60px;" onclick="unit_click('CMU')">
+				{% endif %}<a class="text_a">CMU</a></div>
+				{% if CMU_APM == 'Монтаж' %}<div class="mcu1_gor" style="margin: 1px; color: turquoise; height: 50px; width: 40px;" onclick="unit_click('CMU_APM')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 1px; height: 50px; width: 40px;" onclick="unit_click('CMU_APM')">
+				{% endif %}<a class="text_a" style="font-size: 12px;">CMU<br>APM</a></div>
+				{% if VHF_2 == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;" onclick="unit_click('VHF_2')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" title="Firewall&#013;S/N 365 4345" onclick="unit_click('VHF_2')">
+				{% endif %}<a class="text_a">VHF<br>2</a></div>
+				{% if VHF_3 == 'Монтаж' %}<div class="mcu2" style="margin: 10px; color: turquoise;" onclick="unit_click('VHF_3')">
+				{% else %}<div class="mcu2 demont" style="margin: 10px;" title="Firewall&#013;S/N 365 4345" onclick="unit_click('VHF_3')">
+				{% endif %}<a class="text_a">VHF<br>3</a></div>
+			</div>
+			<div class="bord"></div>
+		</div>
+	</div>
+	<div class="cabin">
+		<div class="cabon_bord" style="flex-direction: row; justify-content: right; margin: 1px; width: 1000px; height: 70px;">
+
+			{% if PRINTER == 'Монтаж' %}<div class="mcu1_gor" style="margin: 1px; color: turquoise; width: 120px; height:70px;" onclick="unit_click('PRINTER')">
+			{% else %}<div class="mcu1_gor demont" style="margin: 1px; width: 120px; height:70px;" onclick="unit_click('PRINTER')">
+			{% endif %}<a class="text_a">PRINTER<br>TW5</a></div>
+		</div>
+		<div class="cabon_bord" style="margin: 1px; width: 1000px; height: 50px;">
+			<div class="mcu1_gor" style=" margin: 1px; background: gray; width: 100px; height: 30px;"><a class="text_a">Alert_CP_L</a></div>
+			{% if BRT_CP_LDU == 'Монтаж' %}<div class="mcu1_gor" style="margin: 1px; color: turquoise; width: 100px; height: 30px;" onclick="unit_click('BRT_CP_LDU')">
+			{% else %}<div class="mcu1_gor demont" style="margin: 1px; width: 100px; height: 30px;" onclick="unit_click('BRT_CP_LDU')">
+			{% endif %}<a class="text_a">BRT_CP_LDU</a></div>
+			{% if DCP_L == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 48px; height: 50px;" onclick="unit_click('DCP_L')">
+			{% else %}<div class="du demont" style="margin: 1px; width: 48px; height: 50px;" onclick="unit_click('DCP_L')">
+			{% endif %}<a class="text_a">DCP<br>L</a></div>
+			{% if AFCP == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; height: 50px;" onclick="unit_click('AFCP')">
+			{% else %}<div class="du demont" style="margin: 1px; height: 50px;" onclick="unit_click('AFCP')">
+			{% endif %}<a class="text_a">AFCP</a></div>
+			{% if DCP_R == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 48px; height: 50px;" onclick="unit_click('DCP_R')">
+			{% else %}<div class="du demont" style="margin: 1px; width: 48px; height: 50px;" onclick="unit_click('DCP_R')">
+			{% endif %}<a class="text_a">DCP<br>R</a></div>
+			{% if BRT_CP_RDU == 'Монтаж' %}<div class="mcu1_gor" style="margin: 1px; color: turquoise; width: 100px; height: 30px;" onclick="unit_click('BRT_CP_RDU')">
+			{% else %}<div class="mcu1_gor demont" style="margin: 1px; width: 100px; height: 30px;" onclick="unit_click('BRT_CP_RDU')">
+			{% endif %}<a class="text_a">BRT_CP_RDU</a></div>
+			<div class="mcu1_gor" style="margin: 1px; background: gray; width: 100px; height: 30px;"><a class="text_a">Alert_CP_R</a></div>
+		</div>
+		<div class="cabon_bord" style="margin: 1px; width: 1000px; height: 150px;">
+			{% if DU_OL == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise;" onclick="unit_click('DU_OL')">
+			{% else %}<div class="du demont" style="margin: 1px;" onclick="unit_click('DU_OL')">
+			{% endif %}<a class="text_a">DU OL</a></div>
+			{% if DU_IL == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise;" onclick="unit_click('DU_IL')">
+			{% else %}<div class="du demont" style="margin: 1px;" onclick="unit_click('DU_IL')">
+			{% endif %}<a class="text_a">DU IL</a></div>
+			<div style="margin: 1px; background: transparent;">
+				{% if ISIS_MFD == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 48px; height: 50px;" onclick="unit_click('ISIS_MFD')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 48px; height: 50px;" onclick="unit_click('ISIS_MFD')">
+				{% endif %}<a class="text_a">ISIS<br>MFD</a></div>
+				<div class="mcu1_gor" style="margin: 1px; background: gray; width: 48px; height: 90px;"><a class="text_a">LGCP</a></div>
+			</div>
+			{% if DU_IR == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise;" onclick="unit_click('DU_IR')">
+			{% else %}<div class="du demont" style="margin: 1px;" onclick="unit_click('DU_IR')">
+			{% endif %}<a class="text_a">DU IR</a></div>
+			{% if DU_OR == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise;" onclick="unit_click('DU_OR')">
+			{% else %}<div class="du demont" style="margin: 1px;" onclick="unit_click('DU_OR')">
+			{% endif %}<a class="text_a">DU OR</a></div>
+		</div>
+		<div class="cabon_bord" style="margin: 1px; width: 1000px; height: 190px; ">
+			{% if RBPU_L == 'Монтаж' %}<div class="du" style="margin-right: 100px; color: turquoise;" onclick="unit_click('RBPU_L')">
+			{% else %}<div class="du demont" style="margin-right: 100px;" onclick="unit_click('RBPU_L')">
+			{% endif %}<a class="text_a">RBPU L</a></div>
+			{% if RBPU_R == 'Монтаж' %}<div class="du" style="margin-left: 100px; color: turquoise;" onclick="unit_click('RBPU_R')">
+			{% else %}<div class="du demont" style="margin-left: 100px;" onclick="unit_click('RBPU_R')">
+			{% endif %}<a class="text_a">RBPU R</a></div>
+		</div>
+	</div>
+	<div class="cabin" style="flex-direction: row;">
+		<div class="cabon_bord_vert">
+			<div class="du" style="margin: 11px; background: gray; width: 100px; height: 130px;"><a class="text_a">EFB1_CU</a></div>
+			<div class="cabon_bord" style="margin: 1px; width: 440px; height: 30px; justify-content: left;">
+				<div class="du" style="margin-left: 30px; background: gray; width: 100px; height: 30px;"><a class="text_a">Panic_CP1</a></div>
+			</div>
+
+			<div class="cabon_bord" style="margin: 1px; width: 440px;">
+				<div class="du" style="margin-right: 25px; background: gray; width: 80px; height: 80px;"><a class="text_a">SP_C<br>apt</a></div>
+				<div class="du" style="margin: 1px; background: gray; width: 100px; height: 130px; transform:rotate(-30deg);"><a class="text_a">EFB1_DU</a></div>
+			</div>
+
+			{% if USSU_L == 'Монтаж' %}<div class="du" style="margin-top: 25px;  color: turquoise; width: 100px; height: 170px;" onclick="unit_click('USSU_L')">
+			{% else %}<div class="du demont" style="margin-top: 25px;  width: 100px; height: 170px;" onclick="unit_click('USSU_L')">
+			{% endif %}<a class="text_a">USSU L</a></div>
+			<div class="du" style="margin: 1px; background: gray; width: 90px; height: 30px;"><a class="text_a">JB1</a></div>
+			<div class="du" style="margin: 11px; background: gray; width: 170px; height: 30px;"><a class="text_a">HAND_MIC_L</a></div>
+		</div>
+		<div class="cabon_bord_vert">
+			{% if DU_CD == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise;" onclick="unit_click('DU_CD')">
+			{% else %}<div class="du demont" style="margin: 1px;" onclick="unit_click('DU_CD')">
+			{% endif %}<a class="text_a">DU CD</a></div>
+			<div class="cabon_bord" style="margin: 5px; width: 440px;">
+				{% if TBCP_L == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 100px; height: 100px;" onclick="unit_click('TBCP_L')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 100px; height: 100px;" onclick="unit_click('TBCP_L')">
+				{% endif %}<a class="text_a">TBCP L</a></div>
+				{% if TQA == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 80px; height: 120px;" onclick="unit_click('TQA')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 80px; height: 120px;" onclick="unit_click('TQA')">
+				{% endif %}<a class="text_a">TQA</a></div>
+				{% if TBCP_R == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 100px; height: 100px;" onclick="unit_click('TBCP_R')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 100px; height: 100px;" onclick="unit_click('TBCP_R')">
+				{% endif %}<a class="text_a">TBCP R</a></div>
+			</div>
+			<div class="cabon_bord" style="margin: 1px; height: 60px; width: 440px;">
+				{% if MFCP_1 == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 80px; height: 60px;" onclick="unit_click('MFCP_1')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 80px; height: 60px;" onclick="unit_click('MFCP_1')">
+				{% endif %}<a class="text_a">MFCP 1</a></div>
+				<div class="du" style="margin: 1px; background: gray; width: 80px; height: 60px;"><a class="text_a">ENG_CP</a></div>
+				{% if MFCP_2 == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 80px; height: 60px;" onclick="unit_click('MFCP_2')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 80px; height: 60px;" onclick="unit_click('MFCP_2')">
+				{% endif %}<a class="text_a">MFCP 2</a></div>
+			</div>
+			<div class="cabon_bord" style="margin: 1px; height: 60px; width: 440px;">
+				{% if B7_21_1 == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 80px; height: 60px;" onclick="unit_click('B7_21_1')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 80px; height: 60px;" onclick="unit_click('B7_21_1')">
+				{% endif %}<a class="text_a">B7_21_1</a></div>
+				{% if TCP == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 80px; height: 40px;" onclick="unit_click('TCP')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 80px; height: 40px;" onclick="unit_click('TCP')">
+				{% endif %}<a class="text_a">TCP</a></div>
+				{% if B7_21_2 == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 80px; height: 60px;" onclick="unit_click('B7_21_2')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 80px; height: 60px;" onclick="unit_click('B7_21_2')">
+				{% endif %}<a class="text_a">B7_21_2</a></div>
+			</div>
+			<div class="cabon_bord" style="margin: 1px; height: 60px; width: 440px;">
+				{% if SCM == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 80px; height: 60px;" onclick="unit_click('SCM')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 80px; height: 60px;" onclick="unit_click('SCM')">
+				{% endif %}<a class="text_a">SCM</a></div>
+				{% if B7_21_3 == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 80px; height: 60px;" onclick="unit_click('B7_21_3')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 80px; height: 60px;" onclick="unit_click('B7_21_3')">
+				{% endif %}<a class="text_a">B7_21_3</a></div>
+				{% if FCM == 'Монтаж' %}<div class="du" style="margin: 1px; color: turquoise; width: 80px; height: 60px;" onclick="unit_click('FCM')">
+				{% else %}<div class="du demont" style="margin: 1px; width: 80px; height: 60px;" onclick="unit_click('FCM')">
+				{% endif %}<a class="text_a">FCM</a></div>
+			</div>
+			<div class="cabon_bord" style="margin: 1px; height: 30px; width: 440px;">
+				{% if BRT_CP_CDU == 'Монтаж' %}<div class="mcu1_gor" style="margin: 1px; color: turquoise; width: 100px; height: 30px;" onclick="unit_click('BRT_CP_CDU')">
+				{% else %}<div class="mcu1_gor demont" style="margin: 1px; width: 100px; height: 30px;" onclick="unit_click('BRT_CP_CDU')">
+				{% endif %}<a class="text_a">BRT_CP_CDU</a></div>
+			</div>
+			
+		</div>
+		
+		<div class="cabon_bord_vert">
+			<div class="du" style="margin: 11px; background: gray; width: 100px; height: 130px;"><a class="text_a">EFB2_CU</a></div>
+			<div class="cabon_bord" style="margin: 1px; width: 440px; height: 30px; justify-content: right;">
+				<div class="du" style="margin-right: 30px; background: gray; width: 100px; height: 30px;"><a class="text_a">Panic_CP2</a></div>
+			</div>
+			<div class="cabon_bord" style="margin: 1px; width: 440px;">			
+				<div class="du" style="margin: 1px; background: gray; width: 100px; height: 130px; transform:rotate(30deg);"><a class="text_a">EFB2_DU</a></div>
+				<div class="du" style="margin-left: 25px; background: gray; width: 80px; height: 80px;"><a class="text_a">SP_C<br>o</a></div>
+			</div>
+			{% if USSU_R == 'Монтаж' %}<div class="du" style="margin-top: 25px;  color: turquoise; width: 100px; height: 170px;" onclick="unit_click('USSU_R')">
+			{% else %}<div class="du demont" style="margin-top: 25px;  width: 100px; height: 170px;" onclick="unit_click('USSU_R')">
+			{% endif %}<a class="text_a">USSU R</a></div>
+			<div class="du" style="margin: 1px; background: gray; width: 90px; height: 30px;"><a class="text_a">JB2</a></div>
+			<div class="du" style="margin: 11px; background: gray; width: 170px; height: 30px;"><a class="text_a">HAND_MIC_R</a></div>
+		</div>
+	</div>
+	
+{% endblock %} 

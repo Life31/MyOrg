@@ -1,0 +1,154 @@
+<style type="text/css"> 
+    .log {
+	border-collapse: separate;
+	border-spacing: 2px 1px;
+    border: 4px solid black;
+    font-size: small;
+    }
+    .log th {
+	text-align: center;
+	background:rgb(164, 214, 243);
+    font-weight: bold;
+	padding: 0px 0px 0px 0px;
+    width: 200px;
+	margin: 0;
+    }
+    .log td {
+	text-align: center;
+
+	padding: 0px 0px 0px 0px;
+	margin: 0;
+    }
+    .lol:nth-child(odd){
+        background-color: transparent;
+    }
+    .lol:nth-child(even){
+        background-color: rgb(243, 239, 239);
+    }
+
+</style>
+
+{% extends "base.html" %}
+{% load cache %}
+{% load static %}
+{% load user_filters %}
+{% block title %}Склад / Изолятор{% endblock %}
+{% block header %}
+    <a style="color: rgb(74, 177, 236); font-weight: bold; text-align: left;">Склад / Изолятор</a>
+    {% if not print %}
+    <a class="btn btn-sm btn-secondary"
+			style="margin-left: 10px; font-weight: bold; width: 200px; color: white;"
+            href="#" role="button">Сформировать отчет linux не работает[ url 'print_stor_inj' ]</a>
+    {% else %}
+        <a class="btn btn-sm btn-secondary"
+            style="margin-left: 10px; font-weight: bold; width: 150px; color: white;"
+            href="{% static url %}" role="button">Печать</a>
+    {% endif %}
+    
+    
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_pro.html' %}
+{% endblock %}
+{% load thumbnail %}
+{% block content %}
+    <table>
+        <tr>
+            {% for key, value in data.items %}
+                <td style="vertical-align: top;">
+                    <table class="log" border="1" style="width:300px;">
+                        <thead>
+                            <tr><th colspan="2" style="width:150px;">{{key}}</th></tr>
+                            <tr> <th>Изолятор</th><th>Склад</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for para in value %}
+                                <tr>
+                                    {% for block in para %}
+                                            {% if block == '' %}
+                                                <td></td>
+                                            {% else %}
+                                                <td>
+                                                    <div class="dropdown"> 
+                                                        <a class="btn" style="font-size: small;" href="#">{{block.number}} {{block.info}}</a>
+                                                        <!--div class="dropdown-content" style="background: silver;">
+                                                            <a class="btn btn-sm" href="#" role="button">Добавить</a>
+                                                            <a class="btn btn-sm" href="{% url 'block_edit' block.id %}" role="button">Редактировать</a>
+                                                            <a class="btn btn-sm" href="#" role="button">Копировать</a>
+                                                            <a class="btn btn-sm" href="#" role="button">Удалить</a>
+                                                            <h>Переместить</h>
+                                                            {% if block.block_state_id == 1 %}
+                                                                <a class="btn btn-sm" href="{% url 'on_where' block.id 'изолятор' %}" role="button">В изолятор</a>
+                                                            {% elif block.block_state_id == 2 %}
+                                                                <a class="btn btn-sm" href="{% url 'on_where' block.id 'склад' %}" role="button">В склад</a>
+                                                            {% endif %}	
+                                                        </div-->
+                                                    </div>
+                                                </td>
+                                            {% endif %}
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            {% endfor %}
+        </tr>
+    </table>
+
+        {% for key, value in dd.items %}
+            <table class="log" border="1">
+                <thead>
+                    <tr>
+                        <th style="vertical-align: center; width: 100px;"></th>
+                        <th style="width: 400px; font-size: large;">Изолятор</th>
+                        <th style="width: 400px; font-size: large;">Склад</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <th style="width: 100px">
+                        <table>
+                            <tr><th>{{key}}</th></tr>
+                        </table>
+                    </th>
+                    {% for blocks in value %}
+                        <td style="vertical-align: top;">
+                            <table border="0" style="width: 400px; border-collapse: separate; border-spacing: 2px 1px;">
+                                {% for block in blocks %}                                            
+                                    {% for b in block %}    
+                                        <tr class="lol">                                                
+                                            <td>
+                                                <div class="dropdown"> 
+                                                    <a class="btn" style="font-size: small;" href="#">{{b.number}} {{b.info}}</a>
+                                                    <!--div class="dropdown-content" style="background: silver;">
+                                                        <a class="btn btn-sm" href="#" role="button">Добавить</a>
+                                                        <a class="btn btn-sm" href="#" role="button">Редактировать</a>
+                                                        <a class="btn btn-sm" href="#" role="button">Копировать</a>
+                                                        <a class="btn btn-sm" href="#" role="button">Удалить</a>
+                                                        <a class="btn btn-sm" href="#" role="button">Печать</a>
+                                                        <h>Переместить</h>
+                                                        {% if b.on_storage %}
+                                                            <a class="btn btn-sm" href="{% url 'on_where' b.id 'изолятор' %}" role="button">В изолятор</a>
+                                                        {% elif b.on_injector %}
+                                                            <a class="btn btn-sm" href="{% url 'on_where' b.id 'склад' %}" role="button">В склад</a>
+                                                        {% endif %}	
+                                                    </div-->
+                                                </div>
+                                            </td>
+                                            </tr>
+                                    {% endfor %}                                                         
+                                {% endfor %} 
+                            </table>
+                        </td>           
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}  
+        <!--script>
+            function viewPrint()
+            {
+                document.getElementById("print").style.display = "inline"
+            }
+        </script-->
+{% endblock %} 
+

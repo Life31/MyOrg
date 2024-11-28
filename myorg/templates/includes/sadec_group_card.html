@@ -1,0 +1,27 @@
+{% load thumbnail %}
+<div class="card">
+	
+
+    <div class="card-body">
+        {% thumbnail group.image "400x400" crop="center" upscale=True as im %}
+            <img class="card-img" src="{{ im.url }}">
+        {% endthumbnail %}
+    </div>
+    <div class="card-body">
+        <div class="h3">
+            {{ group.title }}
+        </div>
+        <div class="h4 text-muted">
+            <a name="group_tu" href="{% url 'sadec_groups_tu' group.tu %}">
+                {{ group.tu }}
+            </a>
+        </div>
+    </div>
+    <ul class="list-group list-group-flush" >
+        <li class="list-group-item">
+            <a name="group_description" href="{% url 'sadec_groups_creator_ok' group.descrip_slug %}">
+                {{ group.description }}
+            </a>
+        </li>
+    </ul>
+</div>

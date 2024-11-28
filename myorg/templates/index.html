@@ -1,0 +1,245 @@
+<style>
+	
+	.form_radio_btn {
+		height: 36px;
+		font-family: Calibri;
+		font-size: 18px;
+		font-weight: 400;
+		line-height: 20px;
+		letter-spacing: 0em;
+	}
+	
+	.lbl {
+		display: inline-block;
+		cursor: pointer;
+		padding: 0px 15px;
+		line-height: 34px;
+
+		border-radius: 6px;
+		user-select: none;
+		background: #B3B3B3;
+		font-weight: bold;
+		color: white;
+		border-radius: 18px;
+		margin-left: 5px;
+	}
+	.show {
+		margin-left: 10px;
+		width: 240px;
+		background: #6B5B95;
+		padding: 0px 15px;
+		line-height: 34px;
+		border: 1px solid black;
+		border-radius: 6px;
+		height: 36px;
+		font-weight: bold;
+		color: white;
+	}
+	.form_radio_btn:hover, .show:hover {
+		transition: 0.4s;
+		transform: scale(110%);
+	}
+</style>
+{% extends "base.html" %}
+{% load cache %}
+{% load user_filters %}
+{% block header %}
+<div style="display: flex; flex-direction: row; justify-content: left; align-items: center;">
+	{% with request.resolver_match.view_name as view_name %}
+		
+			{% if view_name  == 'index' %}
+				<a style="color: black; font-weight: bold; text-align: left; line-height: 10px;"></a>
+			{% else %}
+				<a style="color: black; font-weight: bold; text-align: left; line-height: 10px;">Заявки на {{stend}}</a>
+			{% endif %}
+			<!--{% if view_name  == 'stend' %}
+			<a class="btn btn-sm btn-primary"
+			style="margin-left: 20px; width: 250px; color: white; height: 30px; border-radius: 25px; font-family: Calibri;
+			font-size: 18px;
+			font-weight: 400;
+			line-height: 20px;
+			letter-spacing: 0em;"
+					href="{% url 'stend_with_over' group_id %}">
+					отобразить завершенные
+				</a>
+			{% elif view_name  == 'stend_with_over' %}
+			<a class="btn btn-sm btn-primary"
+			style="margin-left: 20px; width: 250px; color: white; height: 30px; border-radius: 25px; font-family: Calibri;
+			font-size: 18px;
+			font-weight: 400;
+			line-height: 20px;
+			letter-spacing: 0em;"
+						href="{% url 'stend' group_id %}">
+						скрыть завершенные
+					</a>
+			{% elif view_name  == 'stend_filtr' %}
+				{% with request.get_full_path|url_to_filtr as f %}
+				<a class="btn btn-sm btn-primary"
+				style="margin-left: 20px; width: 250px; color: white; height: 30px; border-radius: 25px; font-family: Calibri;
+				font-size: 18px;
+				font-weight: 400;
+				line-height: 20px;
+				letter-spacing: 0em;"
+						href="{% url 'stend_filtr_with_over' group_id f %}">
+						отобразить завершенные
+					</a>
+				{% endwith %}
+			{% elif view_name  == 'stend_filtr_with_over' %}
+				{% with request.get_full_path|url_to_filtr as f %}
+				<a class="btn btn-sm btn-primary"
+				style="margin-left: 20px; width: 250px; color: white; height: 30px; border-radius: 25px; font-family: Calibri;
+				font-size: 18px;
+				font-weight: 400;
+				line-height: 20px;
+				letter-spacing: 0em;"
+						href="{% url 'stend_filtr' group_id f %}">
+						скрыть завершенные
+					</a>
+				{% endwith %}
+			{% endif %}-->
+		
+	{% endwith %}
+	<div class="btn-group" style="margin-left: 20px; height: 40px;"> 
+		{% with request.resolver_match.view_name as view_name and request.get_full_path|url_to_filtr as ff%}
+			<!--{% if view_name  == 'stend_with_over' or view_name  == 'stend_filtr_with_over' %}
+				{% for f in filtrs %}
+						<a class="btn btn-sm btn-secondary"
+						{% if f == ff %}
+							style="width: 60px; background: red; font-weight: bold; border: 1px solid black; color: white;"
+						{% else %}
+							style="width: 60px; background: #6B5B95; font-weight: bold; border: 1px solid black; color: white;"
+						{% endif %}
+						href="{% url 'stend_filtr_with_over' group_id f %}">{% if f == '_' %}Все{% else %}{{f}}{% endif %}</a>		
+				{% endfor %}
+				{% for f in filtrs %}
+					<input type="radio" name="r1" id="{{f}}" value="{{f}}">
+					{% if f != '_' %}
+						<label for='{{f}}'>{{f}}</label>
+					{% else %}
+						<label for='{{f}}'>Все</label>
+					{% endif %}
+				{% endfor %}
+			{% else %}
+				{% for f in filtrs %}
+					<a class="btn btn-sm btn-secondary"
+					{% if f == ff %}
+						style="width: 60px; background: red; font-weight: bold; border: 1px solid black; color: white;"
+					{% else %}
+						style="width: 60px; background: #6B5B95; font-weight: bold; border: 1px solid black; color: white;"
+					{% endif %}
+					href="{% url 'stend_filtr' group_id f %}">{% if f == '_' %}Все{% else %}{{f}}{% endif %}</a>
+				{% endfor %}-->
+				{% for f in filtrs %}
+					{% if f != '_' %}
+					<div class="form_radio_btn" style="display: inline-block;">
+						<input type="radio" name="r1" id="{{f}}" value="{{f}}" style="display: none;">
+						<label class="lbl {{f}}" for='{{f}}'>{{f}}</label>
+					</div>
+					{% else %}
+					<div class="form_radio_btn" style="display: inline-block;"> 
+						<input type="radio" name="r1" id="{{f}}" value="{{f}}" style="display: none;">
+						<label class="lbl {{f}}" for='{{f}}'>Все</label>
+					</div>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+		{% endwith %}
+	</div>
+</div>
+
+{% endblock %}
+{% load thumbnail %}
+{% block aside %}
+    {% include 'includes/aside.html' %}
+{% endblock %}
+{% block content %}
+	{% with request.resolver_match.view_name as view_name %}
+		{% if view_name  == 'index' %}
+			{% include "includes/balls.html" %}
+		{% endif %}
+	{% endwith %}
+
+	{% for key, value in data_check.items %}
+		<table border="1" width=120% style="border: 1px solid #f7f7f7;">
+			<tr><strong class="d-block text-black" style="text-align: left;"><th colspan="10">{{key}}</th></strong></tr>
+			{% include "includes/head_for_table.html" with times=24 key=key %}
+			{% for post in value %}
+				{% include "includes/post_table_item.html" with post=post key=key %}
+			{% endfor %}
+			{% include "includes/foot_for_table.html" with times=24 key=key %}
+		</table>
+	{% endfor %}  
+	<script>
+		function check(obj, value){
+			if(obj.includes('CPIOM' + value) | (obj.indexOf("(") != -1 & obj.indexOf(")") != -1 & obj.slice(
+				obj.indexOf("("), obj.indexOf(")")).includes(value))){
+					return 1;
+				}
+			return 0;
+		}
+		function check_mdu(obj, value){
+			if(obj.includes(value) | (obj.indexOf("(") != -1 & obj.indexOf(")") != -1 & obj.slice(
+				obj.indexOf("("), obj.indexOf(")")).includes(value))){
+					return 1;
+				}
+			return 0;
+		}
+		const obj= JSON.parse("{{json_filtrs|escapejs}}");
+		let tables = document.getElementsByTagName('table');
+		let rad = document.getElementsByName('r1');
+		let lbls = document.getElementsByClassName('lbl');
+		for (let r of rad) { r.addEventListener('change', showSelected) }
+		const req__stend = document.getElementsByClassName("text-left");	
+		function showSelected(e) {
+			if (this.checked) {
+				for (let lbl of lbls) { if (lbl.classList.contains(this.value)) {lbl.style.color = 'red'; } else { lbl.style.color = 'white'; } }
+				if (this.value == 'MDU') {
+					for(let table of tables){
+						
+						let howMany = 0;
+						let trs = table.getElementsByClassName("text-left");
+						if(trs.length != 0){
+							for (let t of trs) { howMany += check_mdu(t.textContent.trim(), this.value);}
+							if(howMany == 0){ table.hidden = true;}else{table.hidden = false;}
+						}else{table.hidden = true;}
+					}
+
+
+					for (let req of req__stend) {
+						if(req.textContent.trim().includes(this.value)) {
+							req.parentElement.parentElement.parentElement.hidden = false;
+						}else{
+							req.parentElement.parentElement.parentElement.hidden = true;
+						};		
+					}
+				}
+				else if (this.value == '_') {
+					for(let table of tables){table.hidden = false;}
+					for (let req of req__stend) {
+						req.parentElement.parentElement.parentElement.hidden = false;
+					}
+				}
+				else {
+					
+					for(let table of tables){
+						
+						let howMany = 0;
+						let trs = table.getElementsByClassName("text-left");
+						if(trs.length != 0){
+							for (let t of trs) { howMany += check(t.textContent.trim(), this.value);}
+							if(howMany == 0){ table.hidden = true;}else{table.hidden = false;}
+						}else{table.hidden = true;}
+					}
+					
+					for (let req of req__stend) {
+						if(check(req.textContent.trim(), this.value) == 1) {
+							req.parentElement.parentElement.parentElement.hidden = false;
+						}else{
+							req.parentElement.parentElement.parentElement.hidden = true;
+						};		
+					}
+				}
+			}
+		}	
+	</script>
+{% endblock %} 

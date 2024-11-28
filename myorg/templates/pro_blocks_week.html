@@ -1,0 +1,120 @@
+<style type="text/css"> 
+    .log {
+	border-collapse: separate;
+	border-spacing: 2px 1px;
+    }
+    .log th {
+	text-align: center;
+	background:rgb(164, 214, 243);
+    font-weight: bold;
+	padding: 0px 10px 0px 10px;
+	margin: 0;
+    }
+    .log td {
+	text-align: center;
+
+	padding: 0px 10px 0px 10px;
+	margin: 0;
+    }
+</style>
+
+{% extends "base.html" %}
+{% load cache %}
+{% load static %}
+{% load user_filters %}
+{% block title %}Недельный отчет{% endblock %}
+{% block header %}
+    <a style="color: rgb(74, 177, 236); font-weight: bold; text-align: left;">Недельный отчет</a>
+
+    <a class="btn btn-sm btn-secondary"
+			style="margin-left: 10px; font-weight: bold; width: 250px; color: white;"
+			href="{% url 'blocks_week' day|pro_week_before 'False' %}">
+                    &laquo;&laquo;  Предыдущая неделя</a>
+    <a class="btn btn-sm btn-secondary"
+			style="margin-left: 10px; font-weight: bold; width: 250px; color: white;"
+			href="{% url 'blocks_week' day|pro_week_future 'False' %}">
+                    Следующая неделя  &raquo;&raquo;</a>
+    {% if not print %}
+    <a class="btn btn-sm btn-secondary"
+                    style="margin-left: 10px; font-weight: bold; width: 200px; color: white;"
+                    href="#" role="button">Сформировать отчет linux не работает [ url 'print_week' day ]</a>
+    {% else %}
+                <a class="btn btn-sm btn-secondary"
+                    style="margin-left: 10px; font-weight: bold; width: 200px; color: white;"
+                    href="{% static url %}" role="button">Печать</a>
+    {% endif %}
+
+
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_pro.html' %}
+{% endblock %}
+{% load thumbnail %}
+
+{% block content %}  
+    <div><a style="color: rgb(74, 177, 236); font-weight: bold; text-align: left;"> {{start_day|date:"d.m.Y"}} - {{end_day|date:"d.m.Y"}} </a></div>
+    <table class="log" border="1" style="width: 100%;">
+        <thead>
+
+            <tr><th rowspan="2"></th><th colspan="2">Изготовлено</th><th rowspan="2">Вх. контроль</th><th rowspan="2">Отремонтирован</th><th rowspan="2">В ремонте у поставщика</th></tr>
+            <tr><th>Год</th><th>Неделя</th></tr>
+        </thead>
+        <tbody>
+            {% for key, value in f_lens.items %}
+                {% for k, v in value.items %}
+                    <tr>
+                        <th>{{key}}</th>
+                        <th>{{v}}</th>
+                        <th style="vertical-align: top;">
+                            <table>
+                                {% for block in blocks %}
+                                    {% if block.block_type_id == k %}
+                                        {% if block.on_ready and day|day_in_range:block.day %}
+                                            <tr><th>{{block.number}} {{block.info}}</th></tr>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </table>
+                        </th>
+                        <th style="vertical-align: top;">
+                            <table>
+                                {% for block in blocks %}
+                                    {% if block.block_type_id == k %}
+                                        {% if block.block_state_id == 3 and day|day_more_range:block.block_state_day %}
+                                            <tr><th>{{block.number}} {{block.info}}</th></tr>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </table>
+                        </th>
+                        <th style="vertical-align: top;">
+                            <table>
+                                {% for block in blocks %}
+                                    {% if block.block_type_id == k %}
+                                        {% if block.block_state_id == 4 and day|day_more_range:block.block_state_day %}
+                                            <tr><th>{{block.number}} {{block.info}}</th></tr>
+                                        {% elif block.id in ids %}
+                                            <tr><th>{{block.number}} {{block.info}}</th></tr>
+                                        {% endif %}
+                                    {% endif %}
+                                
+                                {% endfor %}
+                            </table>
+                        </th>
+                        <th style="vertical-align: top;">
+                            <table>
+                                {% for block in blocks %}
+                                    {% if block.block_type_id == k %}
+                                        {% if block.block_state_id == 5 and day|day_more_range:block.block_state_day %}
+                                            <tr><th>{{block.number}} {{block.info}}</th></tr>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </table>
+                        </th>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %} 

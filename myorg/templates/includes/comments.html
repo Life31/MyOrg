@@ -1,0 +1,48 @@
+<!-- Форма добавления комментария -->
+{% load user_filters %}
+
+{% if user.is_authenticated %}
+	<div style="margin-top: 10px; margin-left: 15px; width: 700px;">
+		<form method="post" action="{% url 'add_comment' post.author.username post.id %}">
+			{% csrf_token %}
+			<div class="h5" style="text-align: left; color: #808080; font-family: Calibri;
+			font-size: 18px;
+			font-weight: 400;
+			line-height: 24px;
+			letter-spacing: 0em;">Добавить комментарий:</div>
+
+				<div class="form-group" style="margin: 2px;">
+					{{ form.text|addclass:"form-control" }}
+				</div>
+				<div class="form-group" style="display: flex; flex-direction: row; justify-content: left;">
+					<button type="submit" class="btn manage" style="margin: 2px;">Отправить</button>
+				</div>
+				
+				
+
+		</form>
+	</div>
+{% endif %}
+<!-- Форма добавления комментария -->
+
+{% if post.comments.all.count != 0 %}
+	{% for item in post.comments.all %}
+		<div style="width: 700px; margin-left: 15px; display: flex; flex-direction: column; background: white; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);">
+			<div style="text-align: left; padding: 4px; margin-left: 10px;"><a>{{ item.text | linebreaksbr }}</a></div>
+			<div class="card-header" style="display: flex; flex-direction: row; justify-content: left; padding: 0px; align-items: center; border-radius: 10px;">
+				<small class="text-muted">
+					<a style="margin-left: 10px;" href="{% url 'profile' item.author.username %}">
+						{{ item.author.get_full_name }}
+					</a>
+				</small>
+				<small class="text-muted" style="margin: 4px;">{{ item.created|date:"d m Y" }}</small>
+				{% if item.author == request.user %}   
+					<small class="text-muted"><a style="margin: 4px;" href="{% url 'delete_comment' post.author post.id item.id %}" role="button">Удалить</a></small>
+				{% endif %}
+			</div>
+		</div>
+	{% endfor %}
+{% endif %}
+
+
+

@@ -1,0 +1,270 @@
+﻿{% extends "base.html" %}
+{% block header %}
+	<div style="display: flex; flex-direction: row;">
+		<a style="color: black; font-weight: bold; text-align: left; border-radius: 10px;">Заявка {{ post.text }}</a>
+		<div style="display: flex; flex-direction: row; justify-content: right; align-items: center; margin: auto;">
+			{% if post.task_state_id == 1 or post.task_state_id == 4 %}
+				<a class="text-muted">Статус: <span style="color:red;">{{ post.task_state }}</span></a>
+			{% else %}	
+				<a class="text-muted">Статус: <span style="color:green;">{{ post.task_state }}</span></a>
+			{% endif %}
+		</div>
+	</div>	
+{% endblock %}
+{% load user_filters %}
+{% block content %}
+	<style>
+		.th_post_left{
+			width: 250px; text-align: left; border-radius: 10px 0px 0px 10px; color: #808080; font-family: Calibri;
+			font-size: 18px;
+			font-weight: 400;
+			line-height: 24px;
+			letter-spacing: 0em;
+			padding-left: 10px;
+		}
+		.th_post_right{
+			width: 450px; text-align: left; border-radius: 0px 10px 10px 0px; font-family: Calibri;
+			font-size: 18px;
+			font-weight: 400;
+			line-height: 24px;
+			letter-spacing: 0em;
+			padding-left: 10px;
+		}
+	</style>
+	<div style="display: flex; flex-direction: row; width: 120%;">
+		<div>
+			{% include 'includes/author_card.html' %}
+		</div>
+		<div>
+			<div>
+				<div class="card-body" style="padding-top: 0px;">
+					<div style="display: flex; flex-direction: row; margin-top: 0px;">
+						<table border="0" style="border-collapse: separate; border-spacing: 0px 3px;">
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Стенд</div></th>
+								<th class="th_post_right"><div>{{ post.group }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Номер заявки</div></th>
+								<th class="th_post_right"><div>{{ post.text }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Дата испытаний</div></th>
+								<th class="th_post_right"><div>{{ post.day|date:"d M Y" }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Продолжительность испытаний</div></th>
+								<th class="th_post_right"><div>с {{ post.t_start }} до {{ post.t_stop }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Подразделение-инициатор</div></th>
+								<th class="th_post_right"><div>{{ post.unit }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Цель проведения испытаний</div></th>
+								<th class="th_post_right"><div>{{ post.purpose }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Основания для проведения испытаний</div></th>
+								<th class="th_post_right"><div>{{ post.reason }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Объект испытаний</div></th>
+								<th class="th_post_right"><div>{{ post.test_object }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Минимальная конфигурация стенда</div></th>
+								<th class="th_post_right"><div>{{ post.configuration }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Состав бригады испытателей</div></th>
+								<th class="th_post_right"><div>{{ post.testers }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Необходимый инструмент</div></th>
+								<th class="th_post_right"><div>{{ post.instruments }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Дополнительные требования</div></th>
+								<th class="th_post_right"><div>{{ post.add_requirements }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Документ</div></th>
+								<th class="th_post_right"><div>{{ post.doc }}</div></th>
+							</tr>
+							<tr style="background: #E6E6E6;">
+								<th class="th_post_left"><div>Дата и время подачи заявки</div></th>
+								<th class="th_post_right"><div>{{ post.pub_date }}</div></th>
+							</tr>
+						</table>
+						<div style="display: flex; flex-direction: column;">
+							{% if user.username in rights %}
+								<div><a class="btn manage" href="{% url 'post_edit' post.author post.id %}">Править</a></div>
+								<div><a class="btn manage" href="{% url 'post_copy' post.author post.id %}">Шаблон</a></div>
+								<div><a class="btn manage" href="{% url 'post_delete' post.author post.id %}">Удалить</a></div>
+							{% endif %}					
+							{% if user == post.author and user.username not in rights %}
+								{% if post.task_state_id == 1 or post.task_state_id == 4 %}
+									<div><a class="btn manage" href="{% url 'post_edit' post.author post.id %}">Править</a></div>
+								{% endif %}
+								{% if post.task_state_id != 3 %}
+									<a class="btn btn-sm text-muted" style="font-weight: bold;" href="{% url 'post_view_change' post.author post.id 3 %}" role="button">
+										Завершить
+									</a>
+								{% endif %}	
+								<div><a class="btn manage" href="{% url 'post_copy' post.author post.id %}">Шаблон</a></div>
+								{% if post.task_state_id == 1 or post.task_state_id == 4 %}
+									<a class="btn btn-sm text-muted" style="font-weight: bold;" href="{% url 'post_delete' post.author post.id %}" role="button">
+										Удалить
+									</a>
+								{% endif %}
+							{% endif %}
+							{% if user.username in rights %}
+								<div><a class="btn manage" href="{% url 'post_view_change' post.author post.id 2 %}">Подтвердить</a></div>
+								<div><a class="btn manage" href="{% url 'post_view_change' post.author post.id 3 %}">Завершить</a></div>
+								<div><a class="btn manage" href="{% url 'post_view_change' post.author post.id 4 %}">Отклонить</a></div>
+							{% endif %}
+							{% if post.text|check_for_fib == 'FIB-' %}
+								{% if user == post.author or user.username in rights %}
+									<div>Удалить:</div>
+									{% for name in post.text|get_fib_nambers %}
+										{% if name != "" and name != None %}
+										<div>
+											<a class="btn manage" style="background: rgb(170, 162, 162); margin: 0px 0px 4px 35px;"
+													href="{% url 'fib_multi_plus' post.group_id name post.id %}">fib {{ name }}</a>
+										</div>
+										{% endif %}
+									{% endfor %}
+									<div>Добавить:</div>
+									{% for name in post.text|get_fib_not_in_nambers %}
+										{% if name != "" and name != None %}
+										<div>
+											<a class="btn manage" style="background: rgb(241, 177, 57); margin: 0px 0px 4px 35px;"
+													href="{% url 'fib_multi_plus' post.group_id name post.id %}">fib {{ name }}</a>
+										</div>
+										{% endif %}
+									{% endfor %}
+								{% endif %}
+							{% endif %}
+							
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style="width: 100%; font-weight: bold;">
+				{% include "includes/comments.html" %}
+			</div>
+			<style>
+				.manage {
+					border-radius: 15px;
+					background: black;
+					color: white;
+					box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+					width: 130px;
+					margin: 0px 0px 10px 35px;
+
+				}
+			</style>
+			{% if user == post.author and post|show_rele %}
+				<!--div class="card my-2" style="border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);"> 
+					<div class="card-body">
+						<div style="font-size:24pt;text-align: left; border-radius: 10px;">Реле FIB</div>
+						<div style="font-size:12pt;text-align: left; border-radius: 10px;">(только для перезагрузки)</div>
+						
+						<div style="display: flex; flex-direction: column;">
+							<div style="display: flex; flex-direction: row; justify-content: center; align-items: center; background: rgb(74, 177, 236); margin: 0px; padding: 0px;">
+								<div style="margin: 14px;">Реле</div>
+								<div style="margin: 14px;">Кнопки управления</div>
+								<div style="margin: 14px;">Статус</div>
+							</div>
+							{% for p in post|get_num_rele %}
+							<div style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+								<div style="margin: 14px;">FIB {{p}}</div>
+
+									<a class="btn manage" href="{% url 'rele_on_off' '1' p|minus_one 'on' %}" style="width: 70px; height: 35px; font-weight: bold;">ON</a>
+
+								<div style="margin: 7px;">
+									<a class="btn manage" href="{% url 'rele_on_off' '1' p|minus_one 'off' %}" style="width: 70px;  font-weight: bold;">OFF</a>
+								</div>
+								<div style="margin: 14px;"><a class="text" id="Relay{{p}}" style="color: rgb(74, 177, 236); font-weight: bold;"></a></div>
+							</div>
+							{% endfor %}
+						</div-->
+						<script type="text/javascript">
+							var IP_ADDR = "10.1.98.247"
+							var RequestPeriodMS = 1000
+							var ErrorCount = 0
+							var ErrorThreshold = 0
+							function StatusParse(StatusSTR)
+								{
+								if ( StatusSTR == null )
+									{
+									if ( ErrorCount === ErrorThreshold ) { document.getElementById("RelayST").innerHTML = "undefined"; }
+									else { ErrorCount++; }
+
+									return;
+									}
+								ErrorCount = 0;
+								var xmlDOC;
+								if (window.DOMParser)
+									{
+									parser = new DOMParser();
+									xmlDOC = parser.parseFromString(StatusSTR,"text/xml");
+									}
+									else
+										{
+										xmlDOC = new ActiveXObject("Microsoft.XMLDOM");
+										xmlDOC.async = false;
+										xmlDOC.loadXML(StatusSTR);
+										}
+								var RelayCounter = 0;
+								while (1)
+									{
+									var RelayOBJ = xmlDOC.getElementsByTagName("rl" + RelayCounter.toString() + "string");
+									if (RelayOBJ.length === 1)
+										{
+										RelayCounter++;
+										if ( document.getElementById("Relay"+RelayCounter))
+											{
+												if ( RelayOBJ[0].childNodes[0].nodeValue == 1 ) 
+													{ 
+													document.getElementById("Relay"+RelayCounter).innerHTML = "ON";
+													document.getElementById("Relay"+RelayCounter).style.color = "green";
+													}
+													else 
+														{ 
+														document.getElementById("Relay"+RelayCounter).innerHTML = "OFF";
+														document.getElementById("Relay"+RelayCounter).style.color = "red";}
+											}
+										}
+										else { break; }
+									}	
+								}	
+							function SendHttpAsyncRequest(Request)
+								{
+								var req = null;
+								if (window.XMLHttpRequest) { req = new XMLHttpRequest(); }
+								else if (window.ActiveXObject) { req = new ActiveXObject("Microsoft.XMLHTTP"); }
+								if (req) {
+									req.open('GET', Request, true);
+									req.timeout = 2000;
+									req.onreadystatechange = function (e) {
+										if (req.readyState == 4)
+											{
+											if (req.status == 200) { StatusParse(req.responseText); }
+											else { StatusParse(null); }
+											}
+										};
+									req.onerror = function (e) { StatusParse(null); }
+									req.ontimeout = function (e) { StatusParse(null); }
+									req.send();
+									}
+								}
+							setInterval(function(){SendHttpAsyncRequest("http://" + IP_ADDR + "/pstat.xml")}, RequestPeriodMS);
+						</script>
+					</div>	
+				</div>
+			{% endif %}
+		</div>
+    </div>
+{% endblock %}

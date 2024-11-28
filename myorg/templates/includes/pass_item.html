@@ -1,0 +1,43 @@
+<style type="text/css"> 
+    .table td {
+	font-weight: bold;
+	padding: 0px 10px 0px 10px;
+	margin: auto;
+	text-align:left;
+	}
+	.pass{
+	background: #c48f65;
+	text-align: center;
+	}
+</style>
+
+
+{% load static %}
+{% load user_filters %}
+    <!-- Отображение текста поста -->
+      <tr style="background: silver;">
+          <td class="pass">{{ pass.num }}</td>
+          <td>
+        <a href="{% url 'pass_name_filtr' pass.sec_name %}" >{{ pass.sec_name }}</a> {{ pass.name }} {{ pass.patro }}
+      </td>
+          <td>{{ pass.where }}</td>
+          <td>{{ pass.day|day_to_date }}</td>
+          <td>{{ pass.pasport }}</td>
+          <td>{{ pass.comment }}</td>
+          <td class="pass">
+            <div class="dropdown"> 
+              <div class="btn-sm btn-outline-primary" style="height: 30px;">☰</div>
+              <div class="dropdown-content">
+                {% if user.username in passes_rights %}
+                  <a class="btn btn-sm" href="{% url 'pass_copy' pass.id %}" role="button">Как шаблон</a>
+                  <a class="btn btn-sm" href="{% url 'pass_edit' pass.id %}" role="button">Править</a>
+                  <a class="btn btn-sm" href="{% url 'pass_delete' pass.id %}" role="button">Удалить</a>
+                  {% if pass.file.url != None %}
+                    <a class="btn btn-sm" href="{% static pass.file.url %}" role="button">Печать</a>
+                  {% endif %}	
+                {% endif %}	
+              </div>
+            </div>
+          </td>
+      </tr>
+

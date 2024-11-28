@@ -1,0 +1,57 @@
+<div class="card {{color}} mb-1 mt-1 shadow-sm">
+
+    <div class="container mb-1 mt-1">
+		<div class="row">
+			<div class="col-md-5">
+				<a name="post_text" href="{% url 'sadec_post' post.author.username post.id %}">
+					{{ post.text|linebreaksbr }}
+				</a>
+			</div>
+			<div class="col-md-1">
+				<p class="card-text">{{ post.percent }}</p>
+			</div>
+			<div class="col-md-2">
+				{% if post.group %}
+					<a class="card-link muted" href="{% url 'sadec_group' post.group.slug %}">
+						<strong class="d-block text-gray-dark">{{ post.group.title }}</strong>
+					</a>
+				{% endif %}
+			</div>
+			<div class="col-md-2">
+				<p class="card-text">
+					<a name="post_{{ post.id }}" href="{% url 'sadec_profile' post.author.username %}">
+						<strong class="d-block text-gray-dark">{{ post.author }}</strong>
+					</a>
+				</p>
+			</div>
+			<div class="col-md-2">
+				
+				{% if post.task_state_id == 3 %}
+					<a
+						class="btn btn-sm btn-success btn-block">
+						{{ post.task_state }}
+					</a>
+				{% elif post.task_state_id == 1 %}
+					<a
+						class="btn btn-sm btn-outline-primary btn-block">
+						{{ post.task_state }}
+					</a>
+				{% elif post.task_state_id == 4 %}
+					<a
+						class="btn btn-sm btn-outline-secondary btn-block">
+						{{ post.task_state }}
+					</a>
+				{% else %}
+					<a
+						class="btn btn-sm btn-outline-warning btn-block">
+						{{ post.task_state }}
+					</a>
+				
+				{% endif %}
+			</div>
+		</div>
+   </div>
+</div> 
+
+				
+				

@@ -1,0 +1,110 @@
+
+	<style>
+		.frame {
+			display: flex; flex-direction: row; justify-content: left; align-items: center;
+		}
+		.acc {
+			margin: 5px; display: flex; flex-direction: column; justify-content: top; align-items: center;
+			width: 200px; height: 320px; background: rgb(98, 226, 130); border-radius: 10px;
+		}
+		.head {
+			display: flex; flex-direction: row; justify-content: center; align-items: center;  width: 97%;
+			height: 40px; margin-bottom: -10px; background: white; border-radius: 10px;
+		}
+		.org {
+			display: flex; flex-direction: row; justify-content: left; align-items: center; color:black; font-size: 14px; width: 45%; margin: 10px;
+		}
+		.user {
+			display: flex; flex-direction: row; justify-content: right; align-items: center; color:black; font-size: 14px; width: 45%; margin: 10px;
+		}
+		.balance {
+			color:white; font-size: 44px; margin-bottom: -10px;
+		}
+		.in_out {
+			display: flex; flex-direction: row; justify-content: center; align-items: center; width: 90%;
+		}
+		.in_out_in {
+			display: flex; flex-direction: column; justify-content: center; align-items: center; width: 45%;
+		}
+		.in_out_out {
+			display: flex; flex-direction: column; justify-content: center; align-items: center; margin-left: 10px; width: 45%;
+		}
+		.in_word {
+			color:black; font-size: 14px; width: 90%; display: flex; flex-direction: row; justify-content: left;
+		}
+		.in_value {
+			color:black; font-size: 24px; width: 90%; justify-content: center; background: white; border-radius: 5px;
+		}
+		.out_word {
+			color:black; font-size: 14px; width: 90%; display: flex; flex-direction: row; justify-content: right;
+		}
+		.out_value {
+			color:black;  font-size: 24px; width: 90%; justify-content: center; background: white; border-radius: 5px;
+		}
+		.part {
+			display: flex; flex-direction: column; justify-content: left; align-items: center; width: 90%;
+		}
+		.part_name {
+			display: flex; flex-direction: row; justify-content: left; color:black; width: 90%; font-size: 14px; margin: 5px;
+		}
+		.part_text {
+			color:black; font-size: 12px; width: 90%; height: 20px; justify-content: center; background: white; border-radius: 5px; overflow-y: scroll;
+		}
+	</style>
+	
+	<div class="frame">
+		<div class="acc">
+			<div class="head">
+				<div class="org">Лига ставок</div><div class="user">Николай</div>
+			</div>
+			<div class="balance">12378</div>
+			<div class="in_out">
+				<div class="in_out_in">
+					<div class="in_word">Ввод</div><div class="in_value">8800</div>
+				</div>
+				<div class="in_out_out">
+					<div class="out_word">Вывод</div><div class="out_value" style="color:red;">16600</div>
+				</div>
+			</div>
+			<div class="part">
+				<div class="part_name">Стратегия</div>
+				<div class="part_text">Вводить суммы и проигрывать</div>
+			</div>
+			<div class="part">
+				<div class="part_name">Информация</div>
+				<div class="part_text">Не добавили в общедоступную акцию – аккаунт дискредитирован</div>
+			</div>
+			<div class="part">
+				<div class="part_name">Вывод</div>
+				<div class="part_text">Доступен. Нежелателен. Чужой.</div>
+			</div>
+		</div>
+		<div class="acc" style="background: rgb(248, 71, 40);">
+			<div class="head" style="background: black;">
+				<div class="org" style="color:white;">Leon</div><div class="user" style="color:white;">Николай</div>
+			</div>
+			<div class="balance">0</div>
+			<div class="in_out">
+				<div class="in_out_in">
+					<div class="in_word" style="color:white;">Ввод</div><div class="in_value">32050</div>
+				</div>
+				<div class="in_out_out">
+					<div class="out_word" style="color:white;">Вывод</div><div class="out_value" style="color:rgb(38, 231, 102);">4000</div>
+				</div>	
+			</div>
+			<div class="part">
+				<div class="part_name" style="color:white;">Стратегия</div>
+				<div class="part_text">Вводить суммы и копить баллы</div>
+			</div>
+			<div class="part">
+				<div class="part_name" style="color:white;">Информация</div>
+				<div class="part_text">Нельзя клонировать!</div>
+			</div>
+			<div class="part">
+				<div class="part_name" style="color:white;">Вывод</div>
+				<div class="part_text">Доступен.</div>
+			</div>
+		</div>
+	</div>
+	
+	

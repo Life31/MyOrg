@@ -1,0 +1,164 @@
+<style>
+    
+    .box {
+        display: flex; flex-direction: row; justify-content: center; align-items: center; width: 30px; height: 30px; margin: 2px; 
+        padding:10px; background: white; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2); 
+        cursor: pointer;
+    }
+    .ques {
+        display: flex; flex-direction: row; justify-content: left; align-items: center; width: 680px; margin: 10px;
+        padding: 10px; background: white; border-radius: 10px; box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2); 
+        cursor: pointer; 
+    }
+    .ball {
+        background: rgb(165, 167, 166); border-radius: 50%; width: 20px; height: 20px;
+        display: flex; flex-direction: row; justify-content: center; align-items: center;
+    }
+    .ball_in {
+        background: rgb(165, 167, 166); border-radius: 50%; width: 10px; height: 10px;
+    }  
+</style>
+
+{% extends "base.html" %}
+{% load cache %}
+{% load user_filters %}
+{% block title %}Тест{% endblock %}
+{% block header %}
+<div style="display: flex; flex-direction: row; justify-content: left; align-items: center; width: 80%; margin-left: 15px;">
+    {% with request.resolver_match.view_name as view_name %}
+        {% if view_name != "show_test" %}
+        <a style="color: black;">Тест "{{test_name}}"</a>
+        
+        {% endif %}
+    {% endwith %}
+</div>
+
+{% endblock %}
+{% block aside %}
+    {% include 'includes/aside_tests.html' %}
+{% endblock %}
+{% load static %}
+
+{% block content %}
+<div style="display: flex; flex-direction: column; justify-content: left; align-items: left; padding:10px; margin-left: 5px;">
+    <div style="display: flex; flex-direction: row; justify-content: left; align-items: left;">
+        <div style="display: flex; flex-direction: row; justify-content: left; align-items: left; background: transparent;">
+            {% for k, v in questions.items %}
+                <div class="box" onclick="boxClick(this)">{{k}}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div style="display: flex; flex-direction: column; justify-content: left; align-items: left; padding:10px;">
+    {% with request.resolver_match.view_name as view_name %}
+        {% if view_name != "show_test" %}
+        <div class="q" style="width: 100px; font-size: 18px; font-weight: bold; display: flex; flex-direction: column; justify-content: left; align-items: left;"></div>
+        {% endif %}
+    {% endwith %}
+    
+    {% for k, v in questions.items %}
+        <div class="box_{{k}}" style="display: none;">
+        {% for kk, vv in v.items %}
+            <div class="ques" style="justify-content: left; background: rgb(160, 220, 236);">{{kk}}</div>
+            {% for unswer in vv %}
+                <div class="ques" onclick="unswerClick(this)">
+                    <div style="width: 680px; text-align: left;">{{unswer}}</div>
+                    <div class="ball" name="ball_{{k}}" onclick="ballClick(this)">
+                        <div class="ball_in"></div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        </div>  
+    {% endfor %}
+
+</div>
+
+
+<form method='post' enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in form %}
+            <div class="form-group row" aria-required={% if field.field.required %}"true"{% else %}"false"{% endif %} style="display: none;"> 
+                <label for="{{ field.id_for_label }}" class="col-md-4 col-form-label text-md-right">{{ field.label }}{% if field.field.required %}<span style="color:red;">*</span>{% endif %}</label>
+                <div class="col-md-6">
+                    {{ field|addclass:"form-control" }}
+                    {% if field.help_text %}
+                        <small id="{{ field.id_for_label }}-help" class="form-text text-muted">{{ field.help_text|safe }}</small>
+                    {% endif %}    
+                </div>
+                
+            </div>
+    {% endfor %}
+    {% with request.resolver_match.view_name as view_name %}
+        {% if view_name != "show_test" %}
+        <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; margin: 17px; width: 680px;">
+            <button type="submit" class="btn sib" style="width: 150px;">
+                Завершить
+            </button>
+            <a class="btn sib" style="width: 150px; margin-left: 15px;" href="{% url 'show_test_result' request.user.id test_id %}">Результаты</a>
+        </div>
+        {% endif %}
+    {% endwith %}
+    
+</form>
+
+<script>
+    var data = new Map();
+    var data_str = "";
+    let boxes;
+    if (document.getElementsByClassName("box").length > 0){
+        boxes = document.getElementsByClassName("box")
+        boxes[0].style.background = "rgb(160, 220, 236)";
+        boxes[0].style.color = "white";
+    }
+    let box;
+    if (document.getElementsByClassName("box_1").length > 0){
+        box = document.getElementsByClassName("box_1")[0]
+        box.style.display = "block";
+    }
+    let q = document.getElementsByClassName("q")[0]
+    q.textContent = "Вопрос 1";
+    function ballClick(obj) {
+        let balls = document.getElementsByName("ball_" + parseInt(box.classList[0].toString().substring(4)))
+        
+        for (let i = 0; i < balls.length; i++) {
+            if (balls[i] != obj) {
+                balls[i].style.background = "rgb(165, 167, 166)";
+                balls[i].style.display = "none";
+            } else {
+                balls[i].style.background = "rgb(99, 231, 143)";
+
+                data.set(box.firstElementChild.textContent, balls[i].parentElement.textContent);
+                data_str = data_str + box.firstElementChild.textContent + "_" + balls[i].parentElement.textContent + "_";
+                let unswer = document.getElementById("id_unswer_" + box.classList[0].toString().substring(4) );
+                unswer.textContent = balls[i].parentElement.textContent;
+            }
+        }
+        setTimeout(function() {
+            box.style.display = "none";
+            if ( box.classList[0].toString().substring(4) < 20) {
+                let number = parseInt(box.classList[0].toString().substring(4)) + 1;
+                boxes[number - 2].style.background = "rgb(99, 231, 143)";
+                boxes[number - 2].style.color = "black";
+                box = document.getElementsByClassName("box_" + number)[0]
+
+                q.textContent = "Вопрос " + number;
+
+                box.style.display = "block";
+                boxes[number - 1].style.background = "rgb(160, 220, 236)";
+                boxes[number - 1].style.color = "white";
+            } else {
+                q.style.display = "none";
+                let number = parseInt(box.classList[0].toString().substring(4)) + 1;
+                boxes[number - 2].style.background = "rgb(99, 231, 143)"; 
+            }
+        }, 500);
+        
+        
+    }
+    function unswerClick(obj) {
+        obj.style.background = "rgb(99, 231, 143)";
+        ballClick(obj.childNodes[3]);
+    }
+</script>
+{% endblock %} 

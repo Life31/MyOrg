@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Предложения{% endblock %}
+{% block header %}
+	<a style="color: black; font-weight: bold; text-align: left;">Предложения</a>
+{% endblock %}
+{% load thumbnail %}
+{% load static %}
+{% load user_filters %}
+<link rel="stylesheet" href="{% static 'css/my_try.css'%}">
+{% block content %}
+	<div style="width: 660px; background: #E6E6E6; border-radius: 25px; box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.2); margin-bottom: 20px;">
+		<form method="post" enctype="multipart/form-data" action="{% url 'add_feedback' %}">
+			{% csrf_token %}
+			
+			<div class="card-body">
+				<div class="form-group">
+					{{ form.text|addclass:"form-control" }}
+					{{ form.image|addclass:"form-control" }}
+					
+				</div>
+				<button type="submit" class="btn lol">Отправить</button>
+			</div>
+		</form>
+	</div>
+	<table class="feedback" border="1" width=120%>
+		<tr>
+			<th class="head_text" style="width: 250px;">Предложение</th>
+			<th class="head_text" style="width: 250px">Ответ</th>
+			<th class="head_text" style="width: 50px">Фото</th>
+			<th class="head_text" style="width: 100px">Статус</th>
+			<th class="head_text" style="width: 150px">Автор</th>
+			<th class="head_text" style="width: 100px;">Дата</th>
+			<th class="head_text" style="width: 210px;">Актуальность</th>
+
+		</tr>
+		{% for post in page %}
+			{% if post.state_id == 7 %}
+			<tr style="background: #f7f7f7;">
+			{% elif post.state_id == 8 %}
+			<tr style="background: #f7f7f7;">
+			{% else %}
+			<tr>
+			{% endif %}
+				<th style="text-align:left;">{{ post.text | linebreaksbr }}</th>
+				<th style="text-align:left;">{{ post.unswer | linebreaksbr }}</th>
+				<th class="image" style="margin: 0; padding: 0px 0px 0px 0px;">
+					
+						{% thumbnail post.image "900x900" upscale=True as im %}
+							<a href="{{ im.url }}" ><img class="card-img" src="{{ im.url }}"></a>
+						{% endthumbnail %}
+
+				</th>
+				<th style="text-align:center;">{{ post.state }}</th>
+				<th style="text-align:center;"><a style="color: black;" href="{% url 'profile' post.author.username %}">{{ post.author.get_full_name }}</a></th>
+				<th style="text-align:center;">{{ post.created|date:"d.m.Y" }}</th>
+				<th style="text-align:center;">
+					<div tyle="display: flex; flex-direction: row;">
+						{% if post.author == request.user or request.user.username in rights %}
+							<a class="btn feedback__btn_dis" 
+							style="padding: 1px; width: 70px; height: 30px; font-weight: bold;" 
+							href="{% url 'delete_feedback' post.id %}" role="button">Удалить</a>
+						{% endif %}
+						{% if post.state_id == 8 %}
+							<a><br>Голосование закрыто</br></a>
+						{% else %}
+							{% if post.id in likes %} 
+								<a class="btn feedback__btn_like_on" href="{% url 'add_like' post.id request.user.id %}">+{{post.likes}}</a>
+							{% else %}
+								<a class="btn feedback__btn_like" href="{% url 'add_like' post.id request.user.id %}">+{{post.likes}}</a>
+							{% endif %}
+
+							{% if post.id in dis %} 
+								<a class="btn feedback__btn_dis_on" href="{% url 'add_dislike' post.id request.user.id %}">-{{post.dislikes}}</a>
+							{% else %}
+								<a class="btn feedback__btn_dis" href="{% url 'add_dislike' post.id request.user.id %}">-{{post.dislikes}}</a>
+							{% endif %}
+						{% endif %}
+					</div>
+				</th>
+			</tr>
+		{% endfor %}
+	</table>
+	<div style=" display: flex; flex-direction: row; justify-content: center; align-items: center;">{% include "includes/paginator.html" %}</div>
+
+	<style>
+		.head_text {
+			color: #808080;
+			font-family: Calibri;
+			font-size: 18px;
+			font-weight: 400;
+			line-height: 24px;
+			letter-spacing: 0em;
+			text-align:center;
+		}
+		.lol {
+		width: 120px;
+		height: 37px;
+		margin: 2px;
+		border: 3px solid white;
+		border-radius: 10px;
+		box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.2);
+		font-family: 'Calibri';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 18px;
+		line-height: 22px;
+		}
+		.lol:hover {
+			transition: 0.4s;
+			background: #3b3b3a;
+			border: 3px solid white;
+			color: white;
+		}
+		.card-img.zoom {
+			-moz-user-select: none; user-select: none;
+		  }
+		  .card-img.zoom:hover {
+			display: block;
+			position: fixed;
+			z-index: 10;
+			top: 50%;
+			left: 50%;
+			-webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%);
+			width: auto;
+			height: auto;
+			max-width: 100%;
+			max-height: 100%;
+			border: solid rgba(210,210,210,.4);
+			border-width: 100vh 100vw;
+			cursor: zoom-out;
+		  }
+		  :not(:active) > .card-img.zoom:not(:hover), .card-img.zoom:active {
+			pointer-events: none;
+		  }
+	</style>
+{% endblock %} 
